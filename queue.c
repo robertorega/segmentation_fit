@@ -2,47 +2,44 @@
 #include <stdlib.h>
 #include "lezione.h"
 #include "queue.h"
-#define NULLITEM (lezione){.max_partecipanti = -1}
+#define NULLITEM ((lezione){ NULL, "", "", "" })
 
 struct node{
-lezione value;
-struct node *next;
+	lezione value;
+	struct node *next;
 };
 
 struct c_queue {
-struct node *head,*tail;
-int numel;
+	struct node *head,*tail;
+	int numel;
 };
 
-queue newQueue(void)
-{
+queue newQueue(void){
 	struct c_queue *calendario;
 	calendario = malloc(sizeof(struct c_queue));
-    if (calendario == NULL)
-        return NULL;
-
-    calendario->numel = 0;
+	if (calendario == NULL)
+		return NULL;
+	
+	calendario->numel = 0;
 	calendario->head = NULL;
 	calendario->tail = NULL;
 	return calendario;
 }
 
-int emptyQueue(queue calendario)
-{
-    if (calendario == NULL)
-        return -1;
+int emptyQueue(queue calendario){
+	if (calendario == NULL)
+		return -1;
 	return calendario->numel == 0;
 }
 
-int inserisci(lezione val, queue calendario)
-{ 
+int inserisci(lezione val, queue calendario){ 
 	if (calendario == NULL)
-        return -1;
+		return -1;
 
 	struct node *nuovo;
-    nuovo = malloc(sizeof(struct node));
+	nuovo = malloc(sizeof(struct node));
 	if (nuovo == NULL)
-        return 0;
+		return 0;
 
 	nuovo->value = val;
 	nuovo->next = NULL;
@@ -59,9 +56,9 @@ int inserisci(lezione val, queue calendario)
 
 lezione rimuovi(queue calendario){ 
 	if (calendario == NULL)
-        return NULLITEM;
+		return NULLITEM;
 	if (calendario->numel == 0)
-        return NULLITEM; 
+        	return NULLITEM; 
 
 	lezione result = calendario->head->value;
 	struct node *temp = calendario->head; 
@@ -69,7 +66,7 @@ lezione rimuovi(queue calendario){
 	free(temp); 
 
 	if (calendario->head == NULL)
-  	  	calendario->tail = NULL;
+		calendario->tail = NULL;
 
 	(calendario->numel)--;
 	return result;
