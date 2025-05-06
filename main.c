@@ -7,6 +7,7 @@
 int main(){
 	int scelta=0;
 
+	queue calendario = newQueue();
     	printf("Segmentation Fit\n");
     	printf("Benvenuti nella palestra numero uno per gli informatici\n\n");
 
