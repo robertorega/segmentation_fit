@@ -1,3 +1,5 @@
+#include "stack.h"
+
 typedef struct lezione{
 	stack iscritti; 
 	char giorno[20]; //giorno della settimana
