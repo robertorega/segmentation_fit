@@ -10,6 +10,6 @@ void contattaci() {
 	printf("I nostri orari: LUN-VEN 07:00 - 22:00, SAB 08:30 - 17:00, DOM CHIUSI\n\n");
 
 	printf("Possiamo fare altro per te? Premi INVIO\n");
-    	getchar(); //Consuma il carattere di newline rimasto nel buffer
-	getchar(); //Libera il buffer per l'input successivo
+    	getchar(); // Consuma il carattere di newline rimasto nel buffer
+	getchar(); // Libera il buffer per l'input successivo
 }
