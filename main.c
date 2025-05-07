@@ -5,13 +5,16 @@
 #include "queue.h"
 
 int main(){
-	int scelta=0;
-	queue calendario = newQueue();
-	
+	int scelta=0; // Variabile che memorizza la scelta dell'utente
+	queue calendario = newQueue(); // Crea una nuova coda per il calendario delle lezioni
+
+	// Messaggio di benvenuto all'utente
     	printf("Segmentation Fit\n");
     	printf("Benvenuti nella palestra numero uno per gli informatici\n\n");
 
+	// Ciclo infinito per il menu principale
 	while (1){
+		// Stampa le opzioni del menu
     		printf("Selezionare un’opzione:\n");
     		printf("1 - abbonati\n");
     		printf("2 - lezioni\n");
@@ -21,8 +24,8 @@ int main(){
 		printf("6 - contattaci\n");
     		printf("7 - esci\n");
 
-		printf("La tua scelta: ");
-    		scanf("%d", &scelta);
+		printf("La tua scelta: "); // Chiede all'utente di inserire la propria scelta
+    		scanf("%d", &scelta); // Legge l'input dell'utente
 
     		switch(scelta){
         		case 1:
@@ -47,7 +50,7 @@ int main(){
             		printf("Arrivederci!\n");
             		return 0;  // esce dal programma
         		default:
-            		printf("Valore non valido\n\n");
+            		printf("Valore non valido\n\n"); // Messaggio di errore
             		break;
     		}
 	}
