@@ -4,19 +4,19 @@
 #include "contattaci.h"
 #include "queue.h"
 
-void contattaci();
-
 int main(){
 	char scelta[10];
-
+	queue calendario = newQueue();
+	generaLezioni(calendario);
+	
 	// Messaggio di benvenuto all'utente
     	printf("Segmentation Fit\n");
-    	printf("Benvenuti nella palestra numero uno per gli informatici\n\n");
+    	printf("Benvenuti nella palestra numero uno per gli informatici\n");
 
 	// Ciclo infinito per il menu principale
 	while (1) {
 		// Stampa le opzioni del menu
-    		printf("Selezionare un’opzione:\n");
+    		printf("\nSelezionare un’opzione:\n");
     		printf("1 - Area abbonati\n");
     		printf("2 - lezioni\n");
    		printf("3 - lezioni più frequentate\n");
@@ -27,8 +27,7 @@ int main(){
 		printf("La tua scelta: ");
     		scanf("%s", scelta);
 
-    	switch(atoi(scelta)) 
-		{
+    	switch(atoi(scelta)) {
         	case 1:
             	printf("Funzione ancora da implementare.\n");
             	break;
@@ -38,21 +37,15 @@ int main(){
         	case 3:
             	printf("Funzione ancora da implementare.\n");
             	break;
- 		       	case 4:
+ 		case 4:
             	printf("Funzione ancora da implementare.\n");
-            			break;
-       		 	case 5:
-      			      	printf("Funzione ancora da implementare.\n");
-     			       	break;
-    		    	case 6:
-      			      	printf("Funzione ancora da implementare.\n");
-     			       	break;
-    		    	case 7:
-           			 	contattaci();
-          			  	break;
-        	case 8:
+		break;
+    		case 5:
+           	contattaci();
+          	break;
+        	case 6:
             	printf("Arrivederci!\n");
-            	return 0;  // esce dal programma
+            	return 0;  // Esce dal programma
         	default:
             	printf("Valore non valido\n\n");
             	break;
