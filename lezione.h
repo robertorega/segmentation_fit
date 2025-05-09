@@ -1,9 +1,13 @@
-typedef struct //creazione della struct
- {
+#ifndef LEZIONE_H
+#define LEZIONE_H
 
-	int max_partecipanti; //limite fisso di partecipanti per ogni lezione
-	char giorno[20]; //giorno della settimana
-	char orario[20]; //tipo: 10-12
-	char data[11]; // giorno/mese/anno
+#include "stack.h"
 
-} lezione; //nome della struct
+typedef struct lezione {
+	stack iscritti; 
+	char giorno[20]; //Giorno della settimana in cui si tiene la lezione
+	char orario[20]; //Fascia oraria della lezione
+	char data[11]; //gg/mm/aa
+} lezione;
+
+#endif

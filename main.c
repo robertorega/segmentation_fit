@@ -9,20 +9,20 @@ void contattaci();
 int main(){
 	char scelta[10];
 
+	// Messaggio di benvenuto all'utente
     	printf("Segmentation Fit\n");
     	printf("Benvenuti nella palestra numero uno per gli informatici\n\n");
 
-while (1) {
-
+	// Ciclo infinito per il menu principale
+	while (1) {
+		// Stampa le opzioni del menu
     		printf("Selezionare un’opzione:\n");
-    		printf("1 - abbonati\n");
+    		printf("1 - Area abbonati\n");
     		printf("2 - lezioni\n");
-   	 	printf("3 - lezioni più frequentate\n");
-   	 	printf("4 - login abbonati\n");
-  	  	printf("5 - i nostri iscritti\n");
-   	 	printf("6 - disdici\n");
- 	   	printf("7 - contattaci\n");
-    	printf("8 - esci\n");
+   		printf("3 - lezioni più frequentate\n");
+   		printf("4 - disdici\n");
+		printf("5 - contattaci\n");
+    		printf("6 - esci\n");
 
 		printf("La tua scelta: ");
     		scanf("%s", scelta);
@@ -57,6 +57,6 @@ while (1) {
             	printf("Valore non valido\n\n");
             	break;
     		}
-}
-return 0;
+	}
+	return 0;
 }
