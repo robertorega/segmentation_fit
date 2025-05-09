@@ -4,7 +4,7 @@
 #include "queue.h"
 #define NULLITEM ((lezione){ NULL, "", "", "" })
 
-struct node{
+struct node {
 	lezione value;
 	struct node *next;
 };
@@ -14,7 +14,7 @@ struct c_queue {
 	int numel;
 };
 
-queue newQueue(void){
+queue newQueue(void) {
 	struct c_queue *calendario;
 	calendario = malloc(sizeof(struct c_queue));
 	if (calendario == NULL)
@@ -26,13 +26,13 @@ queue newQueue(void){
 	return calendario;
 }
 
-int emptyQueue(queue calendario){
+int emptyQueue(queue calendario) {
 	if (calendario == NULL)
 		return -1;
 	return calendario->numel == 0;
 }
 
-int inserisci(lezione val, queue calendario){ 
+int inserisci(lezione val, queue calendario) { 
 	if (calendario == NULL)
 		return -1;
 
@@ -54,7 +54,7 @@ int inserisci(lezione val, queue calendario){
 	return 1;
 }
 
-lezione rimuovi(queue calendario){ 
+lezione rimuovi(queue calendario) {
 	if (calendario == NULL)
 		return NULLITEM;
 	if (calendario->numel == 0)
