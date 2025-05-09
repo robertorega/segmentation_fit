@@ -1,3 +1,6 @@
+#ifndef ABBONATI_H
+#define ABBONATI_H
+
 #define limite_caratteri 30
 
 typedef struct {
@@ -12,3 +15,5 @@ typedef struct {
 	int id;
 	abbonamento tipo_abbonamento;
 } abbonato;
+
+#endif
