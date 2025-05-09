@@ -1,3 +1,6 @@
+#ifndef LEZIONE_H
+#define LEZIONE_H
+
 #include "stack.h"
 
 typedef struct lezione {
@@ -6,3 +9,5 @@ typedef struct lezione {
 	char orario[20]; //Fascia oraria della lezione
 	char data[11]; //gg/mm/aa
 } lezione;
+
+#endif
