@@ -7,7 +7,7 @@
 void contattaci();
 
 int main(){
-	int scelta=0;
+	char scelta[10];
 
     	printf("Segmentation Fit\n");
     	printf("Benvenuti nella palestra numero uno per gli informatici\n\n");
@@ -25,9 +25,10 @@ while (1) {
     	printf("8 - esci\n");
 
 		printf("La tua scelta: ");
-    		scanf("%d", &scelta);
+    		scanf("%s", scelta);
 
-    	switch(scelta) {
+    	switch(atoi(scelta)) 
+		{
         	case 1:
             	printf("Funzione ancora da implementare.\n");
             	break;
