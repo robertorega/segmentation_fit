@@ -16,13 +16,12 @@ int main() {
 	while (1) {
 		// Stampa le opzioni del menu
     		printf("Selezionare un’opzione:\n");
-    		printf("1 - abbonati\n");
+    		printf("1 - Area abbonati\n");
     		printf("2 - lezioni\n");
    		printf("3 - lezioni più frequentate\n");
-   		printf("4 - login abbonati\n");
-   		printf("5 - disdici\n");
-		printf("6 - contattaci\n");
-    		printf("7 - esci\n");
+   		printf("4 - disdici\n");
+		printf("5 - contattaci\n");
+    		printf("6 - esci\n");
 
 		printf("La tua scelta: "); // Chiede all'utente di inserire la propria scelta
     		scanf("%d", &scelta); // Legge l'input dell'utente
@@ -41,12 +40,9 @@ int main() {
             		printf("Funzione ancora da implementare.\n");
             		break;
     			case 5:
-      			printf("Funzione ancora da implementare.\n");
-     			break;
-    			case 6:
            		contattaci();
           		break;
-        		case 7:
+        		case 6:
             		printf("Arrivederci!\n");
             		return 0;  // esce dal programma
         		default:
