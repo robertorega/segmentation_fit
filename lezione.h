@@ -1,7 +1,7 @@
 #ifndef LEZIONE_H
 #define LEZIONE_H
 
-#include "stack.h"
+#include "pila.h"
 
 typedef struct lezione {
 	stack iscritti; 

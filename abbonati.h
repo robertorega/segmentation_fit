@@ -1,19 +1,14 @@
 #ifndef ABBONATI_H
 #define ABBONATI_H
 
-#define limite_caratteri 30
+#define MAX_CARATTERI 16
 
-typedef struct {
-	char tipo[limite_caratteri];
-	int durata;
-} abbonamento;
-
-typedef struct {
-	char nome[limite_caratteri];
-	char cognome[limite_caratteri];
-	int annodinascita;
-	int id;
-	abbonamento tipo_abbonamento;
+typedef struct abbonato {
+    char *chiave;
+    char nomeutente[MAX_CARATTERI];
+    char password[MAX_CARATTERI];
+    int lezioni_rimanenti;
+    struct abbonato *prossimo;
 } abbonato;
 
 #endif
