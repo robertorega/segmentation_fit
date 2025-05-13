@@ -1,16 +1,16 @@
-#ifndef STACK_H
-#define STACK_H
+#ifndef PILA_H
+#define PILA_H
 
 #include "partecipante.h"
-#define MAXSTACK 20 //numero massimo partecipanti
+#define MASSIMO_PILA 20 //numero massimo partecipanti
 
-typedef struct c_stack *stack;
+typedef struct c_pila *pila;
 
-stack newStack(void);
-int emptyStack(stack iscritti);
-int pop(stack iscritti);
-int push(partecipante val, stack iscritti);
-char* top(stack iscritti);
-int stackSize(stack iscritti);
+pila nuova_pila(void);
+int pila_vuota(pila iscritti);
+int inserisci_pila(partecipante val, pila iscritti);
+int estrai_pila(pila iscritti);
+char* testa(pila iscritti);
+int dimensione_pila(pila iscritti);
 
 #endif
