@@ -2,49 +2,49 @@
 #include <stdlib.h>
 #include <string.h>
 #include "contattaci.h"
-#include "queue.h"
+#include "coda.h"
 
 int main()
 {
 	char scelta[10];
-	queue calendario = newQueue();
-	generaLezioni(calendario);
+	coda calendario = nuova_coda();
+	genera_lezioni(calendario);
 	
 	//Messaggio di benvenuto all'utente
-    printf("Segmentation Fit\n");
-    printf("Benvenuti nella palestra numero uno per gli informatici\n");
+	printf("Segmentation Fit\n");
+	printf("Benvenuti nella palestra numero uno per gli informatici\n");
 
 	//Ciclo infinito per il menu principale
 	while (1) 
 	{
 		clearScreen(); //Pulisce lo schermo della console.
 		//Stampa le opzioni del menu
-    	printf("\nSelezionare un’opzione:\n");
-    	printf("1 - Area abbonati\n");
-    	printf("2 - Lezioni\n");
+    		printf("\nSelezionare un’opzione:\n");
+    		printf("1 - Area abbonati\n");
+    		printf("2 - Lezioni\n");
    		printf("3 - Report mensili\n");
    		printf("4 - Disdici\n");
 		printf("5 - Contattaci\n");
-    	printf("6 - Esci\n");
+    		printf("6 - Esci\n");
 
 		printf("La tua scelta: ");
-    		fgets(scelta, sizeof(scelta), stdin);
-            scelta[strcspn(scelta, "\n")] = 0;  // Rimuove newline
+		fgets(scelta, sizeof(scelta), stdin);
+		scelta[strcspn(scelta, "\n")] = 0;  // Rimuove newline
 
     		switch(atoi(scelta)) 
-			{
+		{
         		case 1:
             		printf("Funzione ancora da implementare.\n");
             		break;
         		case 2:
-            		printf("Funzione ancora da implementare.\n");
+            		prenota_lezione(calendario); 
             		break;
         		case 3:
             		printf("Funzione ancora da implementare.\n");
             		break;
- 			    case 4:
+ 			case 4:
             		printf("Funzione ancora da implementare.\n");
-			        break;
+			break;
     			case 5:
            		contattaci();
           		break;
