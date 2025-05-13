@@ -18,37 +18,37 @@ int main(){
 		// Stampa le opzioni del menu
     		printf("\nSelezionare un’opzione:\n");
     		printf("1 - Area abbonati\n");
-    		printf("2 - lezioni\n");
-   		printf("3 - lezioni più frequentate\n");
-   		printf("4 - disdici\n");
-		printf("5 - contattaci\n");
-    		printf("6 - esci\n");
+    		printf("2 - Lezioni\n");
+   		printf("3 - Report mensili\n");
+   		printf("4 - Disdici\n");
+		printf("5 - Contattaci\n");
+    		printf("6 - Esci\n");
 
 		printf("La tua scelta: ");
     		scanf("%s", scelta);
 
-    	switch(atoi(scelta)) {
-        	case 1:
-            	printf("Funzione ancora da implementare.\n");
-            	break;
-        	case 2:
-            	printf("Funzione ancora da implementare.\n");
-            	break;
-        	case 3:
-            	printf("Funzione ancora da implementare.\n");
-            	break;
- 		case 4:
-            	printf("Funzione ancora da implementare.\n");
-		break;
-    		case 5:
-           	contattaci();
-          	break;
-        	case 6:
-            	printf("Arrivederci!\n");
-            	return 0;  // Esce dal programma
-        	default:
-            	printf("Valore non valido\n\n");
-            	break;
+    		switch(atoi(scelta)) {
+        		case 1:
+            		printf("Funzione ancora da implementare.\n");
+            		break;
+        		case 2:
+            		printf("Funzione ancora da implementare.\n");
+            		break;
+        		case 3:
+            		printf("Funzione ancora da implementare.\n");
+            		break;
+ 			case 4:
+            		printf("Funzione ancora da implementare.\n");
+			break;
+    			case 5:
+           		contattaci();
+          		break;
+        		case 6:
+            		printf("Arrivederci!\n");
+            		return 0;  // Esce dal programma
+        		default:
+            		printf("Valore non valido\n\n");
+            		break;
     		}
 	}
 	return 0;
