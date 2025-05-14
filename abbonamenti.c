@@ -7,7 +7,7 @@
 
 void abbonamenti()
 {
-	int scelta = 0;
+	char scelta[10];
 	tabella_hash tabella_abbonati = nuova_hash(10);  // Crea una tabella hash con 10 slot
 
 	while (1)
@@ -22,9 +22,10 @@ void abbonamenti()
     		printf("3 - Torna al menu principale\n\n");
 
     		printf("La tua scelta: ");
-    		scanf("%d", &scelta);
+    		fgets(scelta, sizeof(scelta), stdin);
+		    scelta[strcspn(scelta, "\n")] = 0;  // Rimuove newline
 
-    		switch (scelta)
+    		switch (atoi(scelta))
     		{
       			case 1:
 			{
