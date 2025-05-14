@@ -17,7 +17,7 @@ int main()
 	//Ciclo infinito per il menu principale
 	while (1) 
 	{
-		clearScreen(); //Pulisce lo schermo della console.
+		pulisci_schermo(); //Pulisce lo schermo della console.
 		//Stampa le opzioni del menu
     		printf("\nSelezionare un’opzione:\n");
     		printf("1 - Area abbonati\n");
