@@ -3,7 +3,7 @@
 #include <string.h>
 #include "coda.h"
 #include "contattaci.h"
-#include "funzioni_genriche.h"
+#include "funzioni_generiche.h"
 
 int main()
 {
