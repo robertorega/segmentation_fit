@@ -110,7 +110,7 @@ int estrai_pila(pila iscritti)
 * iscritti deve essere una pila inizializzata e non nulla
 *
 * Post-condizione:
-* se top>0  ritorna un puntatore al partecipante in cima alla pila altrimenti NULLPARTECIPANTE
+* se top>0  ritorna un puntatore al partecipante in cima alla pila altrimenti NESSUN_PARTECIPANTE
 */
 char* testa(pila iscritti)
  {
@@ -118,7 +118,7 @@ char* testa(pila iscritti)
     return iscritti->vet[iscritti->testa - 1];
 
 	else
-    return NULLPARTECIPANTE;
+    return NESSUN_PARTECIPANTE;
 }
 
 /* Funzione: dimensione_pila
