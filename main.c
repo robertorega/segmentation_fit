@@ -21,13 +21,13 @@ int main()
 	{
 		pulisci_schermo(); //Pulisce lo schermo della console.
 		//Stampa le opzioni del menu
-    		printf("\nSelezionare un’opzione:\n");
-    		printf("1 - Area abbonati\n");
-    		printf("2 - Lezioni\n");
+    	printf("\nSelezionare un’opzione:\n");
+    	printf("1 - Area abbonati\n");
+    	printf("2 - Lezioni\n");
    		printf("3 - Disdici\n");
    		printf("4 - Report mensili\n");
 		printf("5 - Contattaci\n");
-    		printf("6 - Esci\n");
+    	printf("6 - Esci\n");
 
 		printf("La tua scelta: ");
 		fgets(scelta, sizeof(scelta), stdin);

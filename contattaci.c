@@ -1,7 +1,14 @@
 #include <stdio.h>
 #include "contattaci.h"
 
-void contattaci() {
+/* Funzione: contattaci
+*
+* Stampa a schermo le informazioni di contatto e attende che l'utente prema INVIO per continuare
+* Side-effect:
+* Output a schermo
+*/
+void contattaci()
+ {
 	printf("\nHai bisogno di ulteriori info?\n");
 	printf("Ci trovi in Via degli Atleti, n51\n");
 	printf("Altrimenti chiamaci ai seguenti numeri:\n");

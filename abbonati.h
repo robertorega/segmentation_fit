@@ -3,7 +3,8 @@
 
 #define MAX_CARATTERI 16
 
-typedef struct abbonato {
+typedef struct abbonato 
+{
     char *chiave;
     char nomeutente[MAX_CARATTERI];
     char password[MAX_CARATTERI];

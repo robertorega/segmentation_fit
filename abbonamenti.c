@@ -15,11 +15,11 @@ void abbonamenti()
 		pulisci_schermo(); // Pulisce lo schermo della console
     
 		// Mostra il menu delle 2 opzioni iniziali
-    		printf("Scegli il piano di allenamento adatto a te!\n\n");
-    		printf("Selezionare un’opzione:\n");
+    	printf("Scegli il piano di allenamento adatto a te!\n\n");
+    	printf("Selezionare un’opzione:\n");
 		printf("1 - Sei già abbonato? Entra nella tua area riservata\n");
 		printf("2 - Vuoi creare un nuovo abbonamento?\n");
-    		printf("3 - Torna al menu principale\n\n");
+    	printf("3 - Torna al menu principale\n\n");
 
     		printf("La tua scelta: ");
     		fgets(scelta, sizeof(scelta), stdin);
@@ -41,7 +41,7 @@ void abbonamenti()
 
             			// Verifica se l'utente esiste
             			if (abbonato_trovato == NULL)
-                			printf("Utente non trovato.\n");
+                		printf("Utente non trovato.\n");
 				else
 				{
                 			// L'utente è stato trovato, ora chiedi la password
@@ -54,7 +54,8 @@ void abbonamenti()
                     				printf("Benvenuto %s, hai %d lezioni rimanenti.\n", abbonato_trovato->nomeutente, abbonato_trovato->lezioni_rimanenti);
                     				printf("Puoi prenotare una lezione, che tipo di operazione vuoi fare?\n");
                     				// Implementa qui altre funzionalità come la prenotazione
-                			} else
+                			} 
+						else
 						printf("Password errata. Accesso negato.\n");
             			}
             			break;
