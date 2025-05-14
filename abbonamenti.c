@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "abbonamenti.h"
-#include “funzioni_generiche.h”
+#include "funzioni_generiche.h"
 
 
 void abbonamenti()
