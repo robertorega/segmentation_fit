@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "abbonamenti.h"
 #include "coda.h"
 #include "contattaci.h"
 #include "funzioni_generiche.h"
@@ -35,7 +36,7 @@ int main()
     		switch(atoi(scelta)) 
 		{
         		case 1:
-            		printf("Funzione ancora da implementare.\n");
+            		abbonamenti(calendario);
             		break;
         		case 2:
             		prenota_lezione(calendario); 
