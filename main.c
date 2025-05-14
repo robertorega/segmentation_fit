@@ -1,8 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "contattaci.h"
 #include "coda.h"
+#include "contattaci.h"
+#include "funzioni_genriche.h"
 
 int main()
 {
