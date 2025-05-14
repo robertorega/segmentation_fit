@@ -22,8 +22,8 @@ int main()
     		printf("\nSelezionare un’opzione:\n");
     		printf("1 - Area abbonati\n");
     		printf("2 - Lezioni\n");
-   		printf("3 - Report mensili\n");
-   		printf("4 - Disdici\n");
+   		printf("3 - Disdici\n");
+   		printf("4 - Report mensili\n");
 		printf("5 - Contattaci\n");
     		printf("6 - Esci\n");
 
