@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <time.h>
 #include "lezione.h"
 #include "coda.h"
 #define ELEMENTO_NULLO ((lezione){ NULL, "", "", "" })
