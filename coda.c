@@ -273,8 +273,8 @@ void prenota_lezione(coda calendario)
 {
 	if (coda_vuota(calendario))
 	{
-    		printf("Non ci sono lezioni disponibili.\n");
-    		return;
+    	printf("Non ci sono lezioni disponibili.\n");
+    	return;
 	}
 
 	stampa_lezioni(calendario);
@@ -306,14 +306,14 @@ void prenota_lezione(coda calendario)
 
 	if (corrente == NULL)
 	{
-    		printf("Scelta non valida.\n");
-    		return;
+    	printf("Scelta non valida.\n");
+    	return;
 	}
 
 	if (dimensione_pila(corrente->valore.iscritti) >= MASSIMO_PILA)
 	{
-    		printf("Mi dispiace, la lezione è al completo!\n");
-    		return;
+    	printf("Mi dispiace, la lezione è al completo!\n");
+    	return;
 	}
 
 	partecipante nome;
@@ -322,8 +322,15 @@ void prenota_lezione(coda calendario)
 	nome[strcspn(nome, "\n")] = 0; // rimuove newline
 
 	if (inserisci_pila(nome, corrente->valore.iscritti))
-    printf("Prenotazione completata per %s\nTi è stato addebitato il costo di 15€\n", nome);
-
-	else
-    printf("Errore nella prenotazione.\n");
+	{
+        printf("Prenotazione completata per %s\nTi è stato addebitato il costo di 15€\n", nome);
+		printf("Possiamo fare altro per te? Premi INVIO\n");
+    	getchar(); // Consuma il carattere di newline rimasto nel buffer
+	    getchar(); // Libera il buffer per l'input successivo
+    }
+	
+    else
+	{
+      printf("Errore nella prenotazione.\n");
+	}
 }
