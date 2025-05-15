@@ -122,7 +122,7 @@ lezione rimuovi_lezione(coda calendario)
 	if (calendario == NULL)
 		return ELEMENTO_NULLO;
 	if (calendario->numel == 0)
-        	return ELEMENTO_NULLO; 
+        return ELEMENTO_NULLO; 
 
 	lezione risultato = calendario->testa->valore;
 	struct nodo *temp = calendario->testa; 
@@ -300,8 +300,8 @@ void prenota_lezione(coda calendario)
 	int indice = 1;
 	while (corrente != NULL && indice < atoi(scelta))
 	{
-    		corrente = corrente->prossimo;
-    		indice++;
+    	corrente = corrente->prossimo;
+    	indice++;
 	}
 
 	if (corrente == NULL)
