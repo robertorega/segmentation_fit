@@ -36,7 +36,7 @@ int main()
     		switch(atoi(scelta)) 
 		{
         		case 1:
-            		abbonamenti(calendario);
+            		
             		break;
         		case 2:
             		prenota_lezione(calendario); 

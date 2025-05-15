@@ -287,19 +287,18 @@ void prenota_lezione(coda calendario)
 
 	if (risposta != 's' && risposta != 'S')
 	{
-        	printf("Prenotazione annullata.\n");
+        printf("Prenotazione annullata.\n");
 		return;
-    	}
+    }
 
-	int scelta;
+	char scelta[10];
 	printf("Inserisci il numero della lezione a cui vuoi iscriverti: "); //CONTROLLO VALORE!!!
-	scanf("%d", &scelta);
-	getchar();
+	fgets(scelta, sizeof(scelta), stdin);
 
 	// Naviga alla lezione scelta
 	struct nodo *corrente = calendario->testa;
 	int indice = 1;
-	while (corrente != NULL && indice < scelta)
+	while (corrente != NULL && indice < atoi(scelta))
 	{
     		corrente = corrente->prossimo;
     		indice++;
@@ -323,7 +322,8 @@ void prenota_lezione(coda calendario)
 	nome[strcspn(nome, "\n")] = 0; // rimuove newline
 
 	if (inserisci_pila(nome, corrente->valore.iscritti))
-    		printf("Prenotazione completata per %s\nTi è stato addebitato il costo di 15€\n", nome);
+    printf("Prenotazione completata per %s\nTi è stato addebitato il costo di 15€\n", nome);
+
 	else
-    		printf("Errore nella prenotazione.\n");
+    printf("Errore nella prenotazione.\n");
 }
