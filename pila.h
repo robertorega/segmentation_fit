@@ -6,24 +6,6 @@
 
 typedef struct c_pila *pila;
 
-/* Funzione: pila_vuota
-*
-* controlla se la pila iscritti è vuota
-* Parametri:
-* iscritti: pila da controllare
-*
-* Pre-condizione:
-* iscritti è una pila inizializzata
-*
-* Post-condizione:
-* Il valore restituito è 1 se e solo se la pila è vuota (iscritti->testa == 0), altrimenti 0.
-*/
-int pila_vuota(pila iscritti) 
-{
-	return iscritti->testa == 0;
-}
-
-
 /* Funzione: nuova_pila
 *
 * Crea e inizializza una nuova pila vuota
