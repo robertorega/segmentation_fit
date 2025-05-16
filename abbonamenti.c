@@ -50,22 +50,22 @@ void abbonamenti()
 
                 			// Verifica la password
                 			if (strcmp(abbonato_trovato->password, password) == 0)
-					{
-                    				printf("Benvenuto %s, hai %d lezioni rimanenti.\n", abbonato_trovato->nomeutente, abbonato_trovato->lezioni_rimanenti);
-                    				printf("Puoi prenotare una lezione, che tipo di operazione vuoi fare?\n");
-                    				// Implementa qui altre funzionalità come la prenotazione
-                			} 
+					    {
+                    		printf("Benvenuto %s, hai %d lezioni rimanenti.\n", abbonato_trovato->nomeutente, abbonato_trovato->lezioni_rimanenti);
+                    		printf("Puoi prenotare una lezione, che tipo di operazione vuoi fare?\n");
+                    		// Implementa qui altre funzionalità come la prenotazione
+                		} 
 						else
 						printf("Password errata. Accesso negato.\n");
-            			}
+            	}
             			break;
         		}
         		case 2:
 			{
             			// Sottomenu per la creazione di un nuovo abbonamento
-            			int scelta_abbonamento = 0;
+            			char scelta_abbonamento[10];
             			while (1)
-				{  // Mostra il menu per scegliere il tipo di abbonamento
+				        {  // Mostra il menu per scegliere il tipo di abbonamento
                 			printf("Scegli il piano di allenamento:\n");
                 			printf("1 - Abbonamento da 12 lezioni - 60€\n");
                 			printf("2 - Abbonamento da 24 lezioni - 100€\n");
@@ -73,12 +73,12 @@ void abbonamenti()
                 			printf("4 - Torna al menu principale\n");
 
                 			printf("La tua scelta: ");
-                			scanf("%d", &scelta_abbonamento);
+                			fgets(scelta, sizeof(scelta_abbonamento), stdin);
 
-                			switch (scelta_abbonamento)
-					{
+                			switch (atoi(scelta_abbonamento))
+				        {
                     				case 1:
-						{
+						            {
                         				// Abbonamento da 12 lezioni
                         				abbonato nuovo_abbonato;
                         				printf("Inserisci nome utente: ");
@@ -140,18 +140,19 @@ void abbonamenti()
                     				default:
                         				printf("Valore non valido, riprova.\n\n");
                         				break;
-                			}
+                		}
             			}
             			break;
         		}
         		case 3:
-			{
-            			printf("Tornando al menu principale...\n\n");
-            			return;  // Esce dalla funzione abbonamenti()
+			    {
+            		printf("Tornando al menu principale...\n\n");
+            		return;  // Esce dalla funzione abbonamenti()
         		}
         		default:
-            			printf("Valore non valido, riprova.\n\n");
-            			break;
+				
+            		printf("Valore non valido, riprova.\n\n");
+            		break;
     		}
 	}
 }
