@@ -3,7 +3,7 @@
 #include <string.h>
 #include "abbonamenti.h"
 #include "funzioni_generiche.h"
-#inlcude "lezione.h"
+#include "lezione.h"
 #include "hash.h"
 
 void abbonamenti(coda calendario)
