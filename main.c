@@ -11,15 +11,15 @@ int main()
 	char scelta[10];
 	coda calendario = nuova_coda();
 	genera_lezioni(calendario);
-	
-	//Messaggio di benvenuto all'utente
-	printf("Segmentation Fit\n");
-	printf("Benvenuti nella palestra numero uno per gli informatici\n");
 
 	//Ciclo infinito per il menu principale
 	while (1) 
 	{
 		pulisci_schermo(); //Pulisce lo schermo della console.
+
+		//Messaggio di benvenuto all'utente
+	    printf("Segmentation Fit\n");
+	    printf("Benvenuti nella palestra numero uno per gli informatici\n");
 		//Stampa le opzioni del menu
     	printf("\nSelezionare un’opzione:\n");
     	printf("1 - Area abbonati\n");
