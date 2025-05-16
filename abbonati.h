@@ -1,7 +1,7 @@
 #ifndef ABBONATI_H
 #define ABBONATI_H
 
-#define MAX_CARATTERI 16
+#define MAX_CARATTERI 50
 
 typedef struct abbonato 
 {
