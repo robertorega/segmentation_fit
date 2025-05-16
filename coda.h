@@ -2,6 +2,7 @@
 #define CODA_H
 
 #include "lezione.h"
+#include "abbonati.h"
 
 typedef struct c_coda *coda;
 
@@ -136,5 +137,27 @@ void stampa_lezioni(coda calendario);
 * Modifica la pila degli iscritti per la lezione scelta, interagisce con l’utente tramite input/output
 */
 void prenota_lezione(coda calendario);
+
+/* Funzione: prenota_lezione_abbonato
+*
+* Prenota una lezione per un utente abbonato
+*
+* Parametri:
+* calendario: coda contenente le lezioni
+* utente_loggato: abbonato che effettua la prenotazione
+*
+* Pre-condizione:
+* calendario inizializzato e non vuoto
+* utente_loggato valido
+*
+* Post-condizione:
+* Se la prenotazione va a buon fine:
+* - l’utente viene aggiunto alla pila degli iscritti
+* - decrementa le lezioni rimanenti dell’abbonato
+*
+* Side-effect:
+* Modifica pila iscritti e lezioni_rimanenti, interazione I/O
+*/
+void prenota_lezione_abbonato(coda calendario, abbonato *utente_loggato);
 
 #endif

@@ -4,6 +4,7 @@
 #include <time.h>
 #include "lezione.h"
 #include "coda.h"
+
 #define ELEMENTO_NULLO ((lezione){ NULL, "", "", "" })
 
 struct nodo
@@ -332,5 +333,81 @@ void prenota_lezione(coda calendario)
     else
 	{
       printf("Errore nella prenotazione.\n");
+	}
+}
+
+/* Funzione: prenota_lezione_abbonato
+*
+* Prenota una lezione per un utente abbonato
+*
+* Parametri:
+* calendario: coda contenente le lezioni
+* utente_loggato: abbonato che effettua la prenotazione
+*
+* Pre-condizione:
+* calendario inizializzato e non vuoto
+* utente_loggato valido
+*
+* Post-condizione:
+* Se la prenotazione va a buon fine:
+* - l’utente viene aggiunto alla pila degli iscritti
+* - decrementa le lezioni rimanenti dell’abbonato
+*
+* Side-effect:
+* Modifica pila iscritti e lezioni_rimanenti, interazione I/O
+*/
+void prenota_lezione_abbonato(coda calendario, abbonato *utente_loggato)
+{
+	if (coda_vuota(calendario)) {
+    	printf("Non ci sono lezioni disponibili.\n");
+    	return;
+	}
+
+	stampa_lezioni(calendario);
+
+	char risposta;
+	printf("\nDesideri prenotare una lezione, %s? (s/n): ", utente_loggato->nomeutente);
+	scanf(" %c", &risposta);
+	getchar();  // consuma newline
+
+	if (risposta != 's' && risposta != 'S') {
+    	printf("Prenotazione annullata.\n");
+    	return;
+	}
+
+	if (utente_loggato->lezioni_rimanenti <= 0) {
+    	printf("Non hai lezioni rimanenti. Rinnova l'abbonamento o acquista più lezioni.\n");
+    	return;
+	}
+
+	int scelta;
+	printf("Inserisci il numero della lezione a cui vuoi iscriverti: ");
+	scanf("%d", &scelta);
+	getchar();
+
+	struct nodo *corrente = calendario->testa;
+	int indice = 1;
+	while (corrente != NULL && indice < scelta) {
+    	corrente = corrente->prossimo;
+    	indice++;
+	}
+
+	if (corrente == NULL) {
+    	printf("Scelta non valida.\n");
+    	return;
+	}
+
+	if (dimensione_pila(corrente->valore.iscritti) >= MASSIMO_PILA) {
+    	printf("Mi dispiace, la lezione è al completo!\n");
+    	return;
+	}
+
+	// Aggiunge il nome utente nella pila iscritti
+	if (inserisci_pila(utente_loggato->nomeutente, corrente->valore.iscritti)) {
+    	utente_loggato->lezioni_rimanenti--;
+    	printf("Prenotazione completata per %s.\n", utente_loggato->nomeutente);
+    	printf("Lezioni rimanenti: %d\n", utente_loggato->lezioni_rimanenti);
+	} else {
+    	printf("Errore nella prenotazione.\n");
 	}
 }
