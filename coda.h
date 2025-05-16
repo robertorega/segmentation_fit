@@ -1,8 +1,8 @@
 #ifndef CODA_H
 #define CODA_H
 
-#include "lezione.h"
 #include "abbonati.h"
+#include "lezione.h"
 
 typedef struct c_coda *coda;
 
