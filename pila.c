@@ -148,6 +148,13 @@ int dimensione_pila(pila iscritti)
 *
 * Permette a un utente di disdire la propria iscrizione da una lezione selezionata 
 *
+* Descrizione:
+* Viene stampato l'elenco delle lezioni disponibili
+* L'utente seleziona una lezione inserendo il numero corrispondente
+* Viene chiesto il nome del partecipante da disiscrivere
+* Il nome, se presente nella pila degli iscritti della lezione selezionata, viene rimosso
+* Il nome viene rimosso anche dal file che memorizza le iscrizioni
+
 * Parametri:
 * - calendario: array di strutture lezione, ognuna contenente una pila di iscritti
 * - numero_lezioni: numero totale di lezioni presenti nel calendario
