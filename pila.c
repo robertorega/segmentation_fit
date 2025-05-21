@@ -3,6 +3,8 @@
 #include <string.h>
 #include "partecipante.h"
 #include "pila.h"
+#include "coda.h"
+#include "lezione.h"
 
 struct c_pila
  {
@@ -162,44 +164,138 @@ int dimensione_pila(pila iscritti)
  * - modifica la pila iscritti
  * - libera la memoria della pila di supporto
  */
-int disdici_iscrizione(pila iscritti, const char* nome)
+int disdici_iscrizione(lezione* calendario, int numero_lezioni, const char* lezioni)
 {
-    if (iscritti == NULL || nome == NULL)
-        return 0;
+    	if (coda_vuota(calendario) || numero_lezioni <= 0)
+	{
+    		printf("Non ci sono lezioni disponibili.\n");
+    		return -1;
+	}
+
+	stampa_lezioni(calendario);
+
+	char risposta;
+	printf("\nDesideri disdire l'iscrizione ad una lezione? (s/n): ");
+	scanf(" %c", &risposta);
+	getchar();  // consuma il newline
+
+	if (risposta != 's' && risposta != 'S')
+	{
+        printf("Nessuna lezione disdetta.\n");
+		return -1;
+    }
+
+	char scelta[10];
+	printf("Inserisci il numero della lezione a cui vuoi disdire la tua iscrizione: "); //CONTROLLO VALORE!!!
+	fgets(scelta, sizeof(scelta), stdin);
+
+	int num_scelta = atoi(scelta);
+    if (num_scelta < 1 || num_scelta > numero_lezioni)
+    {
+        printf("Scelta non valida.\n");
+        return -1;
+    }
+
+    lezione* selezionata = &calendario[num_scelta - 1];
+
+    char nome[50];
+    printf("Inserisci il tuo nome per disdire l'iscrizione: ");
+    fgets(nome, sizeof(nome), stdin);
+    nome[strcspn(nome, "\n")] = 0;  // rimuove newline
 
     int trovato = 0;
     pila supporto = nuova_pila();
     if (supporto == NULL)
-        return 0;
-
-    partecipante corrente;
-
-    // Sposta gli elementi dalla pila principale alla pila di supporto
-    for (int i = iscritti->testa - 1; i >= 0; i--)
     {
-        corrente = iscritti->vet[i];
-        if (strcmp(corrente, nome) == 0 && !trovato)
+        printf("Errore nell'allocazione della pila di supporto.\n");
+        return -1;
+    }
+
+    partecipante p;
+
+    while (!pila_vuota(selezionata->iscritti))
+    {
+        strcpy(p, testa(selezionata->iscritti));
+        estrai_pila(selezionata->iscritti);
+
+        if (strcmp(p, nome) == 0 && !trovato)
         {
-            // Non inserisce nella pila di supporto
             trovato = 1;
-        } 
-        else 
-        {
-            inserisci_pila(corrente, supporto);
+            // Non reinserisco nella pila di supporto => rimuovo l'iscritto
         }
-        estrai_pila(iscritti);
+        else
+        {
+            inserisci_pila(p, supporto);
+        }
     }
 
-    // Riporta gli elementi dalla pila d'appoggio alla pila principale
-    while(!pila_vuota(supporto))
+    while (!pila_vuota(supporto))
     {
-        inserisci_pila(testa(supporto), iscritti);
+        strcpy(p, testa(supporto));
         estrai_pila(supporto);
+        inserisci_pila(p, selezionata->iscritti);
+    }
+    free(supporto);
+
+    if (!trovato)
+    {
+        printf("Partecipante non trovato.\n");
+        return 0;
     }
 
-    free(supporto);
-    printf("Possiamo fare altro per te? Premi INVIO\n");
-    getchar(); // Consuma il carattere di newline rimasto nel buffer
-	getchar(); // Libera il buffer per l'input successivo
-    return trovato;
+FILE* file = fopen(lezioni, "r");
+if (!file)
+{
+    printf("Errore nell'apertura del file.\n");
+    return -1;
+}
+
+FILE* temp = fopen("temp.txt", "w");
+if (!temp)
+{
+    fclose(file);
+    printf("Errore nella creazione del file temporaneo.\n");
+    return -1;
+}
+
+char riga[256];
+int in_lezione_target = 0;
+
+while (fgets(riga, sizeof(riga), file))
+{
+    // Rimuove newline
+    riga[strcspn(riga, "\n")] = 0;
+
+    // Se contiene la data, è intestazione di una nuova lezione
+    if (strstr(riga, "/") && strstr(riga, ";"))
+    {
+        if (strstr(riga, selezionata->data))
+            in_lezione_target = 1;
+        else
+            in_lezione_target = 0;
+
+        fputs(riga, temp);
+        fputc('\n', temp);
+        continue;
+    }
+
+    // Se è partecipante nella lezione giusta e corrisponde al nome da eliminare, salta la riga
+    if (in_lezione_target && strcmp(riga, nome) == 0)
+        continue;
+
+    // Altrimenti scrivi normalmente
+    fputs(riga, temp);
+    fputc('\n', temp);
+}
+
+    fclose(file);
+    fclose(temp);
+    remove(lezioni);
+    rename("temp.txt", lezioni);
+
+    printf("Iscrizione disdetta con successo.\nPremi INVIO per continuare...");
+    getchar();
+	getchar();
+
+    return 1;
 }

@@ -97,11 +97,11 @@ int dimensione_pila(pila iscritti);
 /*
  * Funzione: disdici_iscrizione
  *
- * Rimuove un partecipante dalla pila degli iscritti, se presente.
+ * Permette di disiscrivere un partecipante da una lezione specifica, selezionata tramite indice da un calendario
  *
  * Parametri:
- * - iscritti: pila principale degli iscritti
- * - nome: stringa contenente il nome dell'utente da rimuovere
+ * - calendario: array di strutture lezione, ognuna contenente una pila di iscritti
+ * - numero_lezioni: numero totale di lezioni presenti nel calendario
  *
  * Pre-condizione:
  * - iscritti è una pila inizializzata
@@ -115,6 +115,6 @@ int dimensione_pila(pila iscritti);
  * - modifica la pila iscritti
  * - libera la memoria della pila di supporto
  */
-int disdici_iscrizione(pila iscritti, const char* nome);
+int disdici_iscrizione(lezione* calendario, int numero_lezioni, const char* lezioni);
 
 #endif
