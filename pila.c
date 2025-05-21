@@ -17,6 +17,11 @@ struct c_pila
 /* Funzione: nuova_pila
 *
 * Crea e inizializza una nuova pila vuota
+*
+* Descrizione:
+* Alloca dinamicamente una struttura di tipo pila, inizializza l'indice della cima a 0
+* Per indicare che la pila è vuota e restituisce un puntatore alla nuova pila
+*
 * Post-condizione:
 * Restituisce un puntatore a una pila vuota chiamata iscritti
 *
@@ -38,6 +43,10 @@ pila nuova_pila(void)
 /* Funzione: pila_vuota
 *
 * controlla se la pila iscritti è vuota
+*
+*Descrizione:
+* Controlla se l'indice della cima (`testa`) è uguale a zero, condizione che indica che non ci sono elementi nella pila
+*
 * Parametri:
 * iscritti: pila da controllare
 *
@@ -55,6 +64,12 @@ int pila_vuota(pila iscritti)
 /* Funzione: inserisci_pila
 *
 * Inserisce un partecipante in cima alla pila iscritti, se la pila non è piena
+*
+* Descrizione:
+* Verifica se la pila ha raggiunto la dimensione massima
+* Se piena, restituisce 0 per indicare che l'inserimento non è avvenuto
+* Altrimenti, copia il nome del partecipante nella posizione corrente della cima e incrementa l'indice
+* 
 * Parametri:
 * persona: il partecipante da inserire
 * iscritti: la pila in cui inserire i partecipanti 
@@ -81,6 +96,12 @@ int inserisci_pila(partecipante val, pila iscritti)
 /* Funzione: estrai_pila
 *
 * Rimuove l’elemento in cima alla pila iscritti, se la pila non è vuota
+*
+* Descrizione:
+* Verifica se la pila è vuota
+* Se vuota, restituisce 0 indicando che non è stato possibile estrarre alcun elemento
+* Altrimenti, decrementa l'indice della cima per rimuovere l'elemento corrente
+*
 * Parametri:
 * iscritti: la pila in cui rimuovere i partecipanti 
 *
@@ -105,6 +126,12 @@ int estrai_pila(pila iscritti)
 /* Funzione: testa
 *
 * Restituisce l’elemento in cima alla pila iscritti senza rimuoverlo
+*
+* Descrizione:
+* Verifica se la pila contiene almeno un elemento 
+* Se sì, restituisce l'elemento all'indice testa - 1, ovvero l'ultimo inserito
+* Se la pila è vuota, restituisce un valore predefinito
+*
 * Parametri:
 * iscritti: pila da cui leggere l’elemento in cima
 *
@@ -126,6 +153,11 @@ char* testa(pila iscritti)
 /* Funzione: dimensione_pila
 *
 * Restituisce il numero di elementi attualmente presenti nella pila iscritti
+*
+* Descrizione:
+* Verifica che la pila sia inizializzata
+* Se la pila è NULL, restituisce -1 come segnale di errore
+* Altrimenti, restituisce il numero di elementi contenuti nella pila
 * Parametri:
 * iscritti:  pila da analizzare
 *
@@ -154,7 +186,7 @@ int dimensione_pila(pila iscritti)
 * Viene chiesto il nome del partecipante da disiscrivere
 * Il nome, se presente nella pila degli iscritti della lezione selezionata, viene rimosso
 * Il nome viene rimosso anche dal file che memorizza le iscrizioni
-
+*
 * Parametri:
 * - calendario: array di strutture lezione, ognuna contenente una pila di iscritti
 * - numero_lezioni: numero totale di lezioni presenti nel calendario
