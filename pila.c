@@ -144,32 +144,29 @@ int dimensione_pila(pila iscritti)
 }
 
 /*
- * Funzione: disdici_iscrizione
- *
- * Rimuove un partecipante dalla pila degli iscritti, se presente.
- *
- * Parametri:
- * - iscritti: pila principale degli iscritti
- * - nome: stringa contenente il nome dell'utente da rimuovere
- *
- * Pre-condizione:
- * - iscritti è una pila inizializzata
- * - nome deve essere presente nella pila
- * 
- * Post-condizione:
- * - 1 se il partecipante è stato trovato e rimosso
- * - 0 se il partecipante non è presente nella pila
- *
- * Side-effect:
- * - modifica la pila iscritti
- * - libera la memoria della pila di supporto
- */
-int disdici_iscrizione(lezione* calendario, int numero_lezioni, const char* lezioni)
+* Funzione: disdici_iscrizione
+*
+* Permette a un utente di disdire la propria iscrizione da una lezione selezionata 
+*
+* Parametri:
+* - calendario: array di strutture lezione, ognuna contenente una pila di iscritti
+* - numero_lezioni: numero totale di lezioni presenti nel calendario
+* - lezioni: nome del file contenente tutte le iscrizioni
+* 
+* Pre-condizione:
+* - Il calendario deve contenere almeno una lezione valida
+* - Il file 'lezioni' deve essere accessibile in lettura e scrittura
+*
+* Side-effect:
+* - modifica la pila iscritti
+* - libera la memoria della pila di supporto
+*/
+void disdici_iscrizione(lezione* calendario, int numero_lezioni, const char* lezioni)
 {
     	if (coda_vuota(calendario) || numero_lezioni <= 0)
 	{
     		printf("Non ci sono lezioni disponibili.\n");
-    		return -1;
+    		return;
 	}
 
 	stampa_lezioni(calendario);
@@ -182,7 +179,7 @@ int disdici_iscrizione(lezione* calendario, int numero_lezioni, const char* lezi
 	if (risposta != 's' && risposta != 'S')
 	{
         printf("Nessuna lezione disdetta.\n");
-		return -1;
+		return;
     }
 
 	char scelta[10];
@@ -193,7 +190,7 @@ int disdici_iscrizione(lezione* calendario, int numero_lezioni, const char* lezi
     if (num_scelta < 1 || num_scelta > numero_lezioni)
     {
         printf("Scelta non valida.\n");
-        return -1;
+        return;
     }
 
     lezione* selezionata = &calendario[num_scelta - 1];
@@ -208,7 +205,7 @@ int disdici_iscrizione(lezione* calendario, int numero_lezioni, const char* lezi
     if (supporto == NULL)
     {
         printf("Errore nell'allocazione della pila di supporto.\n");
-        return -1;
+        return;
     }
 
     partecipante p;
@@ -240,14 +237,14 @@ int disdici_iscrizione(lezione* calendario, int numero_lezioni, const char* lezi
     if (!trovato)
     {
         printf("Partecipante non trovato.\n");
-        return 0;
+        return;
     }
 
 FILE* file = fopen(lezioni, "r");
 if (!file)
 {
     printf("Errore nell'apertura del file.\n");
-    return -1;
+    return;
 }
 
 FILE* temp = fopen("temp.txt", "w");
@@ -255,7 +252,7 @@ if (!temp)
 {
     fclose(file);
     printf("Errore nella creazione del file temporaneo.\n");
-    return -1;
+    return;
 }
 
 char riga[256];
@@ -296,6 +293,4 @@ while (fgets(riga, sizeof(riga), file))
     printf("Iscrizione disdetta con successo.\nPremi INVIO per continuare...");
     getchar();
 	getchar();
-
-    return 1;
 }

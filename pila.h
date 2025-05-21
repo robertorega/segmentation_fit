@@ -95,26 +95,23 @@ char* testa(pila iscritti);
 int dimensione_pila(pila iscritti);
 
 /*
- * Funzione: disdici_iscrizione
- *
- * Permette di disiscrivere un partecipante da una lezione specifica, selezionata tramite indice da un calendario
- *
- * Parametri:
- * - calendario: array di strutture lezione, ognuna contenente una pila di iscritti
- * - numero_lezioni: numero totale di lezioni presenti nel calendario
- *
- * Pre-condizione:
- * - iscritti è una pila inizializzata
- * - nome deve essere presente nella pila
- * 
- * Post-condizione:
- * - 1 se il partecipante è stato trovato e rimosso
- * - 0 se il partecipante non è presente nella pila
- *
- * Side-effect:
- * - modifica la pila iscritti
- * - libera la memoria della pila di supporto
- */
-int disdici_iscrizione(lezione* calendario, int numero_lezioni, const char* lezioni);
+* Funzione: disdici_iscrizione
+*
+* Permette a un utente di disdire la propria iscrizione da una lezione selezionata 
+*
+* Parametri:
+* - calendario: array di strutture lezione, ognuna contenente una pila di iscritti
+* - numero_lezioni: numero totale di lezioni presenti nel calendario
+* - lezioni: nome del file contenente tutte le iscrizioni
+* 
+* Pre-condizione:
+* - Il calendario deve contenere almeno una lezione valida
+* - Il file 'lezioni' deve essere accessibile in lettura e scrittura
+*
+* Side-effect:
+* - modifica la pila iscritti
+* - libera la memoria della pila di supporto
+*/
+void disdici_iscrizione(lezione* calendario, int numero_lezioni, const char* lezioni);
 
 #endif
