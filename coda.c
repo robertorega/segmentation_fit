@@ -623,8 +623,8 @@ if (!file)
     return;
 }
 
-FILE* temp = fopen("temp.txt", "w");
-if (!temp)
+FILE* temp_file = fopen("temp.txt", "w");
+if (!temp_file)
 {
     fclose(file);
     printf("Errore nella creazione del file temporaneo.\n");
@@ -647,8 +647,8 @@ while (fgets(riga, sizeof(riga), file))
         else
             in_lezione_target = 0;
 
-        fputs(riga, temp);
-        fputc('\n', temp);
+        fputs(riga, temp_file);
+        fputc('\n', temp_file);
         continue;
     }
 
@@ -657,14 +657,14 @@ while (fgets(riga, sizeof(riga), file))
         continue;
 
     // Altrimenti scrive normalmente
-    fputs(riga, temp);
-    fputc('\n', temp);
+    fputs(riga, temp_file);
+    fputc('\n', temp_file);
 }
 
     fclose(file);
-    fclose(temp);
+    fclose(temp_file);
     remove(lezioni);
-    rename("temp.txt", lezioni);
+    rename("temp_file.txt", lezioni);
 
     printf("Iscrizione disdetta con successo.\nPremi INVIO per continuare...");
     getchar();
