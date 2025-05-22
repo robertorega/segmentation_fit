@@ -59,6 +59,8 @@ int main()
             		return 0;  //Esce dal programma
         		default:
             		printf("Valore non valido\n\n");
+					printf("Possiamo fare altro per te? Premi INVIO\n");
+                    getchar(); 
             		break;
     		}
 	}
