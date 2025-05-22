@@ -23,7 +23,7 @@ void abbonamenti(coda calendario)
 
         printf("La tua scelta: ");
         fgets(scelta, sizeof(atoi(scelta)), stdin);
-        getchar(); // pulisce newline
+        scelta[strcspn(scelta, "\n")] = 0;  // Rimuove newline
 
         switch (atoi(scelta))
 	{
@@ -40,6 +40,8 @@ void abbonamenti(coda calendario)
             if (abbonato_trovato == NULL) 
 			{
                 printf("Utente non trovato.\n");
+				printf("Possiamo fare altro per te? Premi INVIO\n");
+                getchar();
             }
 			 else 
 			{
@@ -73,12 +75,16 @@ void abbonamenti(coda calendario)
                 	        break;
                 	    default:
                             printf("Scelta non valida.\n");
+							printf("Premi INVIO\n");
+                            getchar();
                     }
             	}
             } 
 			else
 			{
         		printf("Password errata.\n");
+				printf("Possiamo fare altro per te? Premi INVIO\n");
+                getchar();
         	}
             }
                 break;
@@ -97,7 +103,7 @@ void abbonamenti(coda calendario)
 
             	printf("La tua scelta: ");
             	scanf("%s", scelta_abbonamento);
-        		getchar();
+        		scelta[strcspn(scelta_abbonamento, "\n")] = 0;  // Rimuove newline
 
         	if (atoi(scelta_abbonamento) >= 1 && atoi(scelta_abbonamento) <= 3)
 			{
