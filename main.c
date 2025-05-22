@@ -49,7 +49,7 @@ int main()
             		disdici_iscrizione(calendario, "lezioni.txt");
             		break;
  			case 4:
-            		printf("Funzione ancora da implementare.\n");
+            		report_mensile();
 			break;
     			case 5:
            		contattaci();
