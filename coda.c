@@ -37,9 +37,9 @@ struct c_coda
 * Side-effect:
 * Legge da file e alloca dinamicamente memoria per le pile di iscritti e per i nodi della coda
 */
-void carica_lezioni(coda calendario, const char *partecipanti)
+void carica_lezioni(coda calendario, const char *nome_file)
 {
-	FILE *fp = fopen(lezioni.txt, "a+");  // apre in lettura/scrittura e crea se non esiste
+	FILE *fp = fopen(nome_file, "a+");  // apre in lettura/scrittura e crea se non esiste
 	if (fp == NULL)
 	{
 		perror("Errore apertura file");
