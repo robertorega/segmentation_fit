@@ -8,7 +8,32 @@
 #include "lezione.h"
 #include "pila.h"
 
+/* Funzione: abbonamenti
+*
+* Gestisce l'area abbonamenti dell'applicazione
+*
+* Parametri:
+* calendario - struttura contenente il calendario delle lezioni disponibili
+*
+* Pre-condizione:
+* calendario è una struttura coda valida e inizializzata correttamente
+*
+* Post-condizione:
+* Viene gestito l'accesso all'area abbonati: login, registrazione o ricarica abbonamento
+*
+* Side-effect:
+* - Output a schermo
+* - Possibili modifiche al file "abbonati.txt" e "lezioni.txt"
+*/
 void abbonamenti(coda calendario);
+
+/* Funzione: contattaci
+*
+* Stampa a schermo le informazioni di contatto e attende che l'utente prema INVIO per continuare
+* Side-effect:
+* Output a schermo
+*/
+void contattaci();
 
 int main()
 {
@@ -70,6 +95,34 @@ int main()
 	return 0;
 }
 
+/* Funzione: abbonamenti
+*
+*
+* Gestisce l'interazione dell'utente con l'area dedicata agli abbonamenti.
+*
+* Descrizione:
+* Offre tre opzioni principali: accesso all'area riservata per utenti registrati,
+* registrazione di un nuovo abbonamento, oppure ritorno al menu principale.
+*
+* Se l'utente è già registrato, può effettuare il login inserendo le proprie credenziali,
+* controllare le lezioni rimanenti, prenotare una lezione o ricaricare l’abbonamento con nuovi pacchetti.
+*
+* Se l'utente non è registrato, può creare un nuovo account scegliendo nome utente e password.
+*
+* Parametri:
+* calendario - struttura dati contenente le lezioni, utilizzata per prenotazioni e gestione
+*
+* Pre-condizione:
+* calendario è inizializzato correttamente e i file di supporto ("abbonati.txt", "lezioni.txt") sono presenti o creati
+*
+* Post-condizione:
+* Le operazioni selezionate dall'utente vengono eseguite e i dati aggiornati vengono salvati su file.
+* Se viene creato un nuovo abbonamento, l'utente viene salvato nella tabella hash.
+*
+* Side-effect:
+* - Lettura e scrittura su file ("abbonati.txt", "lezioni.txt")
+* - Allocazione dinamica di memoria per nuovi utenti
+*/
 void abbonamenti(coda calendario)
 {
 	char scelta[10];
@@ -210,4 +263,29 @@ void abbonamenti(coda calendario)
                 break;
         }
     }
+}
+
+/* Funzione: contattaci
+*
+* Stampa a schermo le informazioni di contatto e attende che l'utente prema INVIO per continuare
+*
+* Descrizione:
+* La funzione mostra un messaggio contenente l'indirizzo e i numeri di telefono per contattare il personale
+* Vengono anche visualizzati gli orari di apertura del centro
+* Alla fine la funzione attende che l'utente prema INVIO prima di proseguire
+*
+* Side-effect:
+* Output a schermo
+*/
+void contattaci()
+ {
+	printf("\nHai bisogno di ulteriori info?\n");
+	printf("Ci trovi in Via degli Atleti, n51\n");
+	printf("Altrimenti chiamaci ai seguenti numeri:\n");
+	printf("Roberto Rega - 0512121583\n");
+	printf("Andrea Zottoli - 0512122412\n");
+	printf("I nostri orari: LUN-VEN 07:00 - 22:00, SAB 08:30 - 17:00, DOM CHIUSI\n\n");
+
+	printf("Possiamo fare altro per te? Premi INVIO\n");
+    getchar();
 }
