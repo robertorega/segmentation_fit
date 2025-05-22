@@ -261,4 +261,25 @@ int data_passata(const char *data_str);
 */
 void pulisci_lezioni_passate(coda calendario, const char *nome_file);
 
+/* Funzione: report_mensile
+*
+* Genera e stampa un report ordinato delle lezioni svolte in un mese specifico,
+* elencando solo quelle con almeno un partecipante, ordinate per numero di partecipanti in ordine decrescente
+*
+* Parametri:
+* Nessun parametro di input
+*
+* Pre-condizione:
+* Il file "storico.txt" deve essere presente nella directory del programma e formattato correttamente
+*
+* Post-condizione:
+* Se esistono lezioni nel mese/anno specificati con almeno un partecipante, viene stampato un elenco ordinato
+* Se non ci sono lezioni corrispondenti, viene stampato un messaggio informativo
+*
+* Side-effect:
+* Lettura da file, acquisizione input da tastiera, stampa a schermo
+* Nessuna modifica ai dati persistenti o alla memoria dinamica
+*/
+void report_mensile(void);
+
 #endif
