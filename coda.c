@@ -859,3 +859,142 @@ void pulisci_lezioni_passate(coda calendario, const char *nome_file)
 
 	fclose(fp);
 }
+
+/* Funzione: report_mensile
+*
+* Genera e stampa un report ordinato delle lezioni svolte in un mese specifico,
+* elencando solo quelle con almeno un partecipante, ordinate per numero di partecipanti in ordine decrescente
+*
+* Descrizione:
+* La funzione chiede all’utente di inserire un mese e un anno, poi apre il file "storico.txt" in lettura
+* e analizza tutte le lezioni presenti. Per ogni lezione che corrisponde al mese e all’anno richiesti
+* e che ha almeno un partecipante, memorizza data, giorno, orario e numero di partecipanti in degli array temporanei.
+* Dopo aver caricato tutte le lezioni valide, esegue un ordinamento decrescente in base al numero di partecipanti
+* (utilizzando bubble sort), quindi stampa il report ordinato a video.
+*
+* Parametri:
+* Nessun parametro di input
+*
+* Pre-condizione:
+* Il file "storico.txt" deve essere presente nella directory del programma e formattato correttamente
+*
+* Post-condizione:
+* Se esistono lezioni nel mese/anno specificati con almeno un partecipante, viene stampato un elenco ordinato
+* Se non ci sono lezioni corrispondenti, viene stampato un messaggio informativo
+*
+* Side-effect:
+* Lettura da file, acquisizione input da tastiera, stampa a schermo
+* Nessuna modifica ai dati persistenti o alla memoria dinamica
+*/
+void report_mensile()
+{
+    FILE *file_storico = fopen("storico.txt", "r");
+    if (!file_storico)
+    {
+        printf("Errore nell'apertura del file storico.\n");
+        return;
+    }
+
+    char input[10];
+
+    // Richiesta del mese all'utente tramite input da tastiera
+    printf("Inserisci il mese (numero): ");
+    fgets(input, sizeof(input), stdin);
+    int mese_da_cercare = atoi(input);  // Conversione da stringa a intero
+
+    // Richiesta dell'anno all'utente
+    printf("Inserisci l'anno: ");
+    fgets(input, sizeof(input), stdin);
+    int anno_da_cercare = atoi(input);  // Conversione da stringa a intero
+
+    // Array per memorizzare le lezioni trovate
+    char elenco_date[100][11];
+    char elenco_giorni[100][15];
+    char elenco_orari[100][10];
+    int elenco_partecipanti[100];
+    int totale_lezioni = 0;
+
+    char riga[128];
+
+    // Lettura del file riga per riga
+    while (fgets(riga, sizeof(riga), file_storico)) 
+	{
+        char data_lettura[11];
+        char giorno_lettura[15];
+        char orario_lettura[10];
+        int numero_partecipanti;
+
+        // Lettura dei dati principali dalla riga
+        if (sscanf(riga, "%10[^;];%14[^;];%9[^;];%d", data_lettura, giorno_lettura, orario_lettura, &numero_partecipanti) == 4)
+		{
+            int giorno_num, mese_num, anno_num;
+
+            // Estrazione giorno, mese e anno dalla stringa data
+            sscanf(data_lettura, "%d/%d/%d", &giorno_num, &mese_num, &anno_num);
+
+            // Si considerano solo le lezioni del mese/anno richiesto con almeno un partecipante
+            if (mese_num == mese_da_cercare && anno_num == anno_da_cercare && numero_partecipanti > 0) 
+			{
+                strcpy(elenco_date[totale_lezioni], data_lettura);
+                strcpy(elenco_giorni[totale_lezioni], giorno_lettura);
+                strcpy(elenco_orari[totale_lezioni], orario_lettura);
+                elenco_partecipanti[totale_lezioni] = numero_partecipanti;
+                totale_lezioni++;
+            }
+
+            // Si saltano le righe con i nomi dei partecipanti
+            for (int i = 0; i < numero_partecipanti; i++)
+			{
+                fgets(riga, sizeof(riga), file_storico);
+            }
+        }
+    }
+
+    fclose(file_storico);
+
+    if (totale_lezioni == 0) 
+	{
+        printf("Nessuna lezione trovata per il mese %d/%d.\n", mese_da_cercare, anno_da_cercare);
+        return;
+    }
+
+    // Bubble sort
+    for (int i = 0; i < totale_lezioni - 1; i++) 
+	{
+        for (int j = i + 1; j < totale_lezioni; j++) 
+		{
+            if (elenco_partecipanti[j] > elenco_partecipanti[i])
+			 {
+                // Scambio dei valori
+                int temporale_partecipanti = elenco_partecipanti[i];
+                elenco_partecipanti[i] = elenco_partecipanti[j];
+                elenco_partecipanti[j] = temporale_partecipanti;
+
+                char temporale_data[11], temporale_giorno[15], temporale_orario[10];
+                strcpy(temporale_data, elenco_date[i]);
+                strcpy(temporale_giorno, elenco_giorni[i]);
+                strcpy(temporale_orario, elenco_orari[i]);
+
+                strcpy(elenco_date[i], elenco_date[j]);
+                strcpy(elenco_giorni[i], elenco_giorni[j]);
+                strcpy(elenco_orari[i], elenco_orari[j]);
+
+                strcpy(elenco_date[j], temporale_data);
+                strcpy(elenco_giorni[j], temporale_giorno);
+                strcpy(elenco_orari[j], temporale_orario);
+            }
+        }
+    }
+
+    // Stampa finale del report mensile ordinato
+    printf("\n--- Report Mensile %02d/%d ---\n", mese_da_cercare, anno_da_cercare);
+    for (int i = 0; i < totale_lezioni; i++) 
+	{
+        printf("%d) Data: %s | Giorno: %s | Orario: %s | Partecipanti: %d\n",
+               i + 1,
+               elenco_date[i],
+               elenco_giorni[i],
+               elenco_orari[i],
+               elenco_partecipanti[i]);
+    }
+}
