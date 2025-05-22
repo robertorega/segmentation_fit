@@ -458,10 +458,10 @@ void prenota_lezione_abbonato(coda calendario, abbonato *utente_loggato)
 	getchar();  // consuma newline
 
 	if (risposta != 's' && risposta != 'S') {
-    	printf("Prenotazione annullata.\n");
+    		printf("Prenotazione annullata.\n");
 		printf("Possiamo fare altro per te? Premi INVIO\n");
-        getchar();
-    	return;
+        	getchar();
+    		return;
 	}
 
 	if (utente_loggato->lezioni_rimanenti <= 0) {
@@ -497,6 +497,30 @@ void prenota_lezione_abbonato(coda calendario, abbonato *utente_loggato)
     	return;
 	}
 
+	// Controllo se l'utente è già iscritto
+	pila temp = nuova_pila();
+	partecipante p;
+	int duplicato = 0;
+	while (!pila_vuota(corrente->valore.iscritti)) {
+ 	   estrai_pila(corrente->valore.iscritti, p);
+ 	   if (strcmp(p, utente_loggato->nomeutente) == 0) {
+	        duplicato = 1;
+	    }
+	    inserisci_pila(p, temp);
+	}
+	while (!pila_vuota(temp)) {
+	    estrai_pila(temp, p);
+	    inserisci_pila(p, corrente->valore.iscritti);
+	}
+	free(temp);
+
+	if (duplicato) {
+	    printf("Sei già iscritto a questa lezione.\n");
+	    printf("Premi INVIO\n");
+ 	   getchar();
+	    return;
+	}
+	
 	// Aggiunge il nome utente nella pila iscritti
 	if (inserisci_pila(utente_loggato->nomeutente, corrente->valore.iscritti)) {
     	utente_loggato->lezioni_rimanenti--;
