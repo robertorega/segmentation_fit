@@ -1,7 +1,7 @@
 CC = gcc
 CFLAGS = -Wall -g
 
-TARGET = programma
+TARGET = segmentation_fit
 
 SRCS = main.c abbonamenti.c coda.c contattaci.c funzioni_generiche.c hash.c pila.c
 
