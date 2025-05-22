@@ -1,0 +1,19 @@
+CC = gcc
+CFLAGS = -Wall -g
+
+TARGET = programma
+
+SRCS = main.c abbonamenti.c coda.c contattaci.c funzioni_generiche.c hash.c pila.c
+
+OBJS = $(SRCS:.c=.o)
+
+all: $(TARGET)
+
+$(TARGET): $(OBJS)
+	$(CC) $(CFLAGS) -o $@ $^
+
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+clean:
+	rm -f $(OBJS) $(TARGET)
