@@ -690,9 +690,9 @@ while (fgets(riga, sizeof(riga), file))
 * Apre il file in modalità scrittura ("w"), estrae temporaneamente gli iscritti dalle pile,
 * li salva su file, e poi ripristina la pila originale
 */
-void salva_lezioni(coda calendario, const char *partecipanti)
+void salva_lezioni(coda calendario, const char *nome_file)
 {
-	FILE *fp = fopen(partecipanti, "w");
+	FILE *fp = fopen(nome_file, "w");
     	if (fp == NULL)
 	{
         	perror("Errore apertura file");
