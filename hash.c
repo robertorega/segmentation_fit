@@ -6,6 +6,12 @@
 /* Funzione: nuova_hash
 *
 * Crea e inizializza una nuova tabella hash
+*
+* Descrizione: 
+* Viene allocata dinamicamente una struttura hash e una tabella di puntatori a abbonato 
+* della dimensione specificata in input. Ogni slot della tabella viene inizializzato a NULL 
+* tramite calloc, garantendo che tutti i puntatori siano azzerati.
+*
 * Parametri:
 * dimensione: numero di slot nella tabella hash
 *
@@ -39,6 +45,13 @@ tabella_hash nuova_hash(int dimensione)
 /* Funzione: calcola_indice
 *
 * Calcola l'indice nella tabella hash associato alla stringa chiave
+*
+* Descrizione:
+* La funzione calcola un valore intero a partire da una stringa utilizzando 
+* una funzione di hash semplice basata su moltiplicazioni successive con 31 
+* Il risultato viene poi ridotto modulo dimensione per garantire che l’indice rientri 
+* nell’intervallo valido degli slot della tabella hash
+*
 * Parametri:
 * chiave: la stringa di cui si vuole calcolare l'indice 
 * dimensione: numero di slot nella tabella hash
@@ -64,6 +77,15 @@ int calcola_indice(char *chiave, int dimensione)
 /* Funzione: inserisci_hash
 *
 * Inserisce un nuovo elemento (nuovo) nella tabella hash h
+*
+* Descrizione:
+* La funzione calcola l’indice della chiave del nuovo abbonato all’interno della tabella hash, 
+* utilizzando la funzione calcola_indice. Scorre poi la lista collegata in quella posizione per 
+* verificare se la chiave è già presente: se sì, la funzione termina senza modificare la tabella. 
+* In caso contrario, alloca un nuovo nodo abbonato, duplica la chiave con strdup, copia 
+* nome utente e password (assicurandosi che siano null-terminate), e lo inserisce in testa 
+* alla lista nella posizione calcolata
+*
 * Parametri:
 * nuovo: elemento da inserire (contiene: chiave, nomeutente, password)
 * h: tabella hash in cui inserire l'oggetto
@@ -72,11 +94,11 @@ int calcola_indice(char *chiave, int dimensione)
 * nuovo.chiave è una stringa non vuota, h deve essere una tabella hash valida
 *
 * Post-condizione:
-* se nuovo.chiave non è presente nella tabella, viene inserito un nuovo nodo.                                 
+* se nuovo.chiave non è presente nella tabella, viene inserito un nuovo nodo                                
 * Altrimenti la tabella rimane invariata
 *
 * Side-effect:
-* Viene allocata memoria dinamicamente per un nuovo nodo e duplicata la chiave.
+* Viene allocata memoria dinamicamente per un nuovo nodo e duplicata la chiave
 */
 tabella_hash inserisci_hash(abbonato nuovo, tabella_hash h) 
 {
@@ -114,6 +136,12 @@ tabella_hash inserisci_hash(abbonato nuovo, tabella_hash h)
 /* Funzione: cerca_hash
 * Cerca nella tabella hash h un elemento con chiave uguale a chiave e lo restituisce se trovato
 * 
+* Descrizione:
+* La funzione calcola l'indice associato alla chiave usando la funzione calcola_indice
+* Poi scorre la lista collegata presente in quella posizione della tabella hash
+* Se trova un nodo con chiave uguale a quella cercata lo restituisce
+* In caso contrario restituisce NULL
+*
 * Parametri:
 * chiave: elemento da cercare nella tabella 
 * h: tabella hash in cui si cerca l'elemento
@@ -143,6 +171,13 @@ abbonato* cerca_hash(char *chiave, tabella_hash h)
 /* Funzione: elimina_hash
 *
 * Rimuove dalla tabella hash h l’elemento con chiave uguale a chiave, se presente
+*
+* Descrizione:
+* La funzione calcola l'indice associato alla chiave usando calcola_indice
+* Scorre poi la lista collegata in quella posizione per cercare un nodo con chiave uguale
+* Se lo trova lo rimuove dalla lista scollegandolo e deallocando la memoria associata
+* Se la chiave non è presente non viene eseguita alcuna modifica
+*
 * Parametri:
 * chiave: elemento da eliminare nella tabella h
 * h: tabella hash da cui elimare l'elemento 
