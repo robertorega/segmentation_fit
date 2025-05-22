@@ -351,6 +351,8 @@ void prenota_lezione(coda calendario)
 	if (coda_vuota(calendario))
 	{
     	printf("Non ci sono lezioni disponibili.\n");
+		printf("Possiamo fare altro per te? Premi INVIO\n");
+        getchar();
     	return;
 	}
 
@@ -365,6 +367,8 @@ void prenota_lezione(coda calendario)
 	if (risposta != 's' && risposta != 'S')
 	{
         printf("Prenotazione annullata.\n");
+		printf("Possiamo fare altro per te? Premi INVIO\n");
+        getchar();
 		return;
     }
 
@@ -384,12 +388,16 @@ void prenota_lezione(coda calendario)
 	if (corrente == NULL)
 	{
     	printf("Scelta non valida.\n");
+		printf("Premi INVIO\n");
+        getchar();
     	return;
 	}
 
 	if (dimensione_pila(corrente->valore.iscritti) >= MASSIMO_PILA)
 	{
     	printf("Mi dispiace, la lezione è al completo!\n");
+		printf("Possiamo fare altro per te? Premi INVIO\n");
+        getchar();
     	return;
 	}
 
@@ -402,13 +410,14 @@ void prenota_lezione(coda calendario)
 	{
         printf("Prenotazione completata per %s\nTi è stato addebitato il costo di 15€\n", nome);
 		printf("Possiamo fare altro per te? Premi INVIO\n");
-    	getchar(); // Consuma il carattere di newline rimasto nel buffer
-	    getchar(); // Libera il buffer per l'input successivo
+    	getchar(); 
     }
 	
     else
 	{
       printf("Errore nella prenotazione.\n");
+	  printf("Premi INVIO\n");
+    getchar();
 	}
 }
 
@@ -436,6 +445,8 @@ void prenota_lezione_abbonato(coda calendario, abbonato *utente_loggato)
 {
 	if (coda_vuota(calendario)) {
     	printf("Non ci sono lezioni disponibili.\n");
+		printf("Premi INVIO\n");
+        getchar();
     	return;
 	}
 
@@ -448,11 +459,15 @@ void prenota_lezione_abbonato(coda calendario, abbonato *utente_loggato)
 
 	if (risposta != 's' && risposta != 'S') {
     	printf("Prenotazione annullata.\n");
+		printf("Possiamo fare altro per te? Premi INVIO\n");
+        getchar();
     	return;
 	}
 
 	if (utente_loggato->lezioni_rimanenti <= 0) {
     	printf("Non hai lezioni rimanenti. Rinnova l'abbonamento o acquista più lezioni.\n");
+		printf("Possiamo fare altro per te? Premi INVIO\n");
+        getchar();
     	return;
 	}
 
@@ -470,11 +485,15 @@ void prenota_lezione_abbonato(coda calendario, abbonato *utente_loggato)
 
 	if (corrente == NULL) {
     	printf("Scelta non valida.\n");
+		printf("Premi INVIO\n");
+        getchar();
     	return;
 	}
 
 	if (dimensione_pila(corrente->valore.iscritti) >= MASSIMO_PILA) {
     	printf("Mi dispiace, la lezione è al completo!\n");
+		printf("Possiamo fare altro per te? Premi INVIO\n");
+        getchar();
     	return;
 	}
 
@@ -483,8 +502,12 @@ void prenota_lezione_abbonato(coda calendario, abbonato *utente_loggato)
     	utente_loggato->lezioni_rimanenti--;
     	printf("Prenotazione completata per %s.\n", utente_loggato->nomeutente);
     	printf("Lezioni rimanenti: %d\n", utente_loggato->lezioni_rimanenti);
+		printf("Possiamo fare altro per te? Premi INVIO\n");
+        getchar();
 	} else {
     	printf("Errore nella prenotazione.\n");
+		printf("Premi INVIO\n");
+        getchar();
 	}
 }
 
@@ -518,6 +541,8 @@ void disdici_iscrizione(coda calendario, const char* lezioni)
     	if (coda_vuota(calendario))
 	{
     		printf("Non ci sono lezioni disponibili.\n");
+			printf("Possiamo fare altro per te? Premi INVIO\n");
+            getchar();
     		return;
 	}
 
@@ -531,6 +556,8 @@ void disdici_iscrizione(coda calendario, const char* lezioni)
 	if (risposta != 's' && risposta != 'S')
 	{
         printf("Nessuna lezione disdetta.\n");
+		printf("Possiamo fare altro per te? Premi INVIO\n");
+        getchar();
 		return;
     }
 
@@ -551,6 +578,8 @@ int num_scelta = atoi(scelta);
 if (num_scelta < 1 || num_scelta > max_lezioni)
 {
     printf("Scelta non valida.\n");
+	printf("Premi INVIO\n");
+    getchar();
     return;
 }
 
@@ -565,6 +594,8 @@ while (corrente != NULL && indice < num_scelta - 1)
 if (corrente == NULL)
 {
     printf("Errore: lezione non trovata.\n");
+	printf("Premi INVIO\n");
+    getchar();
     return;
 }
 
@@ -580,6 +611,8 @@ lezione* selezionata = &corrente->valore;
     if (supporto == NULL)
     {
         printf("Errore nell'allocazione della pila di supporto.\n");
+		printf("Premi INVIO\n");
+        getchar();
         return;
     }
 
@@ -612,6 +645,8 @@ lezione* selezionata = &corrente->valore;
     if (!trovato)
     {
         printf("Partecipante non trovato.\n");
+		printf("Possiamo fare altro per te? Premi INVIO\n");
+        getchar();
         remove("temp.txt");
         return;
     }
@@ -620,6 +655,8 @@ FILE* file = fopen(lezioni, "r");
 if (!file)
 {
     printf("Errore nell'apertura del file.\n");
+	printf("Premi INVIO\n");
+    getchar();
     return;
 }
 
@@ -628,6 +665,8 @@ if (!temp_file)
 {
     fclose(file);
     printf("Errore nella creazione del file temporaneo.\n");
+	printf("Premi INVIO\n");
+    getchar();
     return;
 }
 
@@ -668,7 +707,6 @@ while (fgets(riga, sizeof(riga), file))
 
     printf("Iscrizione disdetta con successo.\nPremi INVIO per continuare...");
     getchar();
-	getchar();
 }
 
 /* Funzione: salva_lezioni
@@ -696,6 +734,8 @@ void salva_lezioni(coda calendario, const char *nome_file)
     	if (fp == NULL)
 	{
         	perror("Errore apertura file");
+			printf("Premi INVIO\n");
+            getchar();
         	return;
     	}
 
@@ -801,7 +841,9 @@ void pulisci_lezioni_passate(coda calendario, const char *nome_file)
 	FILE *fp = fopen(nome_file, "a");
 	if (fp == NULL)
 	{
-        	perror("Errore apertura file storico");
+        	printf("Errore apertura file storico");
+			printf("Premi INVIO\n");
+            getchar();
         	return;
     	}
 
@@ -892,6 +934,8 @@ void report_mensile()
     if (!file_storico)
     {
         printf("Errore nell'apertura del file storico.\n");
+		printf("Premi INVIO\n");
+        getchar();
         return;
     }
 
@@ -955,6 +999,8 @@ void report_mensile()
     if (totale_lezioni == 0) 
 	{
         printf("Nessuna lezione trovata per il mese %d/%d.\n", mese_da_cercare, anno_da_cercare);
+		printf("Possiamo fare altro per te? Premi INVIO\n");
+        getchar();
         return;
     }
 
@@ -997,4 +1043,6 @@ void report_mensile()
                elenco_orari[i],
                elenco_partecipanti[i]);
     }
+	printf("Possiamo fare altro per te? Premi INVIO\n");
+    getchar(); 
 }
