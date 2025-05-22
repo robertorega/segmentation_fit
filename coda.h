@@ -201,4 +201,64 @@ void prenota_lezione_abbonato(coda calendario, abbonato *utente_loggato);
 */
 void disdici_iscrizione(coda calendario, const char* lezioni);
 
+/* Funzione: salva_lezioni
+*
+* Salva tutte le lezioni presenti nella coda calendario su file, includendo anche gli iscritti
+*
+* Parametri:
+* calendario: la coda contenente le lezioni da salvare
+* partecipanti: nome del file su cui salvare i dati (verrà sovrascritto)
+*
+* Pre-condizione:
+* calendario deve essere una coda inizializzata
+* partecipanti deve essere un puntatore valido a una stringa non nulla
+*
+* Post-condizione:
+* Scrive sul file tutte le lezioni contenute nella coda e i rispettivi partecipanti
+*
+* Side-effect:
+* Apre il file in modalità scrittura ("w"), estrae temporaneamente gli iscritti dalle pile,
+* li salva su file, e poi ripristina la pila originale
+*/
+void salva_lezioni(coda calendario, const char *partecipanti);
+
+/* Funzione: data_passata
+*
+* Verifica se una data nel formato "dd/mm/yyyy" è precedente alla data odierna
+*
+* Parametri:
+* data_str: stringa contenente la data da analizzare
+*
+* Pre-condizione:
+* data_str deve essere una stringa valida nel formato "dd/mm/yyyy"
+*
+* Post-condizione:
+* Ritorna 1 se la data è nel passato rispetto a oggi, 0 altrimenti
+*
+* Side-effect:
+* Nessuno
+*/
+int data_passata(const char *data_str);
+
+/* Funzione: pulisci_lezioni_passate
+*
+* Rimuove dalla coda tutte le lezioni con data già passata, salvandole su un file storico
+*
+* Parametri:
+* calendario: la coda contenente le lezioni da analizzare
+* storico_file: nome del file su cui salvare le lezioni eliminate
+*
+* Pre-condizione:
+* calendario deve essere una coda inizializzata contenente lezioni
+* storico_file deve essere un puntatore valido a una stringa non nulla
+*
+* Post-condizione:
+* Le lezioni con data passata vengono rimosse dalla coda e salvate nel file storico
+*
+* Side-effect:
+* Apre il file in modalità append ("a"), modifica la struttura della coda,
+* scrive su file e libera la memoria dei nodi eliminati
+*/
+void pulisci_lezioni_passate(coda calendario, const char *storico_file);
+
 #endif
