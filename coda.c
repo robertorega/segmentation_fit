@@ -588,7 +588,7 @@ lezione* selezionata = &corrente->valore;
     while (!pila_vuota(selezionata->iscritti))
     {
         strcpy(p, testa(selezionata->iscritti));
-        estrai_pila(selezionata->iscritti);
+        estrai_pila(selezionata->iscritti, p);
 
         if (strcmp(p, nome) == 0 && !trovato)
         {
@@ -604,7 +604,7 @@ lezione* selezionata = &corrente->valore;
     while (!pila_vuota(supporto))
     {
         strcpy(p, testa(supporto));
-        estrai_pila(supporto);
+        estrai_pila(supporto, p);
         inserisci_pila(p, selezionata->iscritti);
     }
     free(supporto);
