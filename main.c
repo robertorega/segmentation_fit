@@ -11,6 +11,7 @@ int main()
 {
 	char scelta[10];
 	coda calendario = nuova_coda();
+	carica_lezioni(calendario, "lezioni.txt");
 	genera_lezioni(calendario);
 
 	//Ciclo infinito per il menu principale
@@ -40,7 +41,9 @@ int main()
             		abbonamenti(calendario);
             		break;
         		case 2:
-            		prenota_lezione(calendario); 
+			pulisci_lezioni_passate(calendario, "storico.txt");
+            		prenota_lezione(calendario);
+			salva_lezioni(calendario, "lezioni.txt");
             		break;
         		case 3:
             		disdici_iscrizione(calendario, "lezioni.txt");
