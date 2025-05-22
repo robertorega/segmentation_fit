@@ -9,8 +9,8 @@
 
 struct nodo
 {
-    lezione valore;
-    struct nodo *prossimo;
+	lezione valore;
+	struct nodo *prossimo;
 };
 
 struct c_coda
@@ -18,6 +18,61 @@ struct c_coda
 	struct nodo *testa,*coda;
 	int numel;
 };
+
+/* Funzione: carica_lezioni
+*
+* Carica le lezioni salvate da un file e le inserisce nella coda calendario
+*
+* Parametri:
+* calendario: la coda dove verranno inserite le lezioni lette dal file
+* partecipanti: nome del file da cui leggere le lezioni e gli iscritti
+*
+* Pre-condizione:
+* calendario deve essere una coda inizializzata
+* partecipanti deve essere un puntatore valido a una stringa non nulla
+*
+* Post-condizione:
+* Inserisce nella coda tutte le lezioni lette correttamente dal file, con i rispettivi iscritti
+*
+* Side-effect:
+* Legge da file e alloca dinamicamente memoria per le pile di iscritti e per i nodi della coda
+*/
+void carica_lezioni(coda calendario, const char *partecipanti)
+{
+	FILE *fp = fopen(nome_file, "a+");  // apre in lettura/scrittura e crea se non esiste
+	if (fp == NULL)
+	{
+		perror("Errore apertura file");
+        	return;
+	}
+
+	rewind(fp); // torna all'inizio del file
+
+	char linea[256];
+	while (fgets(linea, sizeof(linea), fp))
+	{
+		lezione l;
+		int numero_iscritti;
+
+        	if (sscanf(linea, "%[^;];%[^;];%[^;];%d", l.data, l.giorno, l.orario, &numero_iscritti) == 4)
+		{
+        		l.iscritti = nuova_pila();
+
+        		for (int i = 0; i < numero_iscritti; i++)
+			{
+                		if (fgets(linea, sizeof(linea), fp))
+				{
+                			linea[strcspn(linea, "\n")] = 0;
+                			inserisci_pila(linea, l.iscritti);
+        			}
+            		}
+
+        		inserisci_lezione(l, calendario);
+        	}
+	}
+
+    	fclose(fp);
+}
 
 /* Funzione: nuova_coda
 *
@@ -179,43 +234,64 @@ int giorno_lezione(int giorno_settimana, char *giorno, char *orario)
 
 /* Funzione: genera_lezioni
 *
-* Popola la coda calendario con tutte le lezioni previste nei prossimi 30 giorni
+* Genera e aggiunge alla coda calendario le lezioni previste nei prossimi 30 giorni, evitando duplicati
 *
 * Parametri:
-* calendario: la coda dove inserire le lezioni generate
+* calendario: la coda dove inserire le nuove lezioni generate
 *
 * Pre-condizione:
-* calendario deve essere una coda inizializzata
+* calendario deve essere una coda inizializzata contenente eventualmente lezioni già caricate da file
 *
 * Post-condizione:
-* Aggiunge in calendario tutte le lezioni che cadono nei giorni validi (Lun, Mer, Ven, Sab)
+* Inserisce nella coda le lezioni valide (Lun, Mer, Ven, Sab) che non sono già presenti per data e orario
 *
 * Side-effect:
-* Inserisce dinamicamente nuove lezioni nella coda
+* Analizza le prossime 30 date a partire da oggi, verifica i giorni di lezione, controlla duplicati
+* e alloca dinamicamente nuove lezioni da inserire nella coda
 */
-void genera_lezioni(coda calendario)
+void genera_lezioni(coda calendario) //NUOVA 16/05 (CON FILE)
 {
 	time_t t = time(NULL);
 	struct tm oggi = *localtime(&t);
 
-	for (int i = 0; i < 30; i++) {
-    		struct tm temp = oggi;
-    		temp.tm_mday += i;
-    		mktime(&temp); // normalizza la data
+	for (int i = 0; i < 30; i++)
+	{
+        	struct tm temp = oggi;
+        	temp.tm_mday += i;
+        	mktime(&temp);
 
-    		char giorno[20];
-    		char orario[20];
-   	 
-    		if (giorno_lezione(temp.tm_wday, giorno, orario))
+        	char data[11];
+        	char giorno[20];
+        	char orario[20];
+
+        	if (giorno_lezione(temp.tm_wday, giorno, orario))
 		{
-        		lezione l;
-        		l.iscritti = nuova_pila();
-        		strftime(l.data, sizeof(l.data), "%d/%m/%Y", &temp);
-        		strcpy(l.giorno, giorno);
-        		strcpy(l.orario, orario);
-        		inserisci_lezione(l, calendario);
+            		strftime(data, sizeof(data), "%d/%m/%Y", &temp);
+
+            		// Controlla se esiste già una lezione in questa data e orario
+            		struct nodo *corrente = calendario->testa;
+            		int trovata = 0;
+            		while (corrente != NULL)
+			{
+                		if (strcmp(corrente->valore.data, data) == 0 && strcmp(corrente->valore.orario, orario) == 0)
+				{
+                    			trovata = 1;
+                    			break;
+                		}
+                		corrente = corrente->prossimo;
+            		}
+
+            		if (!trovata)
+			{
+                		lezione l;
+                		l.iscritti = nuova_pila();
+                		strcpy(l.data, data);
+                		strcpy(l.giorno, giorno);
+                		strcpy(l.orario, orario);
+                		inserisci_lezione(l, calendario);
+            		}
         	}
-    }
+    	}
 }
 
 /* Funzione: stampa_lezioni
@@ -410,4 +486,193 @@ void prenota_lezione_abbonato(coda calendario, abbonato *utente_loggato)
 	} else {
     	printf("Errore nella prenotazione.\n");
 	}
+}
+
+/* Funzione: salva_lezioni
+*
+* Salva tutte le lezioni presenti nella coda calendario su file, includendo anche gli iscritti
+*
+* Parametri:
+* calendario: la coda contenente le lezioni da salvare
+* partecipanti: nome del file su cui salvare i dati (verrà sovrascritto)
+*
+* Pre-condizione:
+* calendario deve essere una coda inizializzata
+* partecipanti deve essere un puntatore valido a una stringa non nulla
+*
+* Post-condizione:
+* Scrive sul file tutte le lezioni contenute nella coda e i rispettivi partecipanti
+*
+* Side-effect:
+* Apre il file in modalità scrittura ("w"), estrae temporaneamente gli iscritti dalle pile,
+* li salva su file, e poi ripristina la pila originale
+*/
+void salva_lezioni(coda calendario, const char *partecipanti)
+{
+	FILE *fp = fopen(partecipanti, "w");
+    	if (fp == NULL)
+	{
+        	perror("Errore apertura file");
+        	return;
+    	}
+
+    	struct nodo *corrente = calendario->testa;
+
+    	while (corrente != NULL)
+	{
+        	fprintf(fp, "%s;%s;%s;%d\n", 
+            	corrente->valore.data,
+            	corrente->valore.giorno,
+            	corrente->valore.orario,
+            	dimensione_pila(corrente->valore.iscritti));
+
+        	// Salva tutti gli iscritti
+        	pila iscritti_tmp = nuova_pila();
+        	partecipante p;
+
+        	while (!pila_vuota(corrente->valore.iscritti))
+		{
+            		if (estrai_pila(corrente->valore.iscritti, p))
+			{
+                		fprintf(fp, "%s\n", p);
+                		inserisci_pila(p, iscritti_tmp); // ricostruisce pila
+            		}
+        	}
+
+        	// Ripristina pila originale
+        	while (!pila_vuota(iscritti_tmp))
+		{
+            		if (estrai_pila(iscritti_tmp, p))
+			{
+                		inserisci_pila(p, corrente->valore.iscritti);
+            		}
+        	}
+
+        	corrente = corrente->prossimo;
+    	}
+
+    	fclose(fp);
+}
+
+/* Funzione: data_passata
+*
+* Verifica se una data nel formato "dd/mm/yyyy" è precedente alla data odierna
+*
+* Parametri:
+* data_str: stringa contenente la data da analizzare
+*
+* Pre-condizione:
+* data_str deve essere una stringa valida nel formato "dd/mm/yyyy"
+*
+* Post-condizione:
+* Ritorna 1 se la data è nel passato rispetto a oggi, 0 altrimenti
+*
+* Side-effect:
+* Nessuno
+*/
+int data_passata(const char *data_str)
+{
+	struct tm data = {0};
+
+    	int giorno, mese, anno;
+    	if (sscanf(data_str, "%d/%d/%d", &giorno, &mese, &anno) != 3)
+        	return 0;  // Formato invalido, per sicurezza la consideriamo non passata
+
+    	data.tm_mday = giorno;
+    	data.tm_mon = mese - 1;  // mesi da 0 a 11
+    	data.tm_year = anno - 1900;
+
+    	time_t tempo_data = mktime(&data);
+
+    	time_t oggi = time(NULL);
+    	struct tm oggi_tm = *localtime(&oggi);
+    	oggi_tm.tm_hour = 0; oggi_tm.tm_min = 0; oggi_tm.tm_sec = 0;
+    	time_t tempo_oggi = mktime(&oggi_tm);
+
+    	return difftime(tempo_data, tempo_oggi) < 0;
+}
+
+/* Funzione: pulisci_lezioni_passate
+*
+* Rimuove dalla coda tutte le lezioni con data già passata, salvandole su un file storico
+*
+* Parametri:
+* calendario: la coda contenente le lezioni da analizzare
+* storico_file: nome del file su cui salvare le lezioni eliminate
+*
+* Pre-condizione:
+* calendario deve essere una coda inizializzata contenente lezioni
+* storico_file deve essere un puntatore valido a una stringa non nulla
+*
+* Post-condizione:
+* Le lezioni con data passata vengono rimosse dalla coda e salvate nel file storico
+*
+* Side-effect:
+* Apre il file in modalità append ("a"), modifica la struttura della coda,
+* scrive su file e libera la memoria dei nodi eliminati
+*/
+void pulisci_lezioni_passate(coda calendario, const char *storico_file)
+{
+	if (calendario == NULL || coda_vuota(calendario)) return;
+
+	FILE *fp = fopen(nome_file, "a");
+	if (fp == NULL)
+	{
+        	perror("Errore apertura file storico");
+        	return;
+    	}
+
+    	struct nodo *corrente = calendario->testa;
+    	struct nodo *precedente = NULL;
+
+	while (corrente != NULL)
+	{
+        	struct nodo *prossimo = corrente->prossimo;
+
+		if (data_passata(corrente->valore.data))
+		{
+        		// Scrivi su file storico
+            		fprintf(fp, "%s;%s;%s;%d\n",
+                	corrente->valore.data,
+                	corrente->valore.giorno,
+                	corrente->valore.orario,
+                	dimensione_pila(corrente->valore.iscritti));
+
+            		// Salva anche tutti gli iscritti
+            		pila iscritti_tmp = nuova_pila();
+            		partecipante p;
+            		while (!pila_vuota(corrente->valore.iscritti))
+			{
+                		if (estrai_pila(corrente->valore.iscritti, p))
+				{
+                    			fprintf(fp, "%s\n", p);
+                    			inserisci_pila(p, iscritti_tmp);
+                		}
+            		}
+            		while (!pila_vuota(iscritti_tmp))
+			{
+                		if (estrai_pila(iscritti_tmp, p))
+                    			inserisci_pila(p, corrente->valore.iscritti);
+            		}
+
+			// Rimuovi il nodo dalla coda
+            		if (precedente == NULL)
+                		calendario->testa = prossimo;
+			else
+                		precedente->prossimo = prossimo;
+
+            		if (corrente == calendario->coda) {
+                		calendario->coda = precedente;
+            		}
+
+        		free(corrente);
+            		calendario->numel--;
+		}
+		else 
+            		precedente = corrente;
+
+        	corrente = prossimo;
+	}
+
+	fclose(fp);
 }
