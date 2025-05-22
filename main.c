@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include "coda.h"
-#include "contattaci.h"
 #include "funzioni_generiche.h"
 #include "hash.h"
 #include "lezione.h"
