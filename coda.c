@@ -794,7 +794,7 @@ int data_passata(const char *data_str)
 * Apre il file in modalità append ("a"), modifica la struttura della coda,
 * scrive su file e libera la memoria dei nodi eliminati
 */
-void pulisci_lezioni_passate(coda calendario, const char *storico_file)
+void pulisci_lezioni_passate(coda calendario, const char *nome_file)
 {
 	if (calendario == NULL || coda_vuota(calendario)) return;
 
