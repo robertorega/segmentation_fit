@@ -4,6 +4,12 @@
 /* Funzione: contattaci
 *
 * Stampa a schermo le informazioni di contatto e attende che l'utente prema INVIO per continuare
+*
+* Descrizione:
+* La funzione mostra un messaggio contenente l'indirizzo e i numeri di telefono per contattare il personale
+* Vengono anche visualizzati gli orari di apertura del centro
+* Alla fine la funzione attende che l'utente prema INVIO prima di proseguire
+*
 * Side-effect:
 * Output a schermo
 */
