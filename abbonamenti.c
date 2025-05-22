@@ -86,7 +86,7 @@ void abbonamenti(coda calendario)
 
             case 2:
 		{
-            int scelta_abbonamento = 0;
+            char scelta_abbonamento[10];
             while (1)
 			{
             	printf("Scegli il piano di allenamento:\n");
@@ -96,10 +96,10 @@ void abbonamenti(coda calendario)
             	printf("4 - Torna al menu principale\n");
 
             	printf("La tua scelta: ");
-            	scanf("%d", &scelta_abbonamento);
+            	scanf("%s", scelta_abbonamento);
         		getchar();
 
-        	if (scelta_abbonamento >= 1 && scelta_abbonamento <= 3)
+        	if (atoi(scelta_abbonamento) >= 1 && atoi(scelta_abbonamento) <= 3)
 			{
             	abbonato nuovo_abbonato;
             	printf("Inserisci nome utente: ");
@@ -107,7 +107,7 @@ void abbonamenti(coda calendario)
                 printf("Inserisci password: ");
             	scanf("%s", nuovo_abbonato.password);
 
-                switch (scelta_abbonamento)
+                switch (atoi(scelta_abbonamento))
 				{
                 	case 1: 
 					    nuovo_abbonato.lezioni_rimanenti = 12; 
@@ -124,13 +124,15 @@ void abbonamenti(coda calendario)
                 tabella_abbonati = inserisci_hash(nuovo_abbonato, tabella_abbonati);
                 printf("Abbonamento creato con successo!\n\n");
             } 
-							else if (scelta_abbonamento == 4)
+							else if (atoi(scelta_abbonamento) == 4)
 							{
                         		break;
                     		} 
 							else
 							{
-                        		printf("Valore non valido, riprova.\n\n");
+                        		printf("Valore non valido, riprova.\n");
+								printf("Premi INVIO\n");
+                                getchar(); 
                     		}
                 	}
                 	break;
@@ -138,10 +140,14 @@ void abbonamenti(coda calendario)
 
             	case 3:
                 	printf("Tornando al menu principale...\n\n");
+					printf("Premi INVIO\n");
+                    getchar(); 
                 	return;
 
             	default:
                 	printf("Valore non valido, riprova.\n\n");
+					printf("Premi INVIO\n");
+                    getchar(); 
                 	break;
         }
     }
