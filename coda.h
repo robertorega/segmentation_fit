@@ -24,7 +24,7 @@ typedef struct c_coda *coda;
 * Side-effect:
 * Legge da file e alloca dinamicamente memoria per le pile di iscritti e per i nodi della coda
 */
-void carica_lezioni(coda calendario, const char *partecipanti);
+void carica_lezioni(coda calendario, const char *nome_file);
 
 /* Funzione: nuova_coda
 *
@@ -220,7 +220,7 @@ void disdici_iscrizione(coda calendario, const char* lezioni);
 * Apre il file in modalità scrittura ("w"), estrae temporaneamente gli iscritti dalle pile,
 * li salva su file, e poi ripristina la pila originale
 */
-void salva_lezioni(coda calendario, const char *partecipanti);
+void salva_lezioni(coda calendario, const char *nome_file);
 
 /* Funzione: data_passata
 *
