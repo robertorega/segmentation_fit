@@ -623,7 +623,7 @@ if (!file)
     return;
 }
 
-FILE* temp_file = fopen("temp.txt", "w");
+FILE* temp_file = fopen("temp_file.txt", "w");
 if (!temp_file)
 {
     fclose(file);
