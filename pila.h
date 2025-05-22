@@ -51,20 +51,23 @@ int inserisci_pila(partecipante val, pila iscritti);
 
 /* Funzione: estrai_pila
 *
-* Rimuove l’elemento in cima alla pila iscritti, se la pila non è vuota
+* Rimuove l’elemento in cima alla pila iscritti, se la pila non è vuota, e lo copia nel partecipante estratto
+*
 * Parametri:
-* iscritti: la pila in cui rimuovere i partecipanti 
+* iscritti: pila da cui estrarre l’elemento
+* estratto: variabile in cui salvare il partecipante rimosso dalla pila (passata per valore)
 *
 * Pre-condizione:
-* iscritti è una pila inizializzata 
+* iscritti è una pila inizializzata e valida
 *
 * Post-condizione:
-* se iscritti->testa == 0 allora result 0 altrimenti result 1
+* Se la pila non è vuota, l’elemento in cima viene copiato in estratto e rimosso dalla pila (ritorna 1)
+* Se la pila è vuota, estratto rimane inalterato (ritorna 0)
 *
 * Side-effect:
-* iscritti = <a2, …, an>
+* iscritti viene modificata: la sua cima viene decrementata e l’elemento rimosso
 */
-int estrai_pila(pila iscritti);
+int estrai_pila(pila iscritti, partecipante estratto);
 
 /* Funzione: testa
 *

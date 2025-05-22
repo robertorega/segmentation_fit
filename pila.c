@@ -93,32 +93,35 @@ int inserisci_pila(partecipante val, pila iscritti)
 
 /* Funzione: estrai_pila
 *
-* Rimuove l’elemento in cima alla pila iscritti, se la pila non è vuota
+* Rimuove l’elemento in cima alla pila iscritti, se la pila non è vuota, e lo copia nel partecipante estratto
 *
 * Descrizione:
-* Verifica se la pila è vuota
-* Se vuota, restituisce 0 indicando che non è stato possibile estrarre alcun elemento
-* Altrimenti, decrementa l'indice della cima per rimuovere l'elemento corrente
+* La funzione controlla se la pila è vuota.
+* Se lo è, restituisce 0 e non viene effettuata alcuna estrazione.
+* Altrimenti, l’elemento in cima alla pila viene copiato nella variabile locale estratto
+* e rimosso dalla pila, decrementando l'indice della cima.
 *
 * Parametri:
-* iscritti: la pila in cui rimuovere i partecipanti 
+* iscritti: pila da cui estrarre l’elemento
+* estratto: variabile in cui salvare il partecipante rimosso dalla pila (passata per valore)
 *
 * Pre-condizione:
-* iscritti è una pila inizializzata 
+* iscritti è una pila inizializzata e valida
 *
 * Post-condizione:
-* se iscritti->testa == 0 allora result 0 altrimenti result 1
+* Se la pila non è vuota, l’elemento in cima viene copiato in estratto e rimosso dalla pila (ritorna 1)
+* Se la pila è vuota, estratto rimane inalterato (ritorna 0)
 *
 * Side-effect:
-* iscritti = <a2, …, an>
+* iscritti viene modificata: la sua cima viene decrementata e l’elemento rimosso
 */
-int estrai_pila(pila iscritti) 
-{
+int estrai_pila(pila iscritti, partecipante estratto) {
 	if (iscritti->testa == 0)
-    return 0;
+		return 0;
 
-	(iscritti->testa)--;
-	return 1;
+    	iscritti->testa--;
+    	strcpy(estratto, iscritti->vet[iscritti->testa]);
+    	return 1;
 }
 
 /* Funzione: testa
