@@ -100,4 +100,42 @@ abbonato *cerca_hash(char *chiave, tabella_hash tabella);
 */
 tabella_hash elimina_hash(char *chiave, tabella_hash tabella);
 
+/* Funzione: carica_abbonati
+*
+* Carica da file i dati degli abbonati e li inserisce in una nuova tabella hash
+*
+* Parametri:
+* filename: nome del file da cui leggere i dati
+*
+* Pre-condizione:
+* filename è un puntatore a stringa non nullo
+*
+* Post-condizione:
+* Restituisce una tabella hash inizializzata contenente tutti gli abbonati letti dal file.
+* Se il file non esiste, la tabella restituita è vuota.
+*
+* Side-effect:
+* Lettura da file e allocazione dinamica di memoria per ciascun abbonato caricato
+*/
+tabella_hash carica_abbonati(const char *filename);
+
+/* Funzione: salva_abbonati
+*
+* Salva su file i dati degli abbonati presenti nella tabella hash
+*
+* Parametri:
+* h: tabella hash contenente gli abbonati da salvare
+* filename: nome del file su cui salvare i dati
+*
+* Pre-condizione:
+* h è una tabella hash valida e filename è un puntatore a stringa non nullo
+*
+* Post-condizione:
+* Se il file è accessibile in scrittura, i dati degli abbonati sono salvati correttamente
+*
+* Side-effect:
+* Scrittura su file. Se il file non può essere aperto, viene stampato un messaggio di errore
+*/
+void salva_abbonati(tabella_hash h, const char *filename);
+
 #endif
