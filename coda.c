@@ -411,3 +411,186 @@ void prenota_lezione_abbonato(coda calendario, abbonato *utente_loggato)
     	printf("Errore nella prenotazione.\n");
 	}
 }
+
+/*
+* Funzione: disdici_iscrizione
+*
+* Permette a un utente di disdire la propria iscrizione da una lezione selezionata 
+*
+* Descrizione:
+* - Viene stampato l'elenco delle lezioni disponibili, ottenuto dalla coda calendario
+* - L'utente seleziona una lezione inserendo il numero corrispondente (indice dinamico)
+* - Viene chiesto il nome del partecipante da disiscrivere
+* - Il nome, se presente nella pila degli iscritti della lezione selezionata, viene rimosso
+* - Il nome viene rimosso anche dal file che memorizza le iscrizioni
+*
+* Parametri:
+* - calendario: coda di lezioni (lista dinamica) contenente le informazioni delle lezioni e gli iscritti
+* - lezioni: nome del file contenente tutte le iscrizioni
+* 
+* Pre-condizione:
+* - Il calendario deve contenere almeno una lezione valida
+* - Il file 'lezioni' deve essere accessibile in lettura e scrittura
+*
+* Side-effect:
+* - modifica la pila iscritti della lezione selezionata
+* - aggiorna il file delle iscrizioni eliminando il partecipante disdetto
+* - libera la memoria della pila di supporto usata per la rimozione
+*/
+void disdici_iscrizione(coda calendario, const char* lezioni)
+{
+    	if (coda_vuota(calendario))
+	{
+    		printf("Non ci sono lezioni disponibili.\n");
+    		return;
+	}
+
+	stampa_lezioni(calendario);
+
+	char risposta;
+	printf("\nDesideri disdire l'iscrizione ad una lezione? (s/n): ");
+	scanf(" %c", &risposta);
+	getchar();  // consuma il newline
+
+	if (risposta != 's' && risposta != 'S')
+	{
+        printf("Nessuna lezione disdetta.\n");
+		return;
+    }
+
+	char scelta[10];
+	printf("Inserisci il numero della lezione a cui vuoi disdire la tua iscrizione: "); //CONTROLLO VALORE!!!
+	fgets(scelta, sizeof(scelta), stdin);
+
+// Conta dinamicamente il numero di lezioni nella coda calendario
+int max_lezioni = 0;
+struct nodo* temp = calendario->testa;
+while (temp != NULL) 
+{
+    max_lezioni++;
+    temp = temp->prossimo;
+}
+
+int num_scelta = atoi(scelta);
+if (num_scelta < 1 || num_scelta > max_lezioni)
+{
+    printf("Scelta non valida.\n");
+    return;
+}
+
+    struct nodo* corrente = calendario->testa;
+    int indice = 0;
+while (corrente != NULL && indice < num_scelta - 1) 
+{
+    corrente = corrente->prossimo;
+    indice++;
+}
+
+if (corrente == NULL)
+{
+    printf("Errore: lezione non trovata.\n");
+    return;
+}
+
+lezione* selezionata = &corrente->valore; 
+
+    char nome[50];
+    printf("Inserisci il tuo nome per disdire l'iscrizione: ");
+    fgets(nome, sizeof(nome), stdin);
+    nome[strcspn(nome, "\n")] = 0;  // rimuove newline
+
+    int trovato = 0;
+    pila supporto = nuova_pila();
+    if (supporto == NULL)
+    {
+        printf("Errore nell'allocazione della pila di supporto.\n");
+        return;
+    }
+
+    partecipante p;
+
+    while (!pila_vuota(selezionata->iscritti))
+    {
+        strcpy(p, testa(selezionata->iscritti));
+        estrai_pila(selezionata->iscritti);
+
+        if (strcmp(p, nome) == 0 && !trovato)
+        {
+            trovato = 1;
+            // Non reinserisco nella pila di supporto => rimuovo l'iscritto
+        }
+        else
+        {
+            inserisci_pila(p, supporto);
+        }
+    }
+
+    while (!pila_vuota(supporto))
+    {
+        strcpy(p, testa(supporto));
+        estrai_pila(supporto);
+        inserisci_pila(p, selezionata->iscritti);
+    }
+    free(supporto);
+
+    if (!trovato)
+    {
+        printf("Partecipante non trovato.\n");
+        remove("temp.txt");
+        return;
+    }
+
+FILE* file = fopen(lezioni, "r");
+if (!file)
+{
+    printf("Errore nell'apertura del file.\n");
+    return;
+}
+
+FILE* temp = fopen("temp.txt", "w");
+if (!temp)
+{
+    fclose(file);
+    printf("Errore nella creazione del file temporaneo.\n");
+    return;
+}
+
+char riga[256];
+int in_lezione_target = 0;
+
+while (fgets(riga, sizeof(riga), file))
+{
+    // Rimuove newline
+    riga[strcspn(riga, "\n")] = 0;
+
+    // Se contiene la data, è intestazione di una nuova lezione
+    if (strstr(riga, "/") && strstr(riga, ";"))
+    {
+        if (strstr(riga, selezionata->data))
+            in_lezione_target = 1;
+        else
+            in_lezione_target = 0;
+
+        fputs(riga, temp);
+        fputc('\n', temp);
+        continue;
+    }
+
+    // Se è partecipante nella lezione giusta e corrisponde al nome da eliminare, salta la riga
+    if (in_lezione_target && strcmp(riga, nome) == 0)
+        continue;
+
+    // Altrimenti scrive normalmente
+    fputs(riga, temp);
+    fputc('\n', temp);
+}
+
+    fclose(file);
+    fclose(temp);
+    remove(lezioni);
+    rename("temp.txt", lezioni);
+
+    printf("Iscrizione disdetta con successo.\nPremi INVIO per continuare...");
+    getchar();
+	getchar();
+}

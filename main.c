@@ -5,6 +5,7 @@
 #include "coda.h"
 #include "contattaci.h"
 #include "funzioni_generiche.h"
+#include "pila.h"
 
 int main()
 {
@@ -42,7 +43,7 @@ int main()
             		prenota_lezione(calendario); 
             		break;
         		case 3:
-            		printf("Funzione ancora da implementare.\n");
+            		disdici_iscrizione(calendario, "lezioni.txt");
             		break;
  			case 4:
             		printf("Funzione ancora da implementare.\n");

@@ -160,4 +160,24 @@ void prenota_lezione(coda calendario);
 */
 void prenota_lezione_abbonato(coda calendario, abbonato *utente_loggato);
 
+/*
+* Funzione: disdici_iscrizione
+*
+* Permette a un utente di disdire la propria iscrizione da una lezione selezionata 
+*
+* Parametri:
+* - calendario: coda di lezioni (lista dinamica) contenente le informazioni delle lezioni e gli iscritti
+* - lezioni: nome del file contenente tutte le iscrizioni
+* 
+* Pre-condizione:
+* - Il calendario deve contenere almeno una lezione valida
+* - Il file 'lezioni' deve essere accessibile in lettura e scrittura
+*
+* Side-effect:
+* - modifica la pila iscritti della lezione selezionata
+* - aggiorna il file delle iscrizioni eliminando il partecipante disdetto
+* - libera la memoria della pila di supporto usata per la rimozione
+*/
+void disdici_iscrizione(coda calendario, const char* lezioni);
+
 #endif
