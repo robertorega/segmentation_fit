@@ -6,6 +6,26 @@
 
 typedef struct c_coda *coda;
 
+/* Funzione: carica_lezioni
+*
+* Carica le lezioni salvate da un file e le inserisce nella coda calendario
+*
+* Parametri:
+* calendario: la coda dove verranno inserite le lezioni lette dal file
+* partecipanti: nome del file da cui leggere le lezioni e gli iscritti
+*
+* Pre-condizione:
+* calendario deve essere una coda inizializzata
+* partecipanti deve essere un puntatore valido a una stringa non nulla
+*
+* Post-condizione:
+* Inserisce nella coda tutte le lezioni lette correttamente dal file, con i rispettivi iscritti
+*
+* Side-effect:
+* Legge da file e alloca dinamicamente memoria per le pile di iscritti e per i nodi della coda
+*/
+void carica_lezioni(coda calendario, const char *partecipanti);
+
 /* Funzione: nuova_coda
 *
 * Crea e inizializza una nuova coda vuota
@@ -89,19 +109,20 @@ int giorno_lezione(int giorno_settimana, char *giorno, char *orario);
 
 /* Funzione: genera_lezioni
 *
-* Popola la coda calendario con tutte le lezioni previste nei prossimi 30 giorni
+* Genera e aggiunge alla coda calendario le lezioni previste nei prossimi 30 giorni, evitando duplicati
 *
 * Parametri:
-* calendario: la coda dove inserire le lezioni generate
+* calendario: la coda dove inserire le nuove lezioni generate
 *
 * Pre-condizione:
-* calendario deve essere una coda inizializzata
+* calendario deve essere una coda inizializzata contenente eventualmente lezioni già caricate da file
 *
 * Post-condizione:
-* Aggiunge in calendario tutte le lezioni che cadono nei giorni validi (Lun, Mer, Ven, Sab)
+* Inserisce nella coda le lezioni valide (Lun, Mer, Ven, Sab) che non sono già presenti per data e orario
 *
 * Side-effect:
-* Inserisce dinamicamente nuove lezioni nella coda
+* Analizza le prossime 30 date a partire da oggi, verifica i giorni di lezione, controlla duplicati
+* e alloca dinamicamente nuove lezioni da inserire nella coda
 */
 void genera_lezioni(coda calendario);
 
@@ -159,5 +180,65 @@ void prenota_lezione(coda calendario);
 * Modifica pila iscritti e lezioni_rimanenti, interazione I/O
 */
 void prenota_lezione_abbonato(coda calendario, abbonato *utente_loggato);
+
+/* Funzione: salva_lezioni
+*
+* Salva tutte le lezioni presenti nella coda calendario su file, includendo anche gli iscritti
+*
+* Parametri:
+* calendario: la coda contenente le lezioni da salvare
+* partecipanti: nome del file su cui salvare i dati (verrà sovrascritto)
+*
+* Pre-condizione:
+* calendario deve essere una coda inizializzata
+* partecipanti deve essere un puntatore valido a una stringa non nulla
+*
+* Post-condizione:
+* Scrive sul file tutte le lezioni contenute nella coda e i rispettivi partecipanti
+*
+* Side-effect:
+* Apre il file in modalità scrittura ("w"), estrae temporaneamente gli iscritti dalle pile,
+* li salva su file, e poi ripristina la pila originale
+*/
+void salva_lezioni(coda calendario, const char *partecipanti);
+
+/* Funzione: data_passata
+*
+* Verifica se una data nel formato "dd/mm/yyyy" è precedente alla data odierna
+*
+* Parametri:
+* data_str: stringa contenente la data da analizzare
+*
+* Pre-condizione:
+* data_str deve essere una stringa valida nel formato "dd/mm/yyyy"
+*
+* Post-condizione:
+* Ritorna 1 se la data è nel passato rispetto a oggi, 0 altrimenti
+*
+* Side-effect:
+* Nessuno
+*/
+int data_passata(const char *data_str);
+
+/* Funzione: pulisci_lezioni_passate
+*
+* Rimuove dalla coda tutte le lezioni con data già passata, salvandole su un file storico
+*
+* Parametri:
+* calendario: la coda contenente le lezioni da analizzare
+* storico_file: nome del file su cui salvare le lezioni eliminate
+*
+* Pre-condizione:
+* calendario deve essere una coda inizializzata contenente lezioni
+* storico_file deve essere un puntatore valido a una stringa non nulla
+*
+* Post-condizione:
+* Le lezioni con data passata vengono rimosse dalla coda e salvate nel file storico
+*
+* Side-effect:
+* Apre il file in modalità append ("a"), modifica la struttura della coda,
+* scrive su file e libera la memoria dei nodi eliminati
+*/
+void pulisci_lezioni_passate(coda calendario, const char *storico_file);
 
 #endif
