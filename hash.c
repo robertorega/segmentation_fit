@@ -297,7 +297,7 @@ tabella_hash carica_abbonati(const char *nome_file)
 */
 void salva_abbonati(tabella_hash h, const char *nome_file)
 {
-    FILE *file = fopen(filename, "w");
+    FILE *file = fopen(nome_file, "w");
     if (!file) {
         printf("Errore nell'apertura del file per il salvataggio.\n");
         return;
