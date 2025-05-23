@@ -146,7 +146,7 @@ void abbonamenti(coda calendario)
     while (1) {
         pulisci_schermo();
 	printf("--- Area Abbonati ---");
-        printf("Scegli il piano di allenamento adatto a te!\n\n");
+        printf("\nScegli il piano di allenamento adatto a te!\n\n");
         printf("Seleziona un'opzione:\n");
         printf("1 - Sei gia' abbonato? Entra nella tua area riservata\n");
         printf("2 - Vuoi creare un nuovo abbonamento?\n");
@@ -314,8 +314,9 @@ void abbonamenti(coda calendario)
 */
 void contattaci()
  {
+	pulisci_schermo();
 	printf("--- Contattaci ---");
-	printf("\nHai bisogno di ulteriori info?\n");
+	printf("\nHai bisogno di ulteriori info?\n\n");
 	printf("Ci trovi in Via degli Atleti, n51\n");
 	printf("Altrimenti chiamaci ai seguenti numeri:\n");
 	printf("Roberto Rega - 0512121583\n");
