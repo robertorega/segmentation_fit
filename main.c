@@ -312,7 +312,7 @@ void abbonamenti(coda calendario)
 * Side-effect:
 * Output a schermo
 */
-void contattaci()
+void contattaci(void)
  {
 	pulisci_schermo();
 	printf("--- Contattaci ---");
@@ -323,8 +323,8 @@ void contattaci()
 	printf("Andrea Zottoli - 0512122412\n");
 	printf("I nostri orari: LUN-VEN 07:00 - 22:00, SAB 08:30 - 17:00, DOM CHIUSI\n\n");
 
-	printf("Possiamo fare altro per te? Premi INVIO\n");
-    getchar();
+	printf("Premi INVIO per tornare al menu principale...");
+	getchar();
 }
 
 /* Funzione: pulisci_schermo
@@ -342,7 +342,7 @@ void contattaci()
 * - Su Windows: esegue "cls"
 * - Su Unix/Linux/macOS: esegue "clear"
 */
-void pulisci_schermo()
+void pulisci_schermo(void)
 {
 	#ifdef _WIN32
     		system("cls");
