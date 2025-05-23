@@ -136,6 +136,7 @@ void abbonamenti(coda calendario)
         printf("3 - Torna al menu principale\n\n");
         printf("La tua scelta: ");
         fgets(scelta, sizeof(scelta), stdin);
+        scelta[strcspn(scelta, "\n")] = 0;
 
         switch (atoi(scelta)) {
         case 1: {
@@ -167,7 +168,9 @@ void abbonamenti(coda calendario)
                 printf("3 - Torna al menu abbonamenti\n");
                 printf("Scelta: ");
                 fgets(scelta_operazione, sizeof(scelta_operazione), stdin);
-                switch (atoi(scelta_operazione)) {
+                scelta[strcspn(scelta, "\n")] = 0;
+                switch (atoi(scelta_operazione))
+                 {
                 case 1:
                     pulisci_lezioni_passate(calendario, "storico.txt");
                     prenota_lezione_abbonato(calendario, utente);
@@ -175,7 +178,7 @@ void abbonamenti(coda calendario)
                     salva_lezioni(calendario, "lezioni.txt");
                     break;
                 case 2: {
-                    int scelta_abbonamento = 0;
+                    char scelta_abbonamento[10];
                     while (1) {
                         printf("\nScegli il piano di allenamento:\n");
                         printf("1 - 12 lezioni - 60 Euro\n");
@@ -183,18 +186,26 @@ void abbonamenti(coda calendario)
                         printf("3 - 36 lezioni - 150 Euro\n");
                         printf("4 - Annulla\n");
                         printf("La tua scelta: ");
-                        scanf("%d", &scelta_abbonamento);
-                        getchar();
-                        if (scelta_abbonamento >= 1 && scelta_abbonamento <= 3) {
-                            int lezioni = scelta_abbonamento * 12;
+                        fgets(scelta_abbonamento, sizeof(scelta_abbonamento), stdin);
+                        scelta[strcspn(scelta, "\n")] = 0;
+
+                        if (atoi(scelta_abbonamento) >= 1 && atoi(scelta_abbonamento) <= 3) 
+                        {
+                            int lezioni = atoi(scelta_abbonamento) * 12;
                             utente->lezioni_rimanenti += lezioni;
                             printf("Abbonamento aggiornato! Ora hai %d lezioni.\n", utente->lezioni_rimanenti);
                             salva_abbonati(tabella_abbonati, "abbonati.txt");
                             break;
-                        } else if (scelta_abbonamento == 4) {
+                        } 
+                        else if (atoi(scelta_abbonamento) == 4) 
+                        {
                             break;
-                        } else {
+                        } 
+                        else 
+                        {
                             printf("Valore non valido, riprova.\n");
+                            printf("Premi INVIO\n");
+                            getchar(); 
                         }
                     }
                     break;
@@ -204,6 +215,8 @@ void abbonamenti(coda calendario)
                     break;
                 default:
                     printf("Scelta non valida.\n");
+                    printf("Premi INVIO\n");
+                    getchar(); 
                 }
             }
             break;
@@ -221,10 +234,12 @@ void abbonamenti(coda calendario)
             printf("Il nome utente non può contenere spazi. Riprova.\n");
             } else if (strlen(nomeutente) == 0) {
             printf("Il nome utente non può essere vuoto. Riprova.\n");
-            } else {
+            } 
+            else
+            {
             break;
             }
-            } while (1);
+            }while (1);
 
             abbonato *utente = cerca_hash(nomeutente, tabella_abbonati);
             if (utente) {
