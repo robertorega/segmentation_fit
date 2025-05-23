@@ -957,7 +957,7 @@ void pulisci_lezioni_passate(coda calendario, const char *nome_file)
 void report_mensile()
 {
 	printf("--- Report Mensile ---\n");
-	printf("Visualizza le lezioni passate, ordinate per numero di partecipanti.\n\n");
+	printf("Visualizza le lezioni passate, ordinate per numero di partecipanti.\n");
     FILE *file_storico = fopen("storico.txt", "r");
     if (!file_storico)
     {
