@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include "coda.h"
-#include "funzioni_generiche.h"
 #include "hash.h"
 #include "lezione.h"
 #include "pila.h"
@@ -32,7 +31,24 @@ void abbonamenti(coda calendario);
 * Side-effect:
 * Output a schermo
 */
-void contattaci();
+void contattaci(void);
+
+/* Funzione: pulisci_schermo
+*
+* Pulisce il contenuto visualizzato nel terminale, rendendo lo schermo vuoto
+*
+* Pre-condizione:
+* Nessuna
+*
+* Post-condizione:
+* Il terminale viene pulito (effetto visivo simile a "schermo vuoto")
+*
+* Side-effect:
+* Chiama un comando di sistema (dipendente dal sistema operativo):
+* - Su Windows: esegue "cls"
+* - Su Unix/Linux/macOS: esegue "clear"
+*/
+void pulisci_schermo(void);
 
 int main()
 {
@@ -47,8 +63,8 @@ int main()
 		pulisci_schermo(); //Pulisce lo schermo della console.
 
 		//Messaggio di benvenuto all'utente
-		printf("Segmentation Fit\n");
-		printf("Benvenuti nella palestra numero uno per gli informatici\n");
+		printf("--- Segmentation Fit ---\n");
+		printf("Benvenuto nella palestra numero uno per gli informatici\n");
 		//Stampa le opzioni del menu
 		printf("\nSelezionare un’opzione:\n");
     		printf("1 - Area abbonati\n");
@@ -129,6 +145,7 @@ void abbonamenti(coda calendario)
 
     while (1) {
         pulisci_schermo();
+	printf("--- Area Abbonati ---");
         printf("Scegli il piano di allenamento adatto a te!\n\n");
         printf("Seleziona un'opzione:\n");
         printf("1 - Sei gia' abbonato? Entra nella tua area riservata\n");
@@ -181,9 +198,9 @@ void abbonamenti(coda calendario)
                     char scelta_abbonamento[10];
                     while (1) {
                         printf("\nScegli il piano di allenamento:\n");
-                        printf("1 - 12 lezioni - 60 Euro\n");
-                        printf("2 - 24 lezioni - 100 Euro\n");
-                        printf("3 - 36 lezioni - 150 Euro\n");
+                        printf("1 - 12 lezioni: 60€\n");
+                        printf("2 - 24 lezioni: 100€\n");
+                        printf("3 - 36 lezioni: 150€\n");
                         printf("4 - Annulla\n");
                         printf("La tua scelta: ");
                         fgets(scelta_abbonamento, sizeof(scelta_abbonamento), stdin);
@@ -193,7 +210,7 @@ void abbonamenti(coda calendario)
                         {
                             int lezioni = atoi(scelta_abbonamento) * 12;
                             utente->lezioni_rimanenti += lezioni;
-                            printf("Abbonamento aggiornato! Ora hai %d lezioni.\n", utente->lezioni_rimanenti);
+                            printf("Abbonamento aggiornato! Ora hai %d lezioni rimanenti.\n", utente->lezioni_rimanenti);
                             salva_abbonati(tabella_abbonati, "abbonati.txt");
                             break;
                         } 
@@ -297,6 +314,7 @@ void abbonamenti(coda calendario)
 */
 void contattaci()
  {
+	printf("--- Contattaci ---");
 	printf("\nHai bisogno di ulteriori info?\n");
 	printf("Ci trovi in Via degli Atleti, n51\n");
 	printf("Altrimenti chiamaci ai seguenti numeri:\n");
@@ -306,4 +324,28 @@ void contattaci()
 
 	printf("Possiamo fare altro per te? Premi INVIO\n");
     getchar();
+}
+
+/* Funzione: pulisci_schermo
+*
+* Pulisce il contenuto visualizzato nel terminale, rendendo lo schermo vuoto
+*
+* Pre-condizione:
+* Nessuna
+*
+* Post-condizione:
+* Il terminale viene pulito (effetto visivo simile a "schermo vuoto")
+*
+* Side-effect:
+* Chiama un comando di sistema (dipendente dal sistema operativo):
+* - Su Windows: esegue "cls"
+* - Su Unix/Linux/macOS: esegue "clear"
+*/
+void pulisci_schermo()
+{
+	#ifdef _WIN32
+    		system("cls");
+	#else
+    		system("clear");
+	#endif
 }
