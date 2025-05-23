@@ -16,9 +16,6 @@
 * Pre-condizione:
 * calendario è una struttura coda valida e inizializzata correttamente
 *
-* Post-condizione:
-* Viene gestito l'accesso all'area abbonati: login, registrazione o ricarica abbonamento
-*
 * Side-effect:
 * - Output a schermo
 * - Possibili modifiche al file "abbonati.txt" e "lezioni.txt"
@@ -132,10 +129,6 @@ int main()
 *
 * Pre-condizione:
 * calendario è inizializzato correttamente e i file di supporto ("abbonati.txt", "lezioni.txt") sono presenti o creati
-*
-* Post-condizione:
-* Le operazioni selezionate dall'utente vengono eseguite e i dati aggiornati vengono salvati su file.
-* Se viene creato un nuovo abbonamento, l'utente viene salvato nella tabella hash.
 *
 * Side-effect:
 * - Lettura e scrittura su file ("abbonati.txt", "lezioni.txt")
@@ -341,12 +334,6 @@ void contattaci(void)
 * in base al sistema operativo in uso. Su Windows esegue il comando "cls",
 * mentre su sistemi Unix/Linux/macOS esegue "clear". Questo permette di ottenere
 * un terminale visivamente vuoto, migliorando la leggibilità dell'interfaccia utente.
-*
-* Pre-condizione:
-* Nessuna
-*
-* Post-condizione:
-* Il terminale viene pulito (effetto visivo simile a "schermo vuoto")
 *
 * Side-effect:
 * Chiama un comando di sistema (dipendente dal sistema operativo):
