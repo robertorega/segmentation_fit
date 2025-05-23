@@ -312,7 +312,7 @@ void stampa_lezioni(coda calendario)
 	struct nodo *corrente = calendario->testa;
 	int indice = 1;
 
-	printf("\nLezioni disponibili:\n");
+	printf("\nLezioni di fitness disponibili:\n");
 
 	while (corrente != NULL)
 	{
@@ -956,12 +956,14 @@ void pulisci_lezioni_passate(coda calendario, const char *nome_file)
 */
 void report_mensile()
 {
-	printf("--- Report Mensile ---\n");
+	while(1)
+	{
+		printf("--- Report Mensile ---\n");
 	printf("Visualizza le lezioni passate, ordinate per numero di partecipanti.\n");
     FILE *file_storico = fopen("storico.txt", "r");
     if (!file_storico)
     {
-        printf("Errore nell'apertura del file storico.\n");
+        printf("Errore nel report.\n");
 		printf("Premi INVIO\n");
         getchar();
         return;
@@ -1016,13 +1018,21 @@ printf("\nSeleziona il mese da analizzare:\n");
 for (int i = 0; i < count; i++)
     printf("%d) %02d/%d\n", i + 1, mesi[i], anni[i]);
 
+	printf("0) Torna al menu principale\n");
+
 char scelta[10];
 int scelta_numero = 0;
 printf("Inserisci il numero della tua scelta: ");
 fgets(scelta, sizeof(scelta), stdin);
 scelta_numero = atoi(scelta);
 
-if (scelta_numero < 1 || scelta_numero > count)
+if (scelta_numero == 0)
+    {
+        fclose(file_storico);
+        return;
+    }
+
+if (scelta_numero < 0 || scelta_numero > count)
 {
     printf("Scelta non valida.\nPremi INVIO\n");
     getchar();
@@ -1120,4 +1130,5 @@ rewind(file_storico);
     }
 	printf("Possiamo fare altro per te? Premi INVIO\n");
     getchar(); 
+	}
 }
