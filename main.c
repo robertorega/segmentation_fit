@@ -294,10 +294,12 @@ void abbonamenti(coda calendario)
             break;
         }
         case 3:
-            printf("Tornando al menu principale...\n");
+            //ritorna al menu principale
             return;
         default:
             printf("Valore non valido, riprova.\n");
+            printf("Password errata.\nPremi INVIO per continuare...");
+            getchar();
             break;
         }
     }
