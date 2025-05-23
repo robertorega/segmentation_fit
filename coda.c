@@ -312,6 +312,7 @@ void stampa_lezioni(coda calendario)
 	struct nodo *corrente = calendario->testa;
 	int indice = 1;
 
+	printf("--- Prenota una Lezione ---");
 	printf("\nLezioni disponibili:\n");
 
 	while (corrente != NULL)
@@ -562,6 +563,7 @@ void prenota_lezione_abbonato(coda calendario, abbonato *utente_loggato)
 */
 void disdici_iscrizione(coda calendario, const char* lezioni)
 {
+	printf("--- Disdici una prenotazione ---\n");
     	if (coda_vuota(calendario))
 	{
     		printf("Non ci sono lezioni disponibili.\n");
@@ -573,7 +575,7 @@ void disdici_iscrizione(coda calendario, const char* lezioni)
 	stampa_lezioni(calendario);
 
 	char risposta;
-	printf("\nDesideri disdire l'iscrizione ad una lezione? (s/n): ");
+	printf("Desideri disdire l'iscrizione ad una lezione? (s/n): ");
 	scanf(" %c", &risposta);
 	getchar();  // consuma il newline
 
@@ -954,6 +956,7 @@ void pulisci_lezioni_passate(coda calendario, const char *nome_file)
 */
 void report_mensile()
 {
+	printf("--- Report Mensile ---\n");
     FILE *file_storico = fopen("storico.txt", "r");
     if (!file_storico)
     {
