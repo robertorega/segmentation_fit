@@ -84,14 +84,17 @@ int main()
             		abbonamenti(calendario);
             		break;
         		case 2:
+			pulisci_schermo();
 			pulisci_lezioni_passate(calendario, "storico.txt");
             		prenota_lezione(calendario);
 			salva_lezioni(calendario, "lezioni.txt");
             		break;
         		case 3:
+			pulisci_schermo();
             		disdici_iscrizione(calendario, "lezioni.txt");
             		break;
  			case 4:
+			pulisci_schermo();
             		report_mensile();
 			break;
     			case 5:
