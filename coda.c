@@ -957,6 +957,7 @@ void pulisci_lezioni_passate(coda calendario, const char *nome_file)
 void report_mensile()
 {
 	printf("--- Report Mensile ---\n");
+	printf("Visualizza le lezioni passate, ordinate per numero di partecipanti.\n\n");
     FILE *file_storico = fopen("storico.txt", "r");
     if (!file_storico)
     {
@@ -1011,7 +1012,7 @@ if (count == 0)
 }
 
 // Mostra elenco numerato mesi/anni disponibili
-printf("Seleziona il mese da analizzare:\n");
+printf("\nSeleziona il mese da analizzare:\n");
 for (int i = 0; i < count; i++)
     printf("%d) %02d/%d\n", i + 1, mesi[i], anni[i]);
 
