@@ -334,6 +334,12 @@ void contattaci(void)
 *
 * Pulisce il contenuto visualizzato nel terminale, rendendo lo schermo vuoto
 *
+* Descrizione:
+* La funzione pulisce lo schermo del terminale eseguendo il comando appropriato
+* in base al sistema operativo in uso. Su Windows esegue il comando "cls",
+* mentre su sistemi Unix/Linux/macOS esegue "clear". Questo permette di ottenere
+* un terminale visivamente vuoto, migliorando la leggibilità dell'interfaccia utente.
+*
 * Pre-condizione:
 * Nessuna
 *
