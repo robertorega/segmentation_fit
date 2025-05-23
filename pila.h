@@ -42,10 +42,10 @@ int pila_vuota(pila iscritti);
 * iscritti è una pila inizializzata 
 *
 * Post-condizione:
-* Restituisce 1 se persona viene copia in cima altrimenti restituisce 0
+* Restituisce 1 se il partecipante viene copiato in cima altrimenti restituisce 0
 *
 * Side-effect:
-* Modifica la pila iscritti incrementando testa e scrivendo in persona[testa].
+* Modifica la pila iscritti incrementando testa e scrivendo in vet[testa].
 */
 int inserisci_pila(partecipante val, pila iscritti);
 
@@ -55,7 +55,7 @@ int inserisci_pila(partecipante val, pila iscritti);
 *
 * Parametri:
 * iscritti: pila da cui estrarre l’elemento
-* estratto: variabile in cui salvare il partecipante rimosso dalla pila (passata per valore)
+* estratto: puntatore alla variabile in cui salvare il partecipante rimosso dalla pila
 *
 * Pre-condizione:
 * iscritti è una pila inizializzata e valida
@@ -67,7 +67,7 @@ int inserisci_pila(partecipante val, pila iscritti);
 * Side-effect:
 * iscritti viene modificata: la sua cima viene decrementata e l’elemento rimosso
 */
-int estrai_pila(pila iscritti, partecipante estratto);
+int estrai_pila(pila iscritti, partecipante *estratto);
 
 /* Funzione: testa
 *
@@ -79,7 +79,7 @@ int estrai_pila(pila iscritti, partecipante estratto);
 * iscritti deve essere una pila inizializzata e non nulla
 *
 * Post-condizione:
-* se top>0  ritorna un puntatore al partecipante in cima alla pila altrimenti NESSUN_PARTECIPANTE
+* se iscritti->testa>0  ritorna un puntatore al partecipante in cima alla pila altrimenti NESSUN_PARTECIPANTE
 */
 char* testa(pila iscritti);
 
@@ -90,10 +90,10 @@ char* testa(pila iscritti);
 * iscritti:  pila da analizzare
 *
 * Pre-condizione:
-* iscritti = <a1, a2, ..., an> n>0
+* iscritti è una pila inizializzata (può essere vuota)
 *
 * Post-condizione:
-* Restituisce il numero di partecipanti, se la pila è vuota restituisce return -1
+* Se iscritti == NULL ritorna -1, altrimenti ritorna iscritti->testa (che può essere 0 se vuota)
 */
 int dimensione_pila(pila iscritti);
 
