@@ -356,12 +356,12 @@ void prenota_lezione(coda calendario)
     	return;
 	}
 
-	printf("--- Prenota una Lezione ---");
+	printf("--- Prenota una Lezione ---\n");
 	stampa_lezioni(calendario);
 	printf("Costo ingresso singolo: 15€");
 
 	char risposta;
-	printf("\nDesideri prenotare una lezione? (s/n): ");
+	printf("\n\nDesideri prenotare una lezione? (s/n): ");
 	scanf(" %c", &risposta);
 	getchar();  // consuma il newline
 
@@ -575,7 +575,7 @@ void disdici_iscrizione(coda calendario, const char* lezioni)
 	stampa_lezioni(calendario);
 
 	char risposta;
-	printf("Desideri disdire l'iscrizione ad una lezione? (s/n): ");
+	printf("\nDesideri disdire l'iscrizione ad una lezione? (s/n): ");
 	scanf(" %c", &risposta);
 	getchar();  // consuma il newline
 
