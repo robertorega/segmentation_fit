@@ -23,6 +23,13 @@ struct c_coda
 *
 * Carica le lezioni salvate da un file e le inserisce nella coda calendario
 *
+* Descrizione:
+* La funzione apre il file indicato in modalità lettura e scrittura
+* Per ogni lezione trovata nel file legge la data il giorno l'orario e il numero di iscritti
+* Crea una nuova pila per gli iscritti e li inserisce uno alla volta leggendo righe successive
+* Alla fine inserisce la lezione completa nella coda calendario
+* Se il file non esiste viene creato automaticamente
+*
 * Parametri:
 * calendario: la coda dove verranno inserite le lezioni lette dal file
 * partecipanti: nome del file da cui leggere le lezioni e gli iscritti
@@ -78,6 +85,11 @@ void carica_lezioni(coda calendario, const char *nome_file)
 *
 * Crea e inizializza una nuova coda vuota
 *
+* Descrizione:
+* La funzione alloca dinamicamente memoria per una struttura di tipo c_coda
+* Inizializza il numero di elementi a zero e i puntatori testa e coda a NULL
+* Restituisce un puntatore alla nuova coda vuota creata
+*
 * Post-condizione:
 * Restituisce un puntatore a una coda vuota chiamata calendario
 *
@@ -101,6 +113,11 @@ coda nuova_coda(void)
 *
 * Verifica se la coda calendario è vuota
 *
+* Descrizione:
+* La funzione controlla se il puntatore alla coda è NULL
+* In tal caso restituisce -1 per segnalare un errore
+* Altrimenti restituisce 1 se la coda è vuota o 0 se contiene elementi
+*
 * Parametri:
 * calendario: la coda da controllare
 *
@@ -120,6 +137,13 @@ int coda_vuota(coda calendario)
 /* Funzione: inserisci_lezione
 *
 * Inserisce una nuova lezione in fondo alla coda calendario
+*
+* Descrizione:
+* La funzione alloca dinamicamente un nuovo nodo contenente la lezione da inserire
+* Se la coda è vuota imposta il nuovo nodo come testa della coda
+* Altrimenti lo collega in fondo alla coda esistente
+* In entrambi i casi aggiorna il puntatore alla coda e incrementa il numero di elementi
+* Restituisce 1 in caso di successo 0 se l'allocazione fallisce -1 se la coda è NULL
 *
 * Parametri:
 * val: la lezione da inserire
@@ -161,6 +185,12 @@ int inserisci_lezione(lezione val, coda calendario)
 *
 * Rimuove e restituisce la prima lezione presente nella coda calendario
 *
+* Descrizione:
+* La funzione controlla se la coda è NULL o vuota e in tal caso restituisce ELEMENTO_NULLO
+* Altrimenti salva la lezione del primo nodo, aggiorna il puntatore alla testa
+* Dealloca il nodo rimosso e aggiorna il numero di elementi nella coda
+* Se la coda diventa vuota aggiorna anche il puntatore alla coda
+*
 * Parametri:
 * calendario: la coda da cui rimuovere la lezione
 *
@@ -195,6 +225,11 @@ lezione rimuovi_lezione(coda calendario)
 /* Funzione: giorno_lezione
 *
 * Verifica se il giorno della settimana corrente è previsto per una lezione
+*
+* Descrizione:
+* La funzione controlla se il valore del giorno della settimana corrisponde a uno dei giorni in cui sono previste lezioni
+* Se il giorno è valido copia il nome del giorno e la fascia oraria corrispondente nelle stringhe passate come parametri
+* Restituisce 1 se il giorno è valido altrimenti restituisce 0
 *
 * Parametri:
 * giornoSettimana: intero rappresentante il giorno della settimana (0 = Domenica, 6 = Sabato)
@@ -235,6 +270,12 @@ int giorno_lezione(int giorno_settimana, char *giorno, char *orario)
 /* Funzione: genera_lezioni
 *
 * Genera e aggiunge alla coda calendario le lezioni previste nei prossimi 30 giorni, evitando duplicati
+*
+* Descrizione:
+* La funzione analizza i prossimi 30 giorni a partire dalla data odierna
+* Per ogni giorno controlla se è previsto lo svolgimento di una lezione
+* Se il giorno è valido e la lezione con quella data e orario non è già presente nella coda
+* allora crea una nuova lezione vuota e la inserisce nel calendario
 *
 * Parametri:
 * calendario: la coda dove inserire le nuove lezioni generate
@@ -298,6 +339,11 @@ void genera_lezioni(coda calendario) //NUOVA 16/05 (CON FILE)
 *
 * Stampa l’elenco delle lezioni presenti nella coda, con data, giorno, orario e disponibilità
 *
+* Descrizione:
+* La funzione scorre la coda delle lezioni e per ogni lezione mostra le informazioni principali
+* Viene indicato se ci sono posti disponibili o se la lezione è al completo
+* Ogni lezione è numerata per facilitare eventuali selezioni da parte dell'utente
+*
 * Parametri:
 * calendario: la coda contenente le lezioni da stampare
 *
@@ -334,6 +380,11 @@ void stampa_lezioni(coda calendario)
 *
 * Permette all’utente di prenotare una lezione tra quelle disponibili nella coda
 *
+* Descrizione:
+* La funzione mostra all'utente l'elenco delle lezioni disponibili e consente di selezionare una lezione
+* Tramite input, l'utente sceglie la lezione desiderata e inserisce il proprio nome per prenotarsi
+* Se ci sono posti disponibili, il nome viene inserito nella pila degli iscritti della lezione scelta
+*
 * Parametri:
 * calendario: la coda da cui selezionare la lezione da prenotare
 *
@@ -356,7 +407,7 @@ void prenota_lezione(coda calendario)
     	return;
 	}
 
-	printf("--- Prenota una Lezione ---\n");
+	printf("--- Prenota una Lezione di Fitness ---\n");
 	stampa_lezioni(calendario);
 	printf("Costo ingresso singolo: 15€");
 
@@ -426,6 +477,12 @@ void prenota_lezione(coda calendario)
 *
 * Prenota una lezione per un utente abbonato
 *
+* Descrizione:
+* La funzione permette a un utente abbonato di prenotare una lezione tra quelle disponibili
+* Dopo aver verificato la disponibilità delle lezioni e delle lezioni rimanenti dell’abbonato,
+* viene richiesto all’utente di selezionare una lezione. Se non è già iscritto e ci sono posti liberi,
+* l’utente viene aggiunto alla pila degli iscritti della lezione e le sue lezioni rimanenti vengono decrementate
+*
 * Parametri:
 * calendario: coda contenente le lezioni
 * utente_loggato: abbonato che effettua la prenotazione
@@ -472,14 +529,14 @@ void prenota_lezione_abbonato(coda calendario, abbonato *utente_loggato)
     	return;
 	}
 
-	int scelta;
+	char scelta[10];
 	printf("Inserisci il numero della lezione a cui vuoi iscriverti: ");
-	scanf("%d", &scelta);
-	getchar();
+	fgets(scelta, sizeof(scelta), stdin);
+    scelta[strcspn(scelta, "\n")] = 0;
 
 	struct nodo *corrente = calendario->testa;
 	int indice = 1;
-	while (corrente != NULL && indice < scelta) {
+	while (corrente != NULL && indice < atoi(scelta)) {
     	corrente = corrente->prossimo;
     	indice++;
 	}
@@ -566,7 +623,7 @@ void disdici_iscrizione(coda calendario, const char* lezioni)
 	printf("--- Disdici una prenotazione ---\n");
     	if (coda_vuota(calendario))
 	{
-    		printf("Non ci sono lezioni disponibili.\n");
+    		printf("Non ci sono lezioni di fitness disponibili.\n");
 			printf("Possiamo fare altro per te? Premi INVIO...");
             getchar();
     		return;
@@ -739,6 +796,12 @@ while (fgets(riga, sizeof(riga), file))
 *
 * Salva tutte le lezioni presenti nella coda calendario su file, includendo anche gli iscritti
 *
+* Descrizione:
+* La funzione salva tutte le lezioni contenute nella coda calendario in un file
+* Ogni lezione viene scritta con data giorno orario e numero iscritti
+* Gli iscritti vengono temporaneamente estratti dalla pila e scritti su file
+* Dopo la scrittura la pila originale degli iscritti viene ripristinata
+*
 * Parametri:
 * calendario: la coda contenente le lezioni da salvare
 * partecipanti: nome del file su cui salvare i dati (verrà sovrascritto)
@@ -807,6 +870,12 @@ void salva_lezioni(coda calendario, const char *nome_file)
 *
 * Verifica se una data nel formato "dd/mm/yyyy" è precedente alla data odierna
 *
+* Descrizione:
+* La funzione verifica se la data passata come stringa è precedente alla data odierna
+* La data deve essere nel formato dd/mm/yyyy
+* Se la data è nel passato restituisce 1 altrimenti restituisce 0
+* Utilizza le strutture tm per confrontare le date in formato time_t
+*
 * Parametri:
 * data_str: stringa contenente la data da analizzare
 *
@@ -844,6 +913,13 @@ int data_passata(const char *data_str)
 /* Funzione: pulisci_lezioni_passate
 *
 * Rimuove dalla coda tutte le lezioni con data già passata, salvandole su un file storico
+*
+* Descrizione:
+* La funzione scorre la coda delle lezioni e rimuove tutte quelle con data passata
+* Ogni lezione eliminata viene salvata su un file storico insieme ai relativi iscritti
+* Le lezioni vengono confrontate con la data odierna usando la funzione data_passata
+* La struttura della coda viene modificata eliminando i nodi corrispondenti alle lezioni passate
+* La memoria dei nodi eliminati viene liberata e le informazioni vengono scritte in append su file
 *
 * Parametri:
 * calendario: la coda contenente le lezioni da analizzare
@@ -934,10 +1010,12 @@ void pulisci_lezioni_passate(coda calendario, const char *nome_file)
 * elencando solo quelle con almeno un partecipante, ordinate per numero di partecipanti in ordine decrescente
 *
 * Descrizione:
-* La funzione chiede all’utente di inserire un mese e un anno, poi apre il file "storico.txt" in lettura
-* e analizza tutte le lezioni presenti. Per ogni lezione che corrisponde al mese e all’anno richiesti
-* e che ha almeno un partecipante, memorizza data, giorno, orario e numero di partecipanti in degli array temporanei.
-* Dopo aver caricato tutte le lezioni valide, esegue un ordinamento decrescente in base al numero di partecipanti
+* La funzione chiede all’utente di selezionare un mese tra quelli presenti nel file storico
+* Per ogni lezione nel file che corrisponde al mese e anno scelti e ha almeno un partecipante
+* memorizza data, giorno, orario e numero di partecipanti in array temporanei
+* Ordina poi le lezioni trovate in ordine decrescente in base al numero di partecipanti
+* Infine stampa il report mensile ordinato delle lezioni a schermo
+*
 * (utilizzando bubble sort), quindi stampa il report ordinato a video.
 *
 * Parametri:
@@ -959,7 +1037,7 @@ void report_mensile()
 	while(1)
 	{
 		printf("--- Report Mensile ---\n");
-	printf("Visualizza le lezioni passate, ordinate per numero di partecipanti.\n");
+	printf("Visualizza le lezioni di fitness passate, ordinate per numero di partecipanti.\n");
     FILE *file_storico = fopen("storico.txt", "r");
     if (!file_storico)
     {
