@@ -1258,7 +1258,7 @@ void caso_test_1(coda calendario)
 void caso_test_2(coda calendario) 
 {
     printf("\n--- TEST 2: Gestione Abbonamenti ---\n");
-	printf("Test della gestione degli abbonamenti e della verifica della validita'.\n\n");
+    printf("Test della gestione degli abbonamenti e della verifica della validita'.\n\n");
     printf("Premi INVIO per iniziare...");
     getchar();
 
@@ -1276,40 +1276,77 @@ void caso_test_2(coda calendario)
 
     printf("Abbonato creato: %s\n", nuovo.nomeutente);
 
-    // 3. Simula login corretto
-    abbonato *trovato = cerca_hash("TestAbbonato", tabella);
-    if (trovato && strcmp(trovato->password, "1234") == 0) 
-	{
-        printf("Login riuscito con password corretta.\n");
-    }
-	 else
-	{
-        printf("ERRORE: Login fallito con password corretta.\n");
-    }
+    // 3. Ricarica la tabella per simulare un nuovo accesso
+    tabella_hash tabella_ricaricata = carica_abbonati("abbonati.txt");
+    abbonato *trovato = cerca_hash("Abbonato_Test", tabella_ricaricata);
 
-    // 4. Simula login con password errata
-    if (trovato && strcmp(trovato->password, "sbagliata") != 0)
+    if (trovato) 
 	{
-        printf("Login fallito con password errata (comportamento corretto).\n");
-    } 
-	else
-	{
-        printf("ERRORE: Login riuscito con password errata.\n");
-    }
+        if (strcmp(trovato->password, "1234") == 0) 
+		{
+            printf("Login riuscito con password corretta.\n");
+        } 
+		else 
+		{
+            printf("ERRORE: Password errata.\n");
+        }
 
-    // 5. Ricarica abbonamento
-    trovato->lezioni_rimanenti += 12;
-    salva_abbonati(tabella, "abbonati.txt");
-    printf("Lezioni rimanenti dopo ricarica: %d\n", trovato->lezioni_rimanenti);
+        // 4. Simula login con password errata
+        if (strcmp(trovato->password, "sbagliata") != 0) 
+		{
+            printf("Login fallito con password errata (comportamento corretto).\n");
+        } 
+		else 
+		{
+            printf("ERRORE: Login riuscito con password errata.\n");
+        }
 
-    // 6. Verifica aggiornamento
-    if (trovato->lezioni_rimanenti == 12)
-	{
-        printf("Ricarica abbonamento riuscita.\n");
+        // 5. Tentativo di prenotazione SENZA lezioni disponibili
+        printf("\nTentativo di prenotazione senza lezioni disponibili...\n");
+        int lezioni_iniziali = trovato->lezioni_rimanenti;
+        prenota_lezione_abbonato(calendario, trovato);
+        if (trovato->lezioni_rimanenti == lezioni_iniziali) 
+		{
+            printf("Comportamento corretto: nessuna lezione prenotata.\n");
+        } 
+		else 
+		{
+            printf("ERRORE: Lezione prenotata senza lezioni disponibili.\n");
+        }
+
+        // 6. Ricarica abbonamento
+        trovato->lezioni_rimanenti += 12;
+        salva_abbonati(tabella_ricaricata, "abbonati.txt");
+        printf("Lezioni rimanenti dopo ricarica: %d\n", trovato->lezioni_rimanenti);
+
+        // 7. Verifica aggiornamento
+        if (trovato->lezioni_rimanenti == 12) 
+		{
+            printf("Ricarica abbonamento riuscita.\n");
+        } 
+		else 
+		{
+            printf("ERRORE: Ricarica abbonamento fallita.\n");
+        }
+
+        // 8. Prenotazione con successo DOPO ricarica
+        printf("\nTentativo di prenotazione dopo ricarica...\n");
+        int lezioni_pre = trovato->lezioni_rimanenti;
+        prenota_lezione_abbonato(calendario, trovato);
+
+        if (trovato->lezioni_rimanenti == lezioni_pre - 1) 
+		{
+            printf("Prenotazione riuscita. Lezioni rimanenti: %d\n", trovato->lezioni_rimanenti);
+        } 
+		else 
+		{
+            printf("ERRORE: Prenotazione fallita o conteggio lezioni errato.\n");
+        }
+
     } 
 	else 
 	{
-        printf("ERRORE: Ricarica abbonamento fallita.\n");
+        printf("ERRORE: Login fallito con password corretta. Utente non trovato.\n");
     }
 
     printf("Premi INVIO per tornare al menu principale...");
