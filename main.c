@@ -118,13 +118,13 @@ int main()
 							caso_test_1();
 							break;
 						case 2:
-							caso_test_2(); // Assicurati che esista
+							printf("Funzione ancora da implementare");
 							break;
 						case 3:
-							caso_test_3(); // Assicurati che esista
+							printf("Funzione ancora da implementare");
 							break;
 						case 4:
-							break; // Esce dal sotto-menu
+							break;
 						default:
 							printf("Scelta non valida. Premi INVIO...");
 							getchar();
