@@ -1299,14 +1299,23 @@ void caso_test_2(coda calendario)
         return;
     }
 
-    // 4. Tentativo di prenotazione SENZA lezioni disponibili
-    printf("\nTentativo di prenotazione senza lezioni disponibili...\n");
+    // 4. Tentativo automatico di prenotazione SENZA lezioni disponibili
+    printf("\nTentativo automatico di prenotazione senza lezioni disponibili...\n");
+    struct nodo *lezione_test = calendario->testa;
+    if (!lezione_test) {
+        printf("ERRORE: Nessuna lezione disponibile.\n");
+        return;
+    }
+
     int lezioni_iniziali = trovato->lezioni_rimanenti;
-    prenota_lezione_abbonato(calendario, trovato);
-    if (trovato->lezioni_rimanenti == lezioni_iniziali) {
-        printf("Comportamento corretto: nessuna lezione prenotata.\n");
+    int iscritti_pre = dimensione_pila(lezione_test->valore.iscritti);
+
+    if (inserisci_pila(trovato->nomeutente, lezione_test->valore.iscritti)) {
+        printf("ERRORE: Prenotazione riuscita senza lezioni disponibili.\n");
+        trovato->lezioni_rimanenti--; // rollback
+        estrai_pila(lezione_test->valore.iscritti, trovato->nomeutente);
     } else {
-        printf("ERRORE: Lezione prenotata senza lezioni disponibili.\n");
+        printf("Comportamento corretto: prenotazione rifiutata.\n");
     }
 
     // 5. Ricarica abbonamento
@@ -1316,13 +1325,6 @@ void caso_test_2(coda calendario)
 
     // 6. Prenotazione automatica della prima lezione
     printf("\nPrenotazione automatica della prima lezione...\n");
-    struct nodo *lezione_test = calendario->testa;
-    if (!lezione_test) {
-        printf("ERRORE: Nessuna lezione disponibile.\n");
-        return;
-    }
-
-    int iscritti_pre = dimensione_pila(lezione_test->valore.iscritti);
     int lezioni_pre = trovato->lezioni_rimanenti;
 
     if (inserisci_pila(trovato->nomeutente, lezione_test->valore.iscritti)) {
@@ -1340,7 +1342,7 @@ void caso_test_2(coda calendario)
             printf("ERRORE: Lezione non scalata correttamente.\n");
         }
     } else {
-        printf("ERRORE: Prenotazione fallita.\n");
+        printf("ERRORE: Prenotazione fallita dopo ricarica.\n");
     }
 
     printf("Premi INVIO per tornare al menu principale...");
