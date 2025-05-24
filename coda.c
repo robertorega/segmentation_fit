@@ -1301,20 +1301,10 @@ void caso_test_2(coda calendario)
 
     // 4. Tentativo automatico di prenotazione SENZA lezioni disponibili
     printf("\nTentativo automatico di prenotazione senza lezioni disponibili...\n");
-    struct nodo *lezione_test = calendario->testa;
-    if (!lezione_test) {
-        printf("ERRORE: Nessuna lezione disponibile.\n");
-        return;
-    }
-
-    int iscritti_pre = dimensione_pila(lezione_test->valore.iscritti);
-
-    if (inserisci_pila(trovato->nomeutente, lezione_test->valore.iscritti)) {
-        printf("ERRORE: Prenotazione riuscita senza lezioni disponibili.\n");
-        trovato->lezioni_rimanenti--; // rollback
-        estrai_pila(lezione_test->valore.iscritti, trovato->nomeutente);
+    if (trovato->lezioni_rimanenti <= 0) {
+        printf("Comportamento corretto: prenotazione rifiutata per mancanza di lezioni.\n");
     } else {
-        printf("Comportamento corretto: prenotazione rifiutata.\n");
+        printf("ERRORE: L'utente ha ancora lezioni disponibili, ma non dovrebbe.\n");
     }
 
     // 5. Ricarica abbonamento
@@ -1324,6 +1314,13 @@ void caso_test_2(coda calendario)
 
     // 6. Prenotazione automatica della prima lezione
     printf("\nPrenotazione automatica della prima lezione...\n");
+    struct nodo *lezione_test = calendario->testa;
+    if (!lezione_test) {
+        printf("ERRORE: Nessuna lezione disponibile.\n");
+        return;
+    }
+
+    int iscritti_pre = dimensione_pila(lezione_test->valore.iscritti);
     int lezioni_pre = trovato->lezioni_rimanenti;
 
     if (inserisci_pila(trovato->nomeutente, lezione_test->valore.iscritti)) {
