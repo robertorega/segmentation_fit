@@ -1214,10 +1214,10 @@ rewind(file_storico);
 void caso_test_1(coda calendario) 
 {
     printf("\n--- TEST 1: Registrazione Prenotazione e Disponibilità ---\n");
+	printf("Permette di verificare la corretta registrazione delle prenotazioni e\n");
+	printf("dell'aggiornamento delle disponibilità \n\n");
     printf("Premi INVIO per iniziare");
     getchar(); 
-
-    // NON creare una nuova coda! Usiamo quella passata come parametro
 
     // 1. Verifica che ci siano lezioni
     if (coda_vuota(calendario))
@@ -1234,7 +1234,7 @@ void caso_test_1(coda calendario)
 
     // 3. Inserisce un partecipante
     partecipante nome;
-    strcpy(nome, "TestUser");
+    strcpy(nome, "Utente_Test");
     int esito = inserisci_pila(nome, lezione_test->valore.iscritti);
 
     // 4. Verifica aggiornamento
