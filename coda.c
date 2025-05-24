@@ -1214,7 +1214,7 @@ rewind(file_storico);
 void caso_test_1() 
 {
     printf("\n--- TEST 1: Registrazione Prenotazione e Disponibilità ---\n");
-	printf("Premi INVIO per iniziare\n");
+	printf("Premi INVIO per iniziare");
     getchar(); 
 
     // 1. Crea una coda e genera le lezioni
@@ -1225,7 +1225,7 @@ void caso_test_1()
     if (coda_vuota(calendario))
 	{
         printf("ERRORE: Nessuna lezione generata.\n");
-		printf("Possiamo fare altro per te? Premi INVIO\n");
+		printf("Possiamo fare altro per te? Premi INVIO...");
         getchar(); 
         return;
     }
@@ -1240,7 +1240,7 @@ void caso_test_1()
     if (esito == 0) 
 	{
         printf("ERRORE: Prenotazione fallita.\n");
-		printf("Possiamo fare altro per te? Premi INVIO\n");
+		printf("Possiamo fare altro per te? Premi INVIO...");
         getchar(); 
         return;
     }
@@ -1252,14 +1252,14 @@ void caso_test_1()
 	{
         printf("SUCCESSO: Prenotazione registrata correttamente.\n");
         printf("Iscritti prima: %d, dopo: %d\n", iscritti_iniziali, iscritti_finali);
-		printf("Possiamo fare altro per te? Premi INVIO\n");
+		printf("Premi INVIO per tornare al menu principale...");
         getchar(); 
     } 
 	else 
 	{
         printf("ERRORE: Numero di iscritti non aggiornato correttamente.\n");
         printf("Attesi: %d, Trovati: %d\n", iscritti_iniziali + 1, iscritti_finali);
-		printf("Possiamo fare altro per te? Premi INVIO\n");
+		printf("Premi INVIO per tornare al menu principale...");
         getchar(); 
     }
 }
