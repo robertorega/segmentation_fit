@@ -70,10 +70,10 @@ int main()
    		printf("4 - Report mensili\n");
 		printf("5 - Contattaci\n");
     		printf("6 - Esci\n\n");
-            printf("--- Casi di Test ---\n");
-            printf("7 - Caso Test 1\n");
-            printf("8 - Caso Test 2\n");
-            printf("9 - Caso Test 3\n");
+        	printf("--- Casi di Test ---\n");
+            	printf("7 - Caso Test 1\n");
+           	printf("8 - Caso Test 2\n");
+            	printf("9 - Caso Test 3\n");
 
 		printf("La tua scelta: ");
 		fgets(scelta, sizeof(scelta), stdin);
@@ -104,8 +104,9 @@ int main()
         		case 6:
             		printf("Arrivederci!\n");
             		return 0;  //Esce dal programma
-                case 7:
-                    void caso_test_1();
+                	case 7:
+                    	caso_test_1();
+			break;
         		default:
             		printf("Valore non valido\n\n");
 					printf("Possiamo fare altro per te? Premi INVIO\n");
