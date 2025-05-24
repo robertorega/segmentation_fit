@@ -3,6 +3,14 @@
 #include <string.h>
 #include "hash.h"  
 
+typedef struct hash 
+{
+
+	int dimensione;
+	abbonato **tabella; 
+
+} *tabella_hash;
+
 /* Funzione: nuova_hash
 *
 * Crea e inizializza una nuova tabella hash
