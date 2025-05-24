@@ -287,4 +287,6 @@ void caso_test_1(coda calendario);
 
 void caso_test_2(coda calendario);
 
+void caso_test_3(coda calendario);
+
 #endif

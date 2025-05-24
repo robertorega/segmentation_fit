@@ -130,7 +130,7 @@ int main()
 							caso_test_2(calendario);
 							break;
 						case 3:
-							printf("Funzione ancora da implementare");
+							caso_test_3(calendario);
 							break;
 						case 4:
 							break;

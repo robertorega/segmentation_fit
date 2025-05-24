@@ -1327,6 +1327,8 @@ void caso_test_2(coda calendario)
     if (!trovato) 
 	{
         printf("ERRORE: Utente non trovato dopo la creazione.\n");
+		printf("Possiamo fare altro per te? Premi INVIO\n");
+        getchar();
         return;
     }
 
@@ -1383,5 +1385,71 @@ void caso_test_2(coda calendario)
     }
 
     printf("Premi INVIO per tornare al menu principale...");
+    getchar();
+}
+
+void caso_test_3(coda calendario)
+{
+    printf("\n--- TEST 3: Verifica Report Mensile ---\n");
+    printf("Questo test verifica che il report mensile contenga dati corretti sulle prenotazioni.\n");
+    printf("Premi INVIO per iniziare...\n");
+    getchar();
+
+    time_t t = time(NULL);
+    struct tm oggi = *localtime(&t);
+
+    struct tm data_inizio = {0};
+    data_inizio.tm_mday = 1;
+    data_inizio.tm_mon = 3;  // Aprile (0-based)
+    data_inizio.tm_year = 2024 - 1900;
+
+    time_t inizio = mktime(&data_inizio);
+    time_t oggi_t = mktime(&oggi);
+
+    struct tm data_test;
+    int lezione_creata = 0;
+
+    for (int i = 0; i < 365; i++) {
+        data_test = data_inizio;
+        data_test.tm_mday += i;
+        mktime(&data_test);
+
+        if (difftime(mktime(&data_test), oggi_t) >= 0)
+            break;
+
+        char giorno[20], orario[20];
+        if (giorno_lezione(data_test.tm_wday, giorno, orario)) {
+            lezione l;
+            l.iscritti = nuova_pila();
+            strftime(l.data, sizeof(l.data), "%d/%m/%Y", &data_test);
+            strcpy(l.giorno, giorno);
+            strcpy(l.orario, orario);
+
+            int num_partecipanti = (rand() % 5) + 1;
+            char nome[50];
+            for (int j = 1; j <= num_partecipanti; j++) {
+                snprintf(nome, sizeof(nome), "report%d", j);
+                inserisci_pila(nome, l.iscritti);
+            }
+
+            inserisci_lezione(l, calendario);
+            lezione_creata = 1;
+            break;
+        }
+    }
+
+    if (!lezione_creata) {
+        printf("Nessuna data valida trovata per creare una lezione.\n");
+        printf("Premi INVIO per tornare al menu principale...\n");
+        getchar();
+        return;
+    }
+
+    pulisci_lezioni_passate(calendario, "storico.txt");
+
+    printf("\nEsecuzione del report mensile...\n");
+    report_mensile();
+
+    printf("Verifica completata. Premi INVIO per tornare al menu principale...\n");
     getchar();
 }
