@@ -1214,52 +1214,42 @@ rewind(file_storico);
 void caso_test_1(coda calendario) 
 {
     printf("\n--- TEST 1: Registrazione Prenotazione e Disponibilità ---\n");
-	printf("Premi INVIO per iniziare");
+    printf("Premi INVIO per iniziare");
     getchar(); 
 
-    // 1. Crea una coda e genera le lezioni
-    coda calendario = nuova_coda();
-    genera_lezioni(calendario);
+    // NON creare una nuova coda! Usiamo quella passata come parametro
 
-    // 2. Seleziona la prima lezione
+    // 1. Verifica che ci siano lezioni
     if (coda_vuota(calendario))
-	{
-        printf("ERRORE: Nessuna lezione generata.\n");
-		printf("Possiamo fare altro per te? Premi INVIO...");
+    {
+        printf("ERRORE: Nessuna lezione disponibile.\n");
+        printf("Possiamo fare altro per te? Premi INVIO...");
         getchar(); 
         return;
     }
 
+    // 2. Seleziona la prima lezione
     struct nodo *lezione_test = calendario->testa;
     int iscritti_iniziali = dimensione_pila(lezione_test->valore.iscritti);
 
-	partecipante nome;
-	strcpy(nome, "TestUser");
-	int esito = inserisci_pila(nome, lezione_test->valore.iscritti);
-
-    if (esito == 0) 
-	{
-        printf("ERRORE: Prenotazione fallita.\n");
-		printf("Possiamo fare altro per te? Premi INVIO...");
-        getchar(); 
-        return;
-    }
+    // 3. Inserisce un partecipante
+    partecipante nome;
+    strcpy(nome, "TestUser");
+    int esito = inserisci_pila(nome, lezione_test->valore.iscritti);
 
     // 4. Verifica aggiornamento
     int iscritti_finali = dimensione_pila(lezione_test->valore.iscritti);
-
-    if (iscritti_finali == iscritti_iniziali + 1) 
-	{
+    if (esito && iscritti_finali == iscritti_iniziali + 1) 
+    {
         printf("SUCCESSO: Prenotazione registrata correttamente.\n");
         printf("Iscritti prima: %d, dopo: %d\n", iscritti_iniziali, iscritti_finali);
-		printf("Premi INVIO per tornare al menu principale...");
-        getchar(); 
     } 
-	else 
-	{
-        printf("ERRORE: Numero di iscritti non aggiornato correttamente.\n");
+    else 
+    {
+        printf("ERRORE: Prenotazione fallita o numero iscritti non aggiornato.\n");
         printf("Attesi: %d, Trovati: %d\n", iscritti_iniziali + 1, iscritti_finali);
-		printf("Premi INVIO per tornare al menu principale...");
-        getchar(); 
     }
+
+    printf("Premi INVIO per tornare al menu principale...");
+    getchar(); 
 }
