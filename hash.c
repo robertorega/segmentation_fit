@@ -3,13 +3,13 @@
 #include <string.h>
 #include "hash.h"  
 
-typedef struct hash 
+struct c_hash 
 {
 
 	int dimensione;
 	abbonato **tabella; 
 
-} *tabella_hash;
+};
 
 /* Funzione: nuova_hash
 *
@@ -35,7 +35,7 @@ typedef struct hash
 tabella_hash nuova_hash(int dimensione) 
 {
 
-	tabella_hash h = malloc(sizeof(struct hash));
+	tabella_hash h = malloc(sizeof(struct c_hash));
 	if (h == NULL) 
     return NULL;
 
