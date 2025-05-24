@@ -50,9 +50,17 @@ void pulisci_schermo(void);
 int main()
 {
 	char scelta[10];
-	coda calendario = nuova_coda();
-	carica_lezioni(calendario, "lezioni.txt");
-	genera_lezioni(calendario);
+    coda calendario = nuova_coda();
+      
+    carica_lezioni(calendario, "lezioni.txt");
+
+    // Genera nuove lezioni solo se la coda è vuota
+    if (coda_vuota(calendario))
+    {
+        genera_lezioni(calendario);
+    }
+
+	
 
 	while (1) 
 	{
