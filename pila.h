@@ -55,14 +55,14 @@ int inserisci_pila(partecipante val, pila iscritti);
 *
 * Parametri:
 * iscritti: pila da cui estrarre il partecipante
-* estratto: variabile dove verrà copiato il partecipante rimosso dalla cima
+* estratto: array di caratteri dove verrà copiato il partecipante rimosso dalla cima
 *
 * Pre-condizione:
-* iscritti è una pila inizializzata e `estratto` è un puntatore valido
+* iscritti è una pila inizializzata e `estratto` è una variabile di tipo partecipante
 *
 * Post-condizione:
 * Se la pila contiene almeno un elemento, `estratto` conterrà una copia del partecipante in cima
-* e la funzione restituirà 1. Se la pila è vuota, `estratto` non sarà modificato e la funzione restituirà 0
+* e la funzione restituirà 1. Se la pila è vuota, `estratto` non sarà modificato e la funzione restituirà 0.
 *
 * Side-effect:
 * Modifica la pila decrementando `testa`
