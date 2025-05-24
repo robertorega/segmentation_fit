@@ -1252,6 +1252,7 @@ void caso_test_1()
 	{
         printf("SUCCESSO: Prenotazione registrata correttamente.\n");
         printf("Iscritti prima: %d, dopo: %d\n", iscritti_iniziali, iscritti_finali);
+		salva_lezioni(calendario, "lezioni.txt");
 		printf("Premi INVIO per tornare al menu principale...");
         getchar(); 
     } 
