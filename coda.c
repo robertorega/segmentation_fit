@@ -1307,7 +1307,6 @@ void caso_test_2(coda calendario)
         return;
     }
 
-    int lezioni_iniziali = trovato->lezioni_rimanenti;
     int iscritti_pre = dimensione_pila(lezione_test->valore.iscritti);
 
     if (inserisci_pila(trovato->nomeutente, lezione_test->valore.iscritti)) {
