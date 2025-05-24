@@ -1233,9 +1233,9 @@ void caso_test_1()
     struct nodo *lezione_test = calendario->testa;
     int iscritti_iniziali = dimensione_pila(lezione_test->valore.iscritti);
 
-    // 3. Prenota un utente fittizio
-    partecipante nome[] = "TestUser";
-    int esito = inserisci_pila(nome, lezione_test->valore.iscritti);
+	partecipante nome;
+	strcpy(nome, "TestUser");
+	int esito = inserisci_pila(nome, lezione_test->valore.iscritti);
 
     if (esito == 0) 
 	{
