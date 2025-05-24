@@ -1214,8 +1214,8 @@ rewind(file_storico);
 void caso_test_1(coda calendario) 
 {
     printf("\n--- TEST 1: Registrazione Prenotazione e Disponibilità ---\n");
-	printf("Permette di verificare la corretta registrazione delle prenotazioni e\n");
-	printf("dell'aggiornamento delle disponibilità \n\n");
+	printf("Permette di verificare la corretta registrazione delle prenotazioni e dell'aggiornamento delle disponibilita'.\n");
+	printf("Viene creato 'Utente_Test' che viene iscritto alla prima lezione disponibile aggiornando la disponibilita'\n\n");
     printf("Premi INVIO per iniziare");
     getchar(); 
 
