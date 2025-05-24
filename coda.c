@@ -1238,6 +1238,23 @@ rewind(file_storico);
 	}
 }
 
+/* Funzione: caso_test_1
+*
+* Verifica la corretta registrazione di una prenotazione e l’aggiornamento della disponibilità
+*
+* Descrizione:
+* La funzione seleziona la prima lezione disponibile nella coda e registra un partecipante fittizio ("Utente_Test").
+* Confronta il numero di iscritti prima e dopo l'inserimento per verificare che la prenotazione sia stata registrata correttamente.
+*
+* Parametri:
+* calendario: la coda contenente le lezioni su cui effettuare il test
+*
+* Pre-condizione:
+* calendario deve essere inizializzato e contenere almeno una lezione
+*
+* Side-effect:
+* Inserisce un partecipante fittizio nella prima lezione della coda
+*/
 void caso_test_1(coda calendario) 
 {
     printf("\n--- TEST 1: Registrazione Prenotazione e Disponibilità ---\n");
@@ -1281,6 +1298,24 @@ void caso_test_1(coda calendario)
     getchar(); 
 }
 
+/* Funzione: caso_test_2
+*
+* Verifica la gestione degli abbonamenti e la prenotazione da parte di un abbonato
+*
+* Descrizione:
+* La funzione crea un nuovo abbonato fittizio con 0 lezioni disponibili, verifica che non possa prenotare,
+* ricarica l’abbonamento con 12 lezioni, e tenta una prenotazione automatica alla prima lezione disponibile.
+* Verifica che il numero di lezioni rimanenti venga aggiornato correttamente.
+*
+* Parametri:
+* calendario: la coda contenente le lezioni su cui effettuare il test
+*
+* Pre-condizione:
+* calendario deve essere inizializzato e contenere almeno una lezione
+*
+* Side-effect:
+* Modifica il file `abbonati.txt`, inserisce un nuovo abbonato e aggiorna le lezioni
+*/
 void caso_test_2(coda calendario) 
 {
     printf("\n--- TEST 2: Gestione Abbonamenti ---\n");
@@ -1388,6 +1423,24 @@ void caso_test_2(coda calendario)
     getchar();
 }
 
+/* Funzione: caso_test_3
+*
+* Verifica la generazione del report mensile con lezioni passate
+*
+* Descrizione:
+* La funzione crea una lezione in una data passata con partecipanti fittizi, la inserisce nella coda,
+* la salva nel file storico tramite `pulisci_lezioni_passate`, e infine esegue `report_mensile`
+* per verificare che la lezione appaia correttamente nel report.
+*
+* Parametri:
+* calendario: la coda contenente le lezioni su cui effettuare il test
+*
+* Pre-condizione:
+* calendario deve essere inizializzato
+*
+* Side-effect:
+* Scrive nel file `storico.txt`, modifica la coda e interagisce con l’utente tramite I/O
+*/
 void caso_test_3(coda calendario)
 {
     printf("\n--- TEST 3: Verifica Report Mensile ---\n");

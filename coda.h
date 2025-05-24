@@ -283,10 +283,49 @@ void pulisci_lezioni_passate(coda calendario, const char *nome_file);
 */
 void report_mensile(void);
 
+/* Funzione: caso_test_1
+*
+* Verifica la corretta registrazione di una prenotazione e l’aggiornamento della disponibilità
+*
+* Parametri:
+* calendario: la coda contenente le lezioni su cui effettuare il test
+*
+* Pre-condizione:
+* calendario deve essere inizializzato e contenere almeno una lezione
+*
+* Side-effect:
+* Inserisce un partecipante fittizio nella prima lezione della coda
+*/
 void caso_test_1(coda calendario);
 
+/* Funzione: caso_test_2
+*
+* Verifica la gestione degli abbonamenti e la prenotazione da parte di un abbonato
+*
+* Parametri:
+* calendario: la coda contenente le lezioni su cui effettuare il test
+*
+* Pre-condizione:
+* calendario deve essere inizializzato e contenere almeno una lezione
+*
+* Side-effect:
+* Modifica il file `abbonati.txt`, inserisce un nuovo abbonato e aggiorna le lezioni
+*/
 void caso_test_2(coda calendario);
 
+/* Funzione: caso_test_3
+*
+* Verifica la generazione del report mensile con lezioni passate
+*
+* Parametri:
+* calendario: la coda contenente le lezioni su cui effettuare il test
+*
+* Pre-condizione:
+* calendario deve essere inizializzato
+*
+* Side-effect:
+* Scrive nel file `storico.txt`, modifica la coda e interagisce con l’utente tramite I/O
+*/
 void caso_test_3(coda calendario);
 
 #endif
