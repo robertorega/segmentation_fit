@@ -104,6 +104,8 @@ int main()
         		case 6:
             		printf("Arrivederci!\n");
             		return 0;  //Esce dal programma
+                case 7:
+                    void caso_test_1();
         		default:
             		printf("Valore non valido\n\n");
 					printf("Possiamo fare altro per te? Premi INVIO\n");

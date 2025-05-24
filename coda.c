@@ -1210,3 +1210,56 @@ rewind(file_storico);
     getchar(); 
 	}
 }
+
+void caso_test_1() 
+{
+    printf("\n--- TEST 1: Registrazione Prenotazione e Disponibilità ---\n");
+	printf("Premi INVIO per iniziare\n");
+    getchar(); 
+
+    // 1. Crea una coda e genera le lezioni
+    coda calendario = nuova_coda();
+    genera_lezioni(calendario);
+
+    // 2. Seleziona la prima lezione
+    if (coda_vuota(calendario))
+	{
+        printf("ERRORE: Nessuna lezione generata.\n");
+		printf("Possiamo fare altro per te? Premi INVIO\n");
+        getchar(); 
+        return;
+    }
+
+    struct nodo *lezione_test = calendario->testa;
+    int iscritti_iniziali = dimensione_pila(lezione_test->valore.iscritti);
+
+    // 3. Prenota un utente fittizio
+    partecipante nome[] = "TestUser";
+    int esito = inserisci_pila(nome, lezione_test->valore.iscritti);
+
+    if (esito == 0) 
+	{
+        printf("ERRORE: Prenotazione fallita.\n");
+		printf("Possiamo fare altro per te? Premi INVIO\n");
+        getchar(); 
+        return;
+    }
+
+    // 4. Verifica aggiornamento
+    int iscritti_finali = dimensione_pila(lezione_test->valore.iscritti);
+
+    if (iscritti_finali == iscritti_iniziali + 1) 
+	{
+        printf("SUCCESSO: Prenotazione registrata correttamente.\n");
+        printf("Iscritti prima: %d, dopo: %d\n", iscritti_iniziali, iscritti_finali);
+		printf("Possiamo fare altro per te? Premi INVIO\n");
+        getchar(); 
+    } 
+	else 
+	{
+        printf("ERRORE: Numero di iscritti non aggiornato correttamente.\n");
+        printf("Attesi: %d, Trovati: %d\n", iscritti_iniziali + 1, iscritti_finali);
+		printf("Possiamo fare altro per te? Premi INVIO\n");
+        getchar(); 
+    }
+}
