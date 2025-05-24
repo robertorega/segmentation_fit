@@ -69,7 +69,11 @@ int main()
    		printf("3 - Disdici\n");
    		printf("4 - Report mensili\n");
 		printf("5 - Contattaci\n");
-    		printf("6 - Esci\n");
+    		printf("6 - Esci\n\n");
+            printf("--- Casi di Test ---\n");
+            printf("7 - Caso Test 1\n");
+            printf("8 - Caso Test 2\n");
+            printf("9 - Caso Test 3\n");
 
 		printf("La tua scelta: ");
 		fgets(scelta, sizeof(scelta), stdin);
