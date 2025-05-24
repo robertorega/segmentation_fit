@@ -7,7 +7,7 @@
 #include "abbonati.h"
 #include "partecipante.h"
 
-typedef struct c_tabella_hash *tabella_hash;
+typedef struct c_hash *tabella_hash;
 
 // Funzioni per la gestione della tabella hash
 /* Funzione: nuova_hash
