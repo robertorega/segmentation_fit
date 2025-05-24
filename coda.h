@@ -282,6 +282,6 @@ void pulisci_lezioni_passate(coda calendario, const char *nome_file);
 */
 void report_mensile(void);
 
-void caso_test_1();
+void caso_test_1(coda calendario);
 
 #endif

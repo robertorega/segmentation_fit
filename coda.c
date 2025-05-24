@@ -1211,7 +1211,7 @@ rewind(file_storico);
 	}
 }
 
-void caso_test_1() 
+void caso_test_1(coda calendario) 
 {
     printf("\n--- TEST 1: Registrazione Prenotazione e Disponibilità ---\n");
 	printf("Premi INVIO per iniziare");
@@ -1252,7 +1252,6 @@ void caso_test_1()
 	{
         printf("SUCCESSO: Prenotazione registrata correttamente.\n");
         printf("Iscritti prima: %d, dopo: %d\n", iscritti_iniziali, iscritti_finali);
-		salva_lezioni(calendario, "lezioni.txt");
 		printf("Premi INVIO per tornare al menu principale...");
         getchar(); 
     } 
