@@ -127,7 +127,7 @@ int main()
                             salva_lezioni(calendario, "lezioni.txt");
 							break;
 						case 2:
-							printf("Funzione ancora da implementare");
+							caso_test_2(calendario);
 							break;
 						case 3:
 							printf("Funzione ancora da implementare");

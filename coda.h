@@ -284,4 +284,6 @@ void report_mensile(void);
 
 void caso_test_1(coda calendario);
 
+void caso_test_2(coda calendario);
+
 #endif

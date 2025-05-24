@@ -1258,6 +1258,7 @@ void caso_test_1(coda calendario)
 void caso_test_2(coda calendario) 
 {
     printf("\n--- TEST 2: Gestione Abbonamenti ---\n");
+	printf("Test della gestione degli abbonamenti e della verifica della validita'.\n\n");
     printf("Premi INVIO per iniziare...");
     getchar();
 
