@@ -93,29 +93,29 @@ int inserisci_pila(partecipante val, pila iscritti)
 
 /* Funzione: estrai_pila
 *
-* Rimuove l’elemento in cima alla pila iscritti, se la pila non è vuota, e lo copia nel partecipante estratto
+* Estrae l'elemento in cima alla pila iscritti, se presente
 *
 * Descrizione:
-* La funzione controlla se la pila è vuota.
-* Se lo è, restituisce 0 e non viene effettuata alcuna estrazione.
-* Altrimenti, l’elemento in cima alla pila viene copiato nella variabile locale estratto
-* e rimosso dalla pila, decrementando l'indice della cima.
+* Verifica se la pila contiene almeno un elemento
+* Se sì, decrementa l'indice della cima (`testa`), copia il valore dell'elemento in cima 
+* nella variabile `estratto`, e restituisce 1 per indicare il successo
+* Se la pila è vuota, restituisce 0
 *
 * Parametri:
-* iscritti: pila da cui estrarre l’elemento
-* estratto: puntatore alla variabile in cui salvare il partecipante rimosso dalla pila
+* iscritti: pila da cui estrarre il partecipante
+* estratto: variabile dove verrà copiato il partecipante rimosso dalla cima
 *
 * Pre-condizione:
-* iscritti è una pila inizializzata e valida
+* iscritti è una pila inizializzata e `estratto` è un puntatore valido
 *
 * Post-condizione:
-* Se la pila non è vuota, l’elemento in cima viene copiato in estratto e rimosso dalla pila (ritorna 1)
-* Se la pila è vuota, estratto rimane inalterato (ritorna 0)
+* Se la pila contiene almeno un elemento, `estratto` conterrà una copia del partecipante in cima
+* e la funzione restituirà 1. Se la pila è vuota, `estratto` non sarà modificato e la funzione restituirà 0
 *
 * Side-effect:
-* iscritti viene modificata: la sua cima viene decrementata e l’elemento rimosso
+* Modifica la pila decrementando `testa`
 */
-int estrai_pila(pila iscritti, partecipante *estratto) {
+int estrai_pila(pila iscritti, partecipante estratto) {
 	if (iscritti->testa == 0)
 		return 0;
 
