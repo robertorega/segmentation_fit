@@ -54,68 +54,98 @@ int main()
 	carica_lezioni(calendario, "lezioni.txt");
 	genera_lezioni(calendario);
 
-	//Ciclo infinito per il menu principale
 	while (1) 
 	{
-		pulisci_schermo(); //Pulisce lo schermo della console.
+		pulisci_schermo();
 
-		//Messaggio di benvenuto all'utente
 		printf("--- Segmentation Fit ---\n");
 		printf("Benvenuto nella palestra numero uno per gli informatici\n");
-		//Stampa le opzioni del menu
+
 		printf("\nSelezionare un’opzione:\n");
     		printf("1 - Area abbonati\n");
     		printf("2 - Lezioni\n");
-   		printf("3 - Disdici\n");
-   		printf("4 - Report mensili\n");
-		printf("5 - Contattaci\n");
-    		printf("6 - Esci\n\n");
-        	printf("--- Casi di Test ---\n");
-            	printf("7 - Caso Test 1\n");
-           	printf("8 - Caso Test 2\n");
-            	printf("9 - Caso Test 3\n");
+    		printf("3 - Disdici\n");
+    		printf("4 - Report mensili\n");
+    		printf("5 - Contattaci\n");
+    		printf("6 - Casi di Test\n");
+    		printf("7 - Esci\n\n");
 
 		printf("La tua scelta: ");
 		fgets(scelta, sizeof(scelta), stdin);
-		scelta[strcspn(scelta, "\n")] = 0;  // Rimuove newline
+		scelta[strcspn(scelta, "\n")] = 0;
 
     		switch(atoi(scelta)) 
 		{
         		case 1:
-            		abbonamenti(calendario);
-            		break;
+            			abbonamenti(calendario);
+            			break;
         		case 2:
-			pulisci_schermo();
-			pulisci_lezioni_passate(calendario, "storico.txt");
-            		prenota_lezione(calendario);
-			salva_lezioni(calendario, "lezioni.txt");
-            		break;
+				pulisci_schermo();
+				pulisci_lezioni_passate(calendario, "storico.txt");
+            			prenota_lezione(calendario);
+				salva_lezioni(calendario, "lezioni.txt");
+            			break;
         		case 3:
-			pulisci_schermo();
-            		disdici_iscrizione(calendario, "lezioni.txt");
-            		break;
+				pulisci_schermo();
+            			disdici_iscrizione(calendario, "lezioni.txt");
+            			break;
  			case 4:
-			pulisci_schermo();
-            		report_mensile();
-			break;
+				pulisci_schermo();
+            			report_mensile();
+				break;
     			case 5:
-           		contattaci();
-          		break;
+           			contattaci();
+          			break;
         		case 6:
-            		printf("Arrivederci!\n");
-            		return 0;  //Esce dal programma
-                	case 7:
-                    	caso_test_1();
-			break;
+			{
+				int test_scelta = 0;
+				do
+				{
+					pulisci_schermo();
+					printf("--- Casi di Test ---\n");
+					printf("1 - Caso Test 1\n");
+					printf("2 - Caso Test 2\n");
+					printf("3 - Caso Test 3\n");
+					printf("4 - Torna al menu principale\n");
+					printf("Scelta: ");
+					fgets(scelta, sizeof(scelta), stdin);
+					scelta[strcspn(scelta, "\n")] = 0;
+					test_scelta = atoi(scelta);
+
+					switch (test_scelta)
+					{
+						case 1:
+							caso_test_1();
+							break;
+						case 2:
+							caso_test_2(); // Assicurati che esista
+							break;
+						case 3:
+							caso_test_3(); // Assicurati che esista
+							break;
+						case 4:
+							break; // Esce dal sotto-menu
+						default:
+							printf("Scelta non valida. Premi INVIO...");
+							getchar();
+							break;
+					}
+				} while (test_scelta != 4);
+			}
+				break;
+        		case 7:
+            			printf("Arrivederci!\n");
+            			return 0;
         		default:
-            		printf("Valore non valido\n\n");
-					printf("Possiamo fare altro per te? Premi INVIO\n");
-                    getchar(); 
-            		break;
-    		}
+            			printf("Valore non valido\n\n");
+				printf("Possiamo fare altro per te? Premi INVIO...");
+            			getchar(); 
+            			break;
+    		}	
 	}
 	return 0;
 }
+
 
 /* Funzione: abbonamenti
 *
