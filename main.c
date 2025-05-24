@@ -123,7 +123,6 @@ int main()
 					switch (test_scelta)
 					{
 						case 1:
-                            carica_lezioni(calendario, "lezioni.txt");
 							caso_test_1(calendario);
                             salva_lezioni(calendario, "lezioni.txt");
 							break;
