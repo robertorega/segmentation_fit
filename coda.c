@@ -1403,7 +1403,6 @@ void caso_test_3(coda calendario)
     data_inizio.tm_mon = 3;  // Aprile (0-based)
     data_inizio.tm_year = 2024 - 1900;
 
-    time_t inizio = mktime(&data_inizio);
     time_t oggi_t = mktime(&oggi);
 
     struct tm data_test;
