@@ -502,11 +502,12 @@ void prenota_lezione(coda calendario)
 */
 void prenota_lezione_abbonato(coda calendario, abbonato *utente_loggato)
 {
-	if (coda_vuota(calendario)) {
-    	printf("Non ci sono lezioni disponibili.\n");
-		printf("Possiamo fare altro per te? Premi INVIO...");
-        getchar();
-    	return;
+	if (coda_vuota(calendario))
+	{
+    		printf("Non ci sono lezioni disponibili.\n");
+		printf("Premi INVIO per tornare alla tua area riservata...");
+        	getchar();
+    		return;
 	}
 
 	stampa_lezioni(calendario);
@@ -516,81 +517,92 @@ void prenota_lezione_abbonato(coda calendario, abbonato *utente_loggato)
 	scanf(" %c", &risposta);
 	getchar();  // consuma newline
 
-	if (risposta != 's' && risposta != 'S') {
+	if (risposta != 's' && risposta != 'S')
+	{
     		printf("Prenotazione annullata.\n");
-		printf("Possiamo fare altro per te? Premi INVIO...");
+		printf("Premi INVIO per tornare alla tua area riservata...");
         	getchar();
     		return;
 	}
 
-	if (utente_loggato->lezioni_rimanenti <= 0) {
-    	printf("Non hai lezioni rimanenti. Rinnova l'abbonamento o acquista più lezioni.\n");
-		printf("Possiamo fare altro per te? Premi INVIO...");
-        getchar();
-    	return;
+	if (utente_loggato->lezioni_rimanenti <= 0)
+	{
+    		printf("Non hai lezioni rimanenti. Rinnova l'abbonamento o acquista più lezioni.\n");
+		printf("Premi INVIO per tornare alla tua area riservata...");
+        	getchar();
+    		return;
 	}
 
 	char scelta[10];
 	printf("Inserisci il numero della lezione a cui vuoi iscriverti: ");
 	fgets(scelta, sizeof(scelta), stdin);
-    scelta[strcspn(scelta, "\n")] = 0;
+	scelta[strcspn(scelta, "\n")] = 0;
 
 	struct nodo *corrente = calendario->testa;
 	int indice = 1;
-	while (corrente != NULL && indice < atoi(scelta)) {
-    	corrente = corrente->prossimo;
-    	indice++;
+	while (corrente != NULL && indice < atoi(scelta))
+	{
+    		corrente = corrente->prossimo;
+    		indice++;
 	}
 
-	if (corrente == NULL) {
-    	printf("Scelta non valida.\n");
-		printf("Possiamo fare altro per te? Premi INVIO...");
-        getchar();
-    	return;
+	if (corrente == NULL)
+	{
+    		printf("Scelta non valida.\n");
+		printf("Premi INVIO per tornare alla tua area riservata...");
+        	getchar();
+    		return;
 	}
 
-	if (dimensione_pila(corrente->valore.iscritti) >= MASSIMO_PILA) {
-    	printf("Mi dispiace, la lezione è al completo!\n");
-		printf("Possiamo fare altro per te? Premi INVIO...");
-        getchar();
-    	return;
+	if (dimensione_pila(corrente->valore.iscritti) >= MASSIMO_PILA)
+	{
+    		printf("Mi dispiace, la lezione è al completo!\n");
+		printf("Premi INVIO per tornare alla tua area riservata...");
+        	getchar();
+    		return;
 	}
 
 	// Controllo se l'utente è già iscritto
 	pila temp = nuova_pila();
 	partecipante p;
 	int duplicato = 0;
-	while (!pila_vuota(corrente->valore.iscritti)) {
- 	   estrai_pila(corrente->valore.iscritti, p);
- 	   if (strcmp(p, utente_loggato->nomeutente) == 0) {
+	while (!pila_vuota(corrente->valore.iscritti))
+	{
+ 		estrai_pila(corrente->valore.iscritti, p);
+ 		if (strcmp(p, utente_loggato->nomeutente) == 0)
+		{
 	        duplicato = 1;
-	    }
-	    inserisci_pila(p, temp);
+	    	}
+		inserisci_pila(p, temp);
 	}
-	while (!pila_vuota(temp)) {
-	    estrai_pila(temp, p);
-	    inserisci_pila(p, corrente->valore.iscritti);
+	while (!pila_vuota(temp))
+	{
+		estrai_pila(temp, p);
+		inserisci_pila(p, corrente->valore.iscritti);
 	}
 	free(temp);
 
-	if (duplicato) {
-	    printf("Sei già iscritto a questa lezione.\n");
-	    printf("Premi INVIO\n");
- 	   getchar();
-	    return;
+	if (duplicato)
+	{
+		printf("Sei già iscritto a questa lezione.\n");
+	    	printf("Premi INVIO per tornare alla tua area riservata...");
+ 	   	getchar();
+	    	return;
 	}
 	
 	// Aggiunge il nome utente nella pila iscritti
-	if (inserisci_pila(utente_loggato->nomeutente, corrente->valore.iscritti)) {
-    	utente_loggato->lezioni_rimanenti--;
-    	printf("Prenotazione completata per %s.\n", utente_loggato->nomeutente);
-    	printf("Lezioni rimanenti: %d\n", utente_loggato->lezioni_rimanenti);
-		printf("Possiamo fare altro per te? Premi INVIO...");
-        getchar();
-	} else {
-    	printf("Errore nella prenotazione.\n");
-		printf("Possiamo fare altro per te? Premi INVIO...");
-        getchar();
+	if (inserisci_pila(utente_loggato->nomeutente, corrente->valore.iscritti))
+	{
+    		utente_loggato->lezioni_rimanenti--;
+    		printf("Prenotazione completata per %s.\n", utente_loggato->nomeutente);
+    		printf("Lezioni rimanenti: %d\n", utente_loggato->lezioni_rimanenti);
+		printf("Premi INVIO per tornare alla tua area riservata...");
+        	getchar();
+	} else
+	{
+    		printf("Errore nella prenotazione.\n");
+		printf("Premi INVIO per tornare alla tua area riservata...");
+        	getchar();
 	}
 }
 
