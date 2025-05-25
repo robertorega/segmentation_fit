@@ -337,7 +337,7 @@ void abbonamenti(coda calendario)
             return;
         default:
             printf("Valore non valido, riprova.\n");
-            printf("Password errata.\nPremi INVIO per continuare...");
+            printf("Premi INVIO per continuare...");
             getchar();
             break;
         }
