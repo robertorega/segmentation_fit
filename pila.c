@@ -6,10 +6,8 @@
 
 struct c_pila
  {
-
 	partecipante vet[MASSIMO_PILA];
 	int testa;
-
 };
 
 /* Funzione: nuova_pila
@@ -84,7 +82,7 @@ int pila_vuota(pila iscritti)
 int inserisci_pila(partecipante val, pila iscritti) 
 {
 	if (iscritti->testa == MASSIMO_PILA)
-    return 0;
+    		return 0;
 
 	strcpy(iscritti->vet[iscritti->testa], val);
 	(iscritti->testa)++;
@@ -145,10 +143,10 @@ int estrai_pila(pila iscritti, partecipante estratto) {
 char* testa(pila iscritti)
  {
 	if (iscritti->testa > 0)
-    return iscritti->vet[iscritti->testa - 1];
+    		return iscritti->vet[iscritti->testa - 1];
 
 	else
-    return NESSUN_PARTECIPANTE;
+    		return NESSUN_PARTECIPANTE;
 }
 
 /* Funzione: dimensione_pila
@@ -171,7 +169,7 @@ char* testa(pila iscritti)
 int dimensione_pila(pila iscritti)
  {
 	if (iscritti == NULL)
-    return -1;  
+    		return -1;  
 
 	return iscritti->testa; 
 }
