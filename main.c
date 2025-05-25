@@ -336,8 +336,8 @@ void abbonamenti(coda calendario)
             //ritorna al menu principale
             return;
         default:
-            printf("Valore non valido, riprova.\n");
-            printf("Premi INVIO per continuare...");
+            printf("Valore non valido.\n");
+            printf("Premi INVIO per riprovare...");
             getchar();
             break;
         }
