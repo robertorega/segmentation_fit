@@ -8,12 +8,14 @@
 
 #define ELEMENTO_NULLO ((lezione){ NULL, "", "", "" })
 
+// Nodo della coda
 struct nodo
 {
 	lezione valore;
 	struct nodo *prossimo;
 };
 
+// Struttura della coda
 struct c_coda
 {
 	struct nodo *testa,*coda;
@@ -47,16 +49,19 @@ struct c_coda
 */
 void carica_lezioni(coda calendario, const char *nome_file)
 {
-	FILE *fp = fopen(nome_file, "a+");  // apre in lettura/scrittura e crea se non esiste
+	// Apre il file in modalità lettura/scrittura, creandolo se non esiste
+	FILE *fp = fopen(nome_file, "a+");
 	if (fp == NULL)
 	{
 		perror("Errore apertura file");
         	return;
 	}
 
-	rewind(fp); // torna all'inizio del file
+	rewind(fp); // Torna all'inizio del file
 
-	char linea[256];
+	char linea[256]; // Buffer per la lettura delle righe
+
+	// Legge il file riga per riga
 	while (fgets(linea, sizeof(linea), fp))
 	{
 		lezione l;
@@ -64,7 +69,7 @@ void carica_lezioni(coda calendario, const char *nome_file)
 
         	if (sscanf(linea, "%[^;];%[^;];%[^;];%d", l.data, l.giorno, l.orario, &numero_iscritti) == 4)
 		{
-        		l.iscritti = nuova_pila();
+        		l.iscritti = nuova_pila(); // Inizializza la pila degli iscritti
 
         		for (int i = 0; i < numero_iscritti; i++)
 			{
@@ -75,11 +80,11 @@ void carica_lezioni(coda calendario, const char *nome_file)
         			}
             		}
 
-        		inserisci_lezione(l, calendario);
+        		inserisci_lezione(l, calendario); // Inserisce la lezione nella coda
         	}
 	}
 
-    	fclose(fp);
+    	fclose(fp); // Chiude il file
 }
 
 /* Funzione: nuova_coda
@@ -99,11 +104,13 @@ void carica_lezioni(coda calendario, const char *nome_file)
 */
 coda nuova_coda(void)
 {
+	// Alloca la struttura principale
 	struct c_coda *calendario;
 	calendario = malloc(sizeof(struct c_coda));
 	if (calendario == NULL)
 		return NULL;
-	
+
+	// Inizializza i campi
 	calendario->numel = 0;
 	calendario->testa = NULL;
 	calendario->coda = NULL;
@@ -130,6 +137,7 @@ coda nuova_coda(void)
 */
 int coda_vuota(coda calendario)
 {
+	// Controllo parametro NULL
 	if (calendario == NULL)
 		return -1;
 	return calendario->numel == 0;
@@ -164,19 +172,23 @@ int inserisci_lezione(lezione val, coda calendario)
 	if (calendario == NULL)
 		return -1;
 
+	// Crea nuovo nodo
 	struct nodo *nuovo;
 	nuovo = malloc(sizeof(struct nodo));
 	if (nuovo == NULL)
 		return 0;
 
+	// Inizializza nodo
 	nuovo->valore = val;
 	nuovo->prossimo = NULL;
 
+	// Inserimento in coda
 	if (calendario->testa == NULL)
     		calendario->testa = nuovo;
 	else
     		calendario->coda->prossimo = nuovo;
 
+	// Aggiorna puntatore coda e contatore
 	calendario->coda = nuovo;
 	(calendario->numel)++;
 	return 1;
@@ -206,20 +218,22 @@ int inserisci_lezione(lezione val, coda calendario)
 */
 lezione rimuovi_lezione(coda calendario)
 {
+	// Controllo coda vuota o NULL
 	if (calendario == NULL)
 		return ELEMENTO_NULLO;
 	if (calendario->numel == 0)
-        return ELEMENTO_NULLO; 
+        	return ELEMENTO_NULLO; 
 
-	lezione risultato = calendario->testa->valore;
-	struct nodo *temp = calendario->testa; 
-	calendario->testa = calendario->testa->prossimo; 
-	free(temp); 
+	lezione risultato = calendario->testa->valore; // Salva il valore da restituire
+	struct nodo *temp = calendario->testa; // Salva il nodo da eliminare
+	calendario->testa = calendario->testa->prossimo; // Aggiorna la testa
+	free(temp); // Libera la memoria
 
+	// Se la coda è vuota, aggiorna anche il puntatore coda
 	if (calendario->testa == NULL)
 		calendario->coda = NULL;
 
-	(calendario->numel)--;
+	(calendario->numel)--; // Decrementa il contatore
 	return risultato;
 }
 
@@ -291,24 +305,28 @@ int giorno_lezione(int giorno_settimana, char *giorno, char *orario)
 * Analizza le prossime 30 date a partire da oggi, verifica i giorni di lezione, controlla duplicati
 * e alloca dinamicamente nuove lezioni da inserire nella coda
 */
-void genera_lezioni(coda calendario) //NUOVA 16/05 (CON FILE)
+void genera_lezioni(coda calendario)
 {
+	// Ottiene la data corrente
 	time_t t = time(NULL);
 	struct tm oggi = *localtime(&t);
 
+	// Itera sui prossimi 30 giorni
 	for (int i = 0; i < 30; i++)
 	{
+		// Calcola la data del giorno i-esimo
         	struct tm temp = oggi;
         	temp.tm_mday += i;
-        	mktime(&temp);
+        	mktime(&temp); // Normalizza la data
 
         	char data[11];
         	char giorno[20];
         	char orario[20];
 
+		// Verifica se il giorno è valido per le lezioni
         	if (giorno_lezione(temp.tm_wday, giorno, orario))
 		{
-            		strftime(data, sizeof(data), "%d/%m/%Y", &temp);
+            		strftime(data, sizeof(data), "%d/%m/%Y", &temp); // Formatta la data come stringa
 
             		// Controlla se esiste già una lezione in questa data e orario
             		struct nodo *corrente = calendario->testa;
@@ -323,6 +341,7 @@ void genera_lezioni(coda calendario) //NUOVA 16/05 (CON FILE)
                 		corrente = corrente->prossimo;
             		}
 
+			// Se non esiste, crea la nuova lezione
             		if (!trovata)
 			{
                 		lezione l;
@@ -356,6 +375,7 @@ void genera_lezioni(coda calendario) //NUOVA 16/05 (CON FILE)
 */
 void stampa_lezioni(coda calendario)
 {
+	// Puntatore per scorrere la coda
 	struct nodo *corrente = calendario->testa;
 	int indice = 1;
 
@@ -363,15 +383,17 @@ void stampa_lezioni(coda calendario)
 
 	while (corrente != NULL)
 	{
-    		int num_iscritti = dimensione_pila(corrente->valore.iscritti);
+    		int num_iscritti = dimensione_pila(corrente->valore.iscritti); // Calcola numero iscritti
     		printf("%d) Data: %s - Giorno: %s - Orario: %s - ",
-		indice, corrente->valore.data, corrente->valore.giorno, corrente->valore.orario);
+		indice, corrente->valore.data, corrente->valore.giorno, corrente->valore.orario); // Stampa info lezione
 
+		// Stampa disponibilità
     		if (num_iscritti >= MASSIMO_PILA)
         		printf("Posti esauriti\n");
     		else
         		printf("Posti disponibili: %d/%d\n", MASSIMO_PILA - num_iscritti, MASSIMO_PILA);
 
+		// Avanza al prossimo elemento
     		corrente = corrente->prossimo;
     		indice++;
 	}
@@ -861,7 +883,7 @@ void disdici_iscrizione(coda calendario, const char* lezioni)
 */
 void salva_lezioni(coda calendario, const char *nome_file)
 {
-	FILE *fp = fopen(nome_file, "w");
+	FILE *fp = fopen(nome_file, "w"); // Apre il file in modalità scrittura
     	if (fp == NULL)
 	{
         	perror("Errore apertura file");
@@ -870,8 +892,8 @@ void salva_lezioni(coda calendario, const char *nome_file)
         	return;
     	}
 
-    	struct nodo *corrente = calendario->testa;
-
+	// Scorre tutta la coda
+    	struct nodo *corrente = calendario->testa; 
     	while (corrente != NULL)
 	{
         	fprintf(fp, "%s;%s;%s;%d\n", 
@@ -880,20 +902,20 @@ void salva_lezioni(coda calendario, const char *nome_file)
             	corrente->valore.orario,
             	dimensione_pila(corrente->valore.iscritti));
 
-        	// Salva tutti gli iscritti
-        	pila iscritti_tmp = nuova_pila();
+        	pila iscritti_tmp = nuova_pila(); // Crea una pila temporanea per invertire l'ordine
         	partecipante p;
 
-        	while (!pila_vuota(corrente->valore.iscritti))
+		// Estrai tutti gli iscritti dalla pila originale
+        	while (!pila_vuota(corrente->valore.iscritti)) 
 		{
             		if (estrai_pila(corrente->valore.iscritti, p))
 			{
-                		fprintf(fp, "%s\n", p);
-                		inserisci_pila(p, iscritti_tmp); // ricostruisce pila
+                		fprintf(fp, "%s\n", p); // Scrivi l'iscritto sul file
+                		inserisci_pila(p, iscritti_tmp); // Inserisci nella pila temporanea
             		}
         	}
 
-        	// Ripristina pila originale
+        	// Ripristina la pila originale
         	while (!pila_vuota(iscritti_tmp))
 		{
             		if (estrai_pila(iscritti_tmp, p))
@@ -902,7 +924,7 @@ void salva_lezioni(coda calendario, const char *nome_file)
             		}
         	}
 
-        	corrente = corrente->prossimo;
+        	corrente = corrente->prossimo; // Passa alla prossima lezione
     	}
 
     	fclose(fp);
