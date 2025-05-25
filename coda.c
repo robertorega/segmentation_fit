@@ -402,10 +402,10 @@ void prenota_lezione(coda calendario)
 {
 	if (coda_vuota(calendario))
 	{
-    	printf("Non ci sono lezioni disponibili.\n");
-		printf("Possiamo fare altro per te? Premi INVIO...");
-        getchar();
-    	return;
+    		printf("Non ci sono lezioni disponibili.\n");
+		printf("Premi INVIO per tornare al menu principale...");
+        	getchar();
+    		return;
 	}
 
 	printf("--- Prenota una Lezione di Fitness ---\n");
@@ -419,11 +419,11 @@ void prenota_lezione(coda calendario)
 
 	if (risposta != 's' && risposta != 'S')
 	{
-        printf("Prenotazione annullata.\n");
-		printf("Possiamo fare altro per te? Premi INVIO...");
-        getchar();
+        	printf("Prenotazione annullata.\n");
+		printf("Premi INVIO per tornare al menu principale...");
+        	getchar();
 		return;
-    }
+    	}
 
 	char scelta[10];
 	printf("Inserisci il numero della lezione a cui vuoi iscriverti: "); //CONTROLLO VALORE!!!
@@ -434,24 +434,24 @@ void prenota_lezione(coda calendario)
 	int indice = 1;
 	while (corrente != NULL && indice < atoi(scelta))
 	{
-    	corrente = corrente->prossimo;
-    	indice++;
+    		corrente = corrente->prossimo;
+    		indice++;
 	}
 
 	if (corrente == NULL)
 	{
-    	printf("Scelta non valida.\n");
-		printf("Premi INVIO\n");
-        getchar();
-    	return;
+    		printf("Scelta non valida.\n");
+		printf("Premi INVIO per tornare al menu principale...");
+        	getchar();
+    		return;
 	}
 
 	if (dimensione_pila(corrente->valore.iscritti) >= MASSIMO_PILA)
 	{
-    	printf("Mi dispiace, la lezione è al completo!\n");
-		printf("Possiamo fare altro per te? Premi INVIO\n");
-        getchar();
-    	return;
+    		printf("Mi dispiace, la lezione è al completo!\n");
+		printf("Premi INVIO per tornare al menu principale...");
+        	getchar();
+    		return;
 	}
 
 	partecipante nome;
@@ -461,16 +461,16 @@ void prenota_lezione(coda calendario)
 
 	if (inserisci_pila(nome, corrente->valore.iscritti))
 	{
-        printf("Prenotazione completata per %s\nTi è stato addebitato il costo di 15€\n", nome);
-		printf("Possiamo fare altro per te? Premi INVIO...");
-    	getchar(); 
-    }
+        	printf("Prenotazione completata per %s\nTi è stato addebitato il costo di 15€\n", nome);
+		printf("Premi INVIO per tornare al menu principale...");
+    		getchar(); 
+    	}
 	
-    else
+    	else
 	{
-      printf("Errore nella prenotazione.\n");
-	  printf("Possiamo fare altro per te? Premi INVIO...");
-    getchar();
+      		printf("Errore nella prenotazione.\n");
+	  	printf("Premi INVIO per tornare al menu principale...");
+    		getchar();
 	}
 }
 
