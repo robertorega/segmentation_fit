@@ -146,7 +146,7 @@ int main()
             			printf("Arrivederci!\n");
             			return 0;
         		default:
-            			printf("Valore non valido\n");
+            			printf("Valore non valido.\n");
 				printf("Premi INVIO per riprovare...");
             			getchar(); 
             			break;
