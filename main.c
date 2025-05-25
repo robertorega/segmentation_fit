@@ -274,7 +274,7 @@ void abbonamenti(coda calendario)
                     break;
                 default:
                     printf("Scelta non valida.\n");
-                    printf("Premi INVIO\n");
+                    printf("Premi INVIO per riprovare...\n");
                     getchar(); 
                 }
             }
