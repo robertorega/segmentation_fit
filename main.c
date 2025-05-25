@@ -77,7 +77,6 @@ int main()
     		printf("5 - Contattaci\n");
     		printf("6 - Casi di Test\n");
     		printf("7 - Esci\n\n");
-
 		printf("La tua scelta: ");
 		fgets(scelta, sizeof(scelta), stdin);
 		scelta[strcspn(scelta, "\n")] = 0;
@@ -114,8 +113,8 @@ int main()
 					printf("1 - Caso Test 1\n");
 					printf("2 - Caso Test 2\n");
 					printf("3 - Caso Test 3\n");
-					printf("4 - Torna al menu principale\n");
-					printf("Scelta: ");
+					printf("4 - Torna al menu principale\n\n");
+					printf("La tua scelta: ");
 					fgets(scelta, sizeof(scelta), stdin);
 					scelta[strcspn(scelta, "\n")] = 0;
 					test_scelta = atoi(scelta);
@@ -135,7 +134,8 @@ int main()
 						case 4:
 							break;
 						default:
-							printf("Scelta non valida. Premi INVIO...");
+							printf("Scelta non valida.\n");
+							printf("Premi INVIO per riprovare...");
 							getchar();
 							break;
 					}
@@ -146,7 +146,7 @@ int main()
             			printf("Arrivederci!\n");
             			return 0;
         		default:
-            			printf("Valore non valido.\n");
+            			printf("Scelta non valida.\n");
 				printf("Premi INVIO per riprovare...");
             			getchar(); 
             			break;
@@ -224,8 +224,8 @@ void abbonamenti(coda calendario)
                 char scelta_operazione[10];
                 printf("\n1 - Prenota una lezione\n");
                 printf("2 - Ricarica abbonamento\n");
-                printf("3 - Torna al menu abbonamenti\n");
-                printf("Scelta: ");
+                printf("3 - Torna al menu abbonamenti\n\n");
+                printf("La tua scelta: ");
                 fgets(scelta_operazione, sizeof(scelta_operazione), stdin);
                 scelta[strcspn(scelta, "\n")] = 0;
                 switch (atoi(scelta_operazione))
@@ -243,7 +243,7 @@ void abbonamenti(coda calendario)
                         printf("1 - 12 lezioni: 60€\n");
                         printf("2 - 24 lezioni: 100€\n");
                         printf("3 - 36 lezioni: 150€\n");
-                        printf("4 - Annulla\n");
+                        printf("4 - Annulla\n\n");
                         printf("La tua scelta: ");
                         fgets(scelta_abbonamento, sizeof(scelta_abbonamento), stdin);
                         scelta[strcspn(scelta, "\n")] = 0;
@@ -262,8 +262,8 @@ void abbonamenti(coda calendario)
                         } 
                         else 
                         {
-                            printf("Valore non valido, riprova.\n");
-                            printf("Premi INVIO\n");
+                            printf("Scelta non valida.\n");
+                            printf("Premi INVIO per riprovare...");
                             getchar(); 
                         }
                     }
@@ -336,7 +336,7 @@ void abbonamenti(coda calendario)
             //ritorna al menu principale
             return;
         default:
-            printf("Valore non valido.\n");
+            printf("Scelta non valida.\n");
             printf("Premi INVIO per riprovare...");
             getchar();
             break;
