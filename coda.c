@@ -571,7 +571,7 @@ void prenota_lezione_abbonato(coda calendario, abbonato *utente_loggato)
  		estrai_pila(corrente->valore.iscritti, p);
  		if (strcmp(p, utente_loggato->nomeutente) == 0)
 		{
-	        duplicato = 1;
+	        	duplicato = 1;
 	    	}
 		inserisci_pila(p, temp);
 	}
@@ -1114,9 +1114,9 @@ void report_mensile()
             				}
             				if (!già_presente)
             				{
-                			mesi[count] = mese;
-                			anni[count] = anno;
-                			count++;
+                				mesi[count] = mese;
+                				anni[count] = anno;
+                				count++;
             				}
         			}
 
@@ -1196,7 +1196,7 @@ void report_mensile()
      				}
 
             			for (int i = 0; i < numero_partecipanti; i++)
-                		fgets(riga, sizeof(riga), file_storico);
+                			fgets(riga, sizeof(riga), file_storico);
         		}
     		}
 
@@ -1273,45 +1273,45 @@ void report_mensile()
 */
 void caso_test_1(coda calendario) 
 {
-    printf("\n--- TEST 1: Registrazione Prenotazione e Disponibilità ---\n");
+	printf("\n--- TEST 1: Registrazione Prenotazione e Disponibilità ---\n");
 	printf("Permette di verificare la corretta registrazione delle prenotazioni e dell'aggiornamento delle disponibilita'.\n");
 	printf("Viene creato 'Utente_Test' che viene iscritto alla prima lezione disponibile aggiornando la disponibilita'.\n\n");
-    printf("Premi INVIO per iniziare");
-    getchar(); 
+    	printf("Premi INVIO per iniziare");
+    	getchar(); 
 
-    // 1. Verifica che ci siano lezioni
-    if (coda_vuota(calendario))
-    {
-        printf("ERRORE: Nessuna lezione disponibile.\n");
-        printf("Possiamo fare altro per te? Premi INVIO...");
-        getchar(); 
-        return;
-    }
+    	// 1. Verifica che ci siano lezioni
+	if (coda_vuota(calendario))
+    	{
+		printf("ERRORE: Nessuna lezione disponibile.\n");
+        	printf("Possiamo fare altro per te? Premi INVIO...");
+        	getchar(); 
+        	return;
+    	}
 
-    // 2. Seleziona la prima lezione
-    struct nodo *lezione_test = calendario->testa;
-    int iscritti_iniziali = dimensione_pila(lezione_test->valore.iscritti);
+    	// 2. Seleziona la prima lezione
+    	struct nodo *lezione_test = calendario->testa;
+    	int iscritti_iniziali = dimensione_pila(lezione_test->valore.iscritti);
 
-    // 3. Inserisce un partecipante
-    partecipante nome;
-    strcpy(nome, "Utente_Test");
-    int esito = inserisci_pila(nome, lezione_test->valore.iscritti);
+    	// 3. Inserisce un partecipante
+    	partecipante nome;
+    	strcpy(nome, "Utente_Test");
+    	int esito = inserisci_pila(nome, lezione_test->valore.iscritti);
 
-    // 4. Verifica aggiornamento
-    int iscritti_finali = dimensione_pila(lezione_test->valore.iscritti);
-    if (esito && iscritti_finali == iscritti_iniziali + 1) 
-    {
-        printf("SUCCESSO: Prenotazione registrata correttamente.\n");
-        printf("Iscritti prima: %d, dopo: %d\n", iscritti_iniziali, iscritti_finali);
-    } 
-    else 
-    {
-        printf("ERRORE: Prenotazione fallita o numero iscritti non aggiornato.\n");
-        printf("Attesi: %d, Trovati: %d\n", iscritti_iniziali + 1, iscritti_finali);
-    }
+    	// 4. Verifica aggiornamento
+    	int iscritti_finali = dimensione_pila(lezione_test->valore.iscritti);
+    	if (esito && iscritti_finali == iscritti_iniziali + 1) 
+    	{
+        	printf("SUCCESSO: Prenotazione registrata correttamente.\n");
+        	printf("Iscritti prima: %d, dopo: %d\n", iscritti_iniziali, iscritti_finali);
+    	} 
+    	else 
+    	{
+        	printf("ERRORE: Prenotazione fallita o numero iscritti non aggiornato.\n");
+        	printf("Attesi: %d, Trovati: %d\n", iscritti_iniziali + 1, iscritti_finali);
+    	}
 
-    printf("Premi INVIO per tornare al menu principale...");
-    getchar(); 
+    	printf("Premi INVIO per tornare al menu principale...");
+    	getchar(); 
 }
 
 /* Funzione: caso_test_2
@@ -1334,109 +1334,109 @@ void caso_test_1(coda calendario)
 */
 void caso_test_2(coda calendario) 
 {
-    printf("\n--- TEST 2: Gestione Abbonamenti ---\n");
-    printf("Test della gestione degli abbonamenti e della verifica della validita'.\n");
+	printf("\n--- TEST 2: Gestione Abbonamenti ---\n");
+    	printf("Test della gestione degli abbonamenti e della verifica della validita'.\n");
 	printf("Crea 'Abbonato_Test' diverso ogni volta, cerca di prenotare senza lezioni fallendo, ricarica l'abbonamento e l'utente viene iscritto.\n\n");
-    printf("Premi INVIO per iniziare...");
-    getchar();
+    	printf("Premi INVIO per iniziare...");
+    	getchar();
 
-    // 1. Genera nome utente univoco
-    FILE *fc = fopen("counter.txt", "r+");
-    int counter = 1;
-    if (fc) 
+    	// 1. Genera nome utente univoco
+    	FILE *fc = fopen("counter.txt", "r+");
+    	int counter = 1;
+    	if (fc) 
 	{
-        fscanf(fc, "%d", &counter);
-        rewind(fc);
-    } 
+        	fscanf(fc, "%d", &counter);
+        	rewind(fc);
+    	} 
 	else 
 	{
-        fc = fopen("counter.txt", "w+");
-    }
-    fprintf(fc, "%d", counter + 1);
-    fclose(fc);
+        	fc = fopen("counter.txt", "w+");
+    	}
+    	fprintf(fc, "%d", counter + 1);
+    	fclose(fc);
 
-    char nomeutente[MAX_CARATTERI];
-    snprintf(nomeutente, MAX_CARATTERI, "Abbonato_Test%d", counter);
+    	char nomeutente[MAX_CARATTERI];
+    	snprintf(nomeutente, MAX_CARATTERI, "Abbonato_Test%d", counter);
 
-    // 2. Crea nuovo abbonato
-    abbonato nuovo;
-    strcpy(nuovo.nomeutente, nomeutente);
-    strcpy(nuovo.password, "1234");
-    nuovo.chiave = strdup(nuovo.nomeutente);
-    nuovo.lezioni_rimanenti = 0;
+    	// 2. Crea nuovo abbonato
+	abbonato nuovo;
+    	strcpy(nuovo.nomeutente, nomeutente);
+    	strcpy(nuovo.password, "1234");
+    	nuovo.chiave = strdup(nuovo.nomeutente);
+    	nuovo.lezioni_rimanenti = 0;
 
-    tabella_hash tabella = carica_abbonati("abbonati.txt");
-    tabella = inserisci_hash(nuovo, tabella);
-    salva_abbonati(tabella, "abbonati.txt");
+    	tabella_hash tabella = carica_abbonati("abbonati.txt");
+    	tabella = inserisci_hash(nuovo, tabella);
+    	salva_abbonati(tabella, "abbonati.txt");
 
-    printf("Abbonato creato: %s\n", nuovo.nomeutente);
+    	printf("Abbonato creato: %s\n", nuovo.nomeutente);
 
-    // 3. Ricarica tabella e cerca utente
-    tabella = carica_abbonati("abbonati.txt");
-    abbonato *trovato = cerca_hash(nomeutente, tabella);
+	// 3. Ricarica tabella e cerca utente
+    	tabella = carica_abbonati("abbonati.txt");
+    	abbonato *trovato = cerca_hash(nomeutente, tabella);
 
-    if (!trovato) 
+    	if (!trovato) 
 	{
-        printf("ERRORE: Utente non trovato dopo la creazione.\n");
+        	printf("ERRORE: Utente non trovato dopo la creazione.\n");
 		printf("Possiamo fare altro per te? Premi INVIO\n");
-        getchar();
-        return;
-    }
+        	getchar();
+        	return;
+    	}
 
-    // 4. Tentativo automatico di prenotazione SENZA lezioni disponibili
-    printf("\nTentativo automatico di prenotazione senza lezioni disponibili...\n");
-    if (trovato->lezioni_rimanenti <= 0) 
+	// 4. Tentativo automatico di prenotazione SENZA lezioni disponibili
+    	printf("\nTentativo automatico di prenotazione senza lezioni disponibili...\n");
+    	if (trovato->lezioni_rimanenti <= 0) 
 	{
-        printf("Comportamento corretto: prenotazione rifiutata per mancanza di lezioni.\n\n");
-    } 
+        	printf("Comportamento corretto: prenotazione rifiutata per mancanza di lezioni.\n\n");
+    	} 
 	else 
 	{
-        printf("ERRORE: L'utente ha ancora lezioni disponibili, ma non dovrebbe.\n\n");
-    }
+        	printf("ERRORE: L'utente ha ancora lezioni disponibili, ma non dovrebbe.\n\n");
+	}
 
-    // 5. Ricarica abbonamento
-    trovato->lezioni_rimanenti += 12;
-    salva_abbonati(tabella, "abbonati.txt");
-    printf("Lezioni rimanenti dopo ricarica: %d\n\n", trovato->lezioni_rimanenti);
+    	// 5. Ricarica abbonamento
+    	trovato->lezioni_rimanenti += 12;
+    	salva_abbonati(tabella, "abbonati.txt");
+    	printf("Lezioni rimanenti dopo ricarica: %d\n\n", trovato->lezioni_rimanenti);
 
-    // 6. Prenotazione automatica della prima lezione
-    printf("\nPrenotazione automatica della prima lezione...\n");
-    struct nodo *lezione_test = calendario->testa;
-    if (!lezione_test) 
+    	// 6. Prenotazione automatica della prima lezione
+    	printf("\nPrenotazione automatica della prima lezione...\n");
+    	struct nodo *lezione_test = calendario->testa;
+    	if (!lezione_test) 
 	{
-        printf("ERRORE: Nessuna lezione disponibile.\n");
-        return;
-    }
+        	printf("ERRORE: Nessuna lezione disponibile.\n");
+        	return;
+    	}
 
-    int iscritti_pre = dimensione_pila(lezione_test->valore.iscritti);
-    int lezioni_pre = trovato->lezioni_rimanenti;
+    	int iscritti_pre = dimensione_pila(lezione_test->valore.iscritti);
+    	int lezioni_pre = trovato->lezioni_rimanenti;
 
-    if (inserisci_pila(trovato->nomeutente, lezione_test->valore.iscritti)) 
+    	if (inserisci_pila(trovato->nomeutente, lezione_test->valore.iscritti)) 
 	{
-        trovato->lezioni_rimanenti--;
-        salva_abbonati(tabella, "abbonati.txt");
-        salva_lezioni(calendario, "lezioni.txt");
+        	trovato->lezioni_rimanenti--;
+        	salva_abbonati(tabella, "abbonati.txt");
+        	salva_lezioni(calendario, "lezioni.txt");
 
-        int iscritti_post = dimensione_pila(lezione_test->valore.iscritti);
-        printf("Prenotazione riuscita. Iscritti prima: %d, dopo: %d\n", iscritti_pre, iscritti_post);
-        printf("Lezioni rimanenti: %d\n", trovato->lezioni_rimanenti);
+        	int iscritti_post = dimensione_pila(lezione_test->valore.iscritti);
+        	printf("Prenotazione riuscita. Iscritti prima: %d, dopo: %d\n", iscritti_pre, iscritti_post);
+        	printf("Lezioni rimanenti: %d\n", trovato->lezioni_rimanenti);
 
-        if (lezioni_pre - 1 == trovato->lezioni_rimanenti) 
+        	if (lezioni_pre - 1 == trovato->lezioni_rimanenti) 
 		{
-            printf("Lezione scalata correttamente.\n");
-        } 
+        		printf("Lezione scalata correttamente.\n");
+        	} 
 		else 
 		{
-            printf("ERRORE: Lezione non scalata correttamente.\n");
-        }
-    } 
+        		printf("ERRORE: Lezione non scalata correttamente.\n");
+        	}
+    	} 
 	else 
 	{
-        printf("ERRORE: Prenotazione fallita dopo ricarica.\n");
-    }
+        	printf("ERRORE: Prenotazione fallita dopo ricarica.\n");
+    	}
 
-    printf("Premi INVIO per tornare al menu principale...");
-    getchar();
+    	printf("Premi INVIO per tornare al menu principale...");
+    	getchar();
 }
 
 /* Funzione: caso_test_3
@@ -1459,80 +1459,81 @@ void caso_test_2(coda calendario)
 */
 void caso_test_3(coda calendario)
 {
-    printf("\n--- TEST 3: Verifica Report Mensile ---\n");
-    printf("Questo test verifica che il report mensile contenga dati corretti sulle prenotazioni.\n");
+	printf("\n--- TEST 3: Verifica Report Mensile ---\n");
+    	printf("Questo test verifica che il report mensile contenga dati corretti sulle prenotazioni.\n");
 	printf("Crea una data passata per provare il report ad ogni chiamata della funzione, ogni volta salva i dati correttamente.\n\n");
-    printf("Premi INVIO per iniziare...\n");
-    getchar();
+    	printf("Premi INVIO per iniziare...\n");
+    	getchar();
 
 	// 1. Calcola la data odierna
-    time_t t = time(NULL);
-    struct tm oggi = *localtime(&t);
+    	time_t t = time(NULL);
+    	struct tm oggi = *localtime(&t);
 
 	// 2. Imposta la data di partenza: 1 Aprile 2024
-    struct tm data_inizio = {0};
-    data_inizio.tm_mday = 1;
-    data_inizio.tm_mon = 3;  // Aprile (0-based)
-    data_inizio.tm_year = 2024 - 1900;
+    	struct tm data_inizio = {0};
+    	data_inizio.tm_mday = 1;
+    	data_inizio.tm_mon = 3;  // Aprile (0-based)
+	data_inizio.tm_year = 2024 - 1900;
 
-    time_t oggi_t = mktime(&oggi);
+    	time_t oggi_t = mktime(&oggi);
 
-    struct tm data_test;
-    int lezione_creata = 0;
+    	struct tm data_test;
+    	int lezione_creata = 0;
 
 	// 3. Cerca la prima data valida (passata) per una lezione
-    for (int i = 0; i < 365; i++) {
-        data_test = data_inizio;
-        data_test.tm_mday += i;
-        mktime(&data_test);
+    	for (int i = 0; i < 365; i++)
+	{
+        	data_test = data_inizio;
+        	data_test.tm_mday += i;
+        	mktime(&data_test);
 
-        if (difftime(mktime(&data_test), oggi_t) >= 0)
-            break;
+        	if (difftime(mktime(&data_test), oggi_t) >= 0)
+            		break;
 
-	    // 4. Verifica se il giorno è valido per una lezione
-        char giorno[20], orario[20];
-        if (giorno_lezione(data_test.tm_wday, giorno, orario)) 
+	    	// 4. Verifica se il giorno è valido per una lezione
+        	char giorno[20], orario[20];
+		if (giorno_lezione(data_test.tm_wday, giorno, orario)) 
 		{
 			// 5. Crea una nuova lezione con partecipanti fittizi
-            lezione l;
-            l.iscritti = nuova_pila();
-            strftime(l.data, sizeof(l.data), "%d/%m/%Y", &data_test);
-            strcpy(l.giorno, giorno);
-            strcpy(l.orario, orario);
+            		lezione l;
+            		l.iscritti = nuova_pila();
+            		strftime(l.data, sizeof(l.data), "%d/%m/%Y", &data_test);
+			strcpy(l.giorno, giorno);
+            		strcpy(l.orario, orario);
 
 			// 6. Aggiunge da 1 a 5 partecipanti chiamati report1, report2, ...
-            int num_partecipanti = (rand() % 5) + 1;
-            char nome[50];
-            for (int j = 1; j <= num_partecipanti; j++) 
+            		int num_partecipanti = (rand() % 5) + 1;
+            		char nome[50];
+            		for (int j = 1; j <= num_partecipanti; j++) 
 			{
-                snprintf(nome, sizeof(nome), "report%d", j);
-                inserisci_pila(nome, l.iscritti);
-            }
+                		snprintf(nome, sizeof(nome), "report%d", j);
+                		inserisci_pila(nome, l.iscritti);
+            		}
 
 			// 7. Inserisce la lezione nella coda
-            inserisci_lezione(l, calendario);
-            lezione_creata = 1;
-            break;
-        }
-    }
+            		inserisci_lezione(l, calendario);
+            		lezione_creata = 1;
+            		break;
+        	}
+	}
 
 	// 8. Se nessuna lezione è stata creata, termina il test
-    if (!lezione_creata) 
+    	if (!lezione_creata) 
 	{
-        printf("Nessuna data valida trovata per creare una lezione.\n");
-        printf("Premi INVIO per tornare al menu principale...\n");
-        getchar();
-        return;
-    }
+        	printf("Nessuna data valida trovata per creare una lezione.\n");
+        	printf("Premi INVIO per tornare al menu principale...\n");
+        	getchar();
+        	return;
+    	}
 
 	// 9. Salva la lezione nel file storico
-    pulisci_lezioni_passate(calendario, "storico.txt");
+    	pulisci_lezioni_passate(calendario, "storico.txt");
 
 	// 10. Esegue il report mensile per verificare la presenza della lezione
-    printf("\nEsecuzione del report mensile...\n");
-    report_mensile();
+    	printf("\nEsecuzione del report mensile...\n");
+    	report_mensile();
 
 	// 11. Fine test
-    printf("Verifica completata. Premi INVIO per tornare al menu principale...\n");
-    getchar();
+    	printf("Verifica completata. Premi INVIO per tornare al menu principale...\n");
+    	getchar();
 }
