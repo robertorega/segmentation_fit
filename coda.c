@@ -865,8 +865,8 @@ void salva_lezioni(coda calendario, const char *nome_file)
     	if (fp == NULL)
 	{
         	perror("Errore apertura file");
-			printf("Premi INVIO\n");
-            getchar();
+		printf("Premi INVIO\n");
+        	getchar();
         	return;
     	}
 
@@ -986,8 +986,8 @@ void pulisci_lezioni_passate(coda calendario, const char *nome_file)
 	if (fp == NULL)
 	{
         	printf("Errore apertura file storico");
-			printf("Premi INVIO\n");
-            getchar();
+		printf("Premi INVIO\n");
+        	getchar();
         	return;
     	}
 
@@ -1030,7 +1030,8 @@ void pulisci_lezioni_passate(coda calendario, const char *nome_file)
 			else
                 		precedente->prossimo = prossimo;
 
-            		if (corrente == calendario->coda) {
+            		if (corrente == calendario->coda)
+			{
                 		calendario->coda = precedente;
             		}
 
@@ -1079,177 +1080,177 @@ void report_mensile()
 	while(1)
 	{
 		printf("--- Report Mensile ---\n");
-	printf("Visualizza le lezioni di fitness passate, ordinate per numero di partecipanti.\n");
-    FILE *file_storico = fopen("storico.txt", "r");
-    if (!file_storico)
-    {
-        printf("Errore nel report.\n");
-		printf("Premi INVIO\n");
-        getchar();
-        return;
-    }
+		printf("Visualizza le lezioni di fitness passate, ordinate per numero di partecipanti.\n");
+    		FILE *file_storico = fopen("storico.txt", "r");
+    		if (!file_storico)
+    		{
+        		printf("Errore nel report.\n");
+			printf("Premi INVIO\n");
+        		getchar();
+        		return;
+    		}
 
-    // Primo passaggio: estrai mesi e anni unici dal file
-int mesi[120], anni[120], count = 0;
-char riga[256];
+    		// Primo passaggio: estrai mesi e anni unici dal file
+		int mesi[120], anni[120], count = 0;
+		char riga[256];
 
-while (fgets(riga, sizeof(riga), file_storico))
-{
-    int giorno, mese, anno, num;
-    char data[11], giorno_s[15], orario[10];
-
-    if (sscanf(riga, "%10[^;];%14[^;];%9[^;];%d", data, giorno_s, orario, &num) == 4)
-    {
-        if (sscanf(data, "%d/%d/%d", &giorno, &mese, &anno) == 3)
-        {
-            int già_presente = 0;
-            for (int i = 0; i < count; i++)
-            {
-                if (mesi[i] == mese && anni[i] == anno)
-                {
-                    già_presente = 1;
-                    break;
-                }
-            }
-            if (!già_presente)
-            {
-                mesi[count] = mese;
-                anni[count] = anno;
-                count++;
-            }
-        }
-
-        // Salta righe partecipanti
-        for (int i = 0; i < num; i++)
-            fgets(riga, sizeof(riga), file_storico);
-    }
-}
-
-if (count == 0)
-{
-    fclose(file_storico);
-    printf("Nessun dato disponibile nel file storico.\nPremi INVIO\n");
-    getchar();
-    return;
-}
-
-// Mostra elenco numerato mesi/anni disponibili
-printf("\nSeleziona il mese da analizzare:\n");
-for (int i = 0; i < count; i++)
-    printf("%d) %02d/%d\n", i + 1, mesi[i], anni[i]);
-
-	printf("0) Torna al menu principale\n");
-
-char scelta[10];
-int scelta_numero = 0;
-printf("Inserisci il numero della tua scelta: ");
-fgets(scelta, sizeof(scelta), stdin);
-scelta_numero = atoi(scelta);
-
-if (scelta_numero == 0)
-    {
-        fclose(file_storico);
-        return;
-    }
-
-if (scelta_numero < 0 || scelta_numero > count)
-{
-    printf("Scelta non valida.\nPremi INVIO\n");
-    getchar();
-    fclose(file_storico);
-    return;
-}
-
-int mese_da_cercare = mesi[scelta_numero - 1];
-int anno_da_cercare = anni[scelta_numero - 1];
-
-rewind(file_storico);
-
-    // Array per memorizzare le lezioni trovate
-    char elenco_date[100][11];
-    char elenco_giorni[100][15];
-    char elenco_orari[100][10];
-    int elenco_partecipanti[100];
-    int totale_lezioni = 0;
-
-    // Lettura del file riga per riga
-    while (fgets(riga, sizeof(riga), file_storico)) 
-	{
-        char data_lettura[11];
-        char giorno_lettura[15];
-        char orario_lettura[10];
-        int numero_partecipanti;
-		int g, m, a;
-
-        // Lettura dei dati principali dalla riga
-        if (sscanf(riga, "%10[^;];%14[^;];%9[^;];%d", data_lettura, giorno_lettura, orario_lettura, &numero_partecipanti) == 4)
+		while (fgets(riga, sizeof(riga), file_storico))
 		{
-			sscanf(data_lettura, "%d/%d/%d", &g, &m, &a);
-        if (m == mese_da_cercare && a == anno_da_cercare && numero_partecipanti > 0)
-     {
-        strcpy(elenco_date[totale_lezioni], data_lettura);
-        strcpy(elenco_giorni[totale_lezioni], giorno_lettura);
-         strcpy(elenco_orari[totale_lezioni], orario_lettura);
-         elenco_partecipanti[totale_lezioni] = numero_partecipanti;
-         totale_lezioni++;
-     }
+    			int giorno, mese, anno, num;
+    			char data[11], giorno_s[15], orario[10];
 
-            for (int i = 0; i < numero_partecipanti; i++)
-                fgets(riga, sizeof(riga), file_storico);
-        }
-    }
+    			if (sscanf(riga, "%10[^;];%14[^;];%9[^;];%d", data, giorno_s, orario, &num) == 4)
+    			{
+        			if (sscanf(data, "%d/%d/%d", &giorno, &mese, &anno) == 3)
+        			{
+            				int già_presente = 0;
+            				for (int i = 0; i < count; i++)
+            				{
+                				if (mesi[i] == mese && anni[i] == anno)
+                				{
+                    					già_presente = 1;
+                    					break;
+                				}
+            				}
+            				if (!già_presente)
+            				{
+                			mesi[count] = mese;
+                			anni[count] = anno;
+                			count++;
+            				}
+        			}
 
-    fclose(file_storico);
+        			// Salta righe partecipanti
+        			for (int i = 0; i < num; i++)
+            				fgets(riga, sizeof(riga), file_storico);
+    			}
+		}
 
-    if (totale_lezioni == 0) 
-	{
-        printf("Nessuna lezione trovata per il mese %d/%d.\n", mese_da_cercare, anno_da_cercare);
+		if (count == 0)
+		{
+    			fclose(file_storico);
+    			printf("Nessun dato disponibile nel file storico.\nPremi INVIO\n");
+    			getchar();
+    			return;
+		}
+
+		// Mostra elenco numerato mesi/anni disponibili
+		printf("\nSeleziona il mese da analizzare:\n");
+		for (int i = 0; i < count; i++)
+    			printf("%d) %02d/%d\n", i + 1, mesi[i], anni[i]);
+
+		printf("0) Torna al menu principale\n");
+
+		char scelta[10];
+		int scelta_numero = 0;
+		printf("Inserisci il numero della tua scelta: ");
+		fgets(scelta, sizeof(scelta), stdin);
+		scelta_numero = atoi(scelta);
+
+		if (scelta_numero == 0)
+    		{
+        		fclose(file_storico);
+        		return;
+    		}
+
+		if (scelta_numero < 0 || scelta_numero > count)
+		{
+    			printf("Scelta non valida.\nPremi INVIO\n");
+    			getchar();
+    			fclose(file_storico);
+    			return;
+		}
+
+		int mese_da_cercare = mesi[scelta_numero - 1];
+		int anno_da_cercare = anni[scelta_numero - 1];
+
+		rewind(file_storico);
+
+    		// Array per memorizzare le lezioni trovate
+    		char elenco_date[100][11];
+    		char elenco_giorni[100][15];
+    		char elenco_orari[100][10];
+    		int elenco_partecipanti[100];
+    		int totale_lezioni = 0;
+
+    		// Lettura del file riga per riga
+    		while (fgets(riga, sizeof(riga), file_storico)) 
+		{
+        		char data_lettura[11];
+        		char giorno_lettura[15];
+        		char orario_lettura[10];
+        		int numero_partecipanti;
+			int g, m, a;
+
+        		// Lettura dei dati principali dalla riga
+        		if (sscanf(riga, "%10[^;];%14[^;];%9[^;];%d", data_lettura, giorno_lettura, orario_lettura, &numero_partecipanti) == 4)
+			{
+				sscanf(data_lettura, "%d/%d/%d", &g, &m, &a);
+        			if (m == mese_da_cercare && a == anno_da_cercare && numero_partecipanti > 0)
+     				{
+        				strcpy(elenco_date[totale_lezioni], data_lettura);
+        				strcpy(elenco_giorni[totale_lezioni], giorno_lettura);
+        				strcpy(elenco_orari[totale_lezioni], orario_lettura);
+         				elenco_partecipanti[totale_lezioni] = numero_partecipanti;
+         				totale_lezioni++;
+     				}
+
+            			for (int i = 0; i < numero_partecipanti; i++)
+                		fgets(riga, sizeof(riga), file_storico);
+        		}
+    		}
+
+    		fclose(file_storico);
+
+    		if (totale_lezioni == 0) 
+		{
+        		printf("Nessuna lezione trovata per il mese %d/%d.\n", mese_da_cercare, anno_da_cercare);
+			printf("Possiamo fare altro per te? Premi INVIO\n");
+        		getchar();
+        		return;
+    		}
+
+    		// Bubble sort
+		for (int i = 0; i < totale_lezioni - 1; i++)
+		{
+    			for (int j = i + 1; j < totale_lezioni; j++)
+    			{
+        			if (elenco_partecipanti[j] > elenco_partecipanti[i])
+        			{
+            				int tmp = elenco_partecipanti[i];
+            				elenco_partecipanti[i] = elenco_partecipanti[j];
+            				elenco_partecipanti[j] = tmp;
+
+            				char tmp_data[11], tmp_giorno[15], tmp_orario[10];
+            				strcpy(tmp_data, elenco_date[i]);
+            				strcpy(tmp_giorno, elenco_giorni[i]);
+            				strcpy(tmp_orario, elenco_orari[i]);
+
+            				strcpy(elenco_date[i], elenco_date[j]);
+            				strcpy(elenco_giorni[i], elenco_giorni[j]);
+            				strcpy(elenco_orari[i], elenco_orari[j]);
+
+            				strcpy(elenco_date[j], tmp_data);
+            				strcpy(elenco_giorni[j], tmp_giorno);
+            				strcpy(elenco_orari[j], tmp_orario);
+        			}
+    			}
+		}
+
+
+    		// Stampa finale del report mensile ordinato
+    		printf("\n--- Report Mensile %02d/%d ---\n", mese_da_cercare, anno_da_cercare);
+    		for (int i = 0; i < totale_lezioni; i++) 
+		{
+        		printf("%d) Data: %s | Giorno: %s | Orario: %s | Partecipanti: %d\n",
+               		i + 1,
+               		elenco_date[i],
+	               	elenco_giorni[i],
+               		elenco_orari[i],
+               		elenco_partecipanti[i]);
+    		}
 		printf("Possiamo fare altro per te? Premi INVIO\n");
-        getchar();
-        return;
-    }
-
-    // Bubble sort
-	for (int i = 0; i < totale_lezioni - 1; i++)
-{
-    for (int j = i + 1; j < totale_lezioni; j++)
-    {
-        if (elenco_partecipanti[j] > elenco_partecipanti[i])
-        {
-            int tmp = elenco_partecipanti[i];
-            elenco_partecipanti[i] = elenco_partecipanti[j];
-            elenco_partecipanti[j] = tmp;
-
-            char tmp_data[11], tmp_giorno[15], tmp_orario[10];
-            strcpy(tmp_data, elenco_date[i]);
-            strcpy(tmp_giorno, elenco_giorni[i]);
-            strcpy(tmp_orario, elenco_orari[i]);
-
-            strcpy(elenco_date[i], elenco_date[j]);
-            strcpy(elenco_giorni[i], elenco_giorni[j]);
-            strcpy(elenco_orari[i], elenco_orari[j]);
-
-            strcpy(elenco_date[j], tmp_data);
-            strcpy(elenco_giorni[j], tmp_giorno);
-            strcpy(elenco_orari[j], tmp_orario);
-        }
-    }
-}
-
-
-    // Stampa finale del report mensile ordinato
-    printf("\n--- Report Mensile %02d/%d ---\n", mese_da_cercare, anno_da_cercare);
-    for (int i = 0; i < totale_lezioni; i++) 
-	{
-        printf("%d) Data: %s | Giorno: %s | Orario: %s | Partecipanti: %d\n",
-               i + 1,
-               elenco_date[i],
-               elenco_giorni[i],
-               elenco_orari[i],
-               elenco_partecipanti[i]);
-    }
-	printf("Possiamo fare altro per te? Premi INVIO\n");
-    getchar(); 
+    		getchar(); 
 	}
 }
 
