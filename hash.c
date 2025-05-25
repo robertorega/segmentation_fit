@@ -5,10 +5,8 @@
 
 struct c_hash 
 {
-
 	int dimensione;
-	abbonato **tabella; 
-
+	abbonato **tabella;
 };
 
 /* Funzione: nuova_hash
@@ -37,14 +35,14 @@ tabella_hash nuova_hash(int dimensione)
 
 	tabella_hash h = malloc(sizeof(struct c_hash));
 	if (h == NULL) 
-    return NULL;
+    		return NULL;
 
 	h->dimensione = dimensione;
 	h->tabella = calloc(dimensione, sizeof(abbonato *));
 	if (h->tabella == NULL) 
-    {
-    	free(h);
-    	return NULL;
+    	{
+    		free(h);
+    		return NULL;
 	}
 
 	return h;
@@ -75,8 +73,8 @@ int calcola_indice(char *chiave, int dimensione)
 	unsigned int hash = 0;
 
 	while (*chiave)
-    {
-    	hash = hash * 31 + *chiave++;
+    	{
+    		hash = hash * 31 + *chiave++;
 	}
 
 	return hash % dimensione;
@@ -114,19 +112,19 @@ tabella_hash inserisci_hash(abbonato nuovo, tabella_hash h)
 	abbonato *corrente = h->tabella[indice];
 
 	while (corrente != NULL)
-     {
-    	if (strcmp(corrente->chiave, nuovo.chiave) == 0)
-        {
-        	return h;  // Chiave già presente
-    	}
+	{
+    		if (strcmp(corrente->chiave, nuovo.chiave) == 0)
+        	{
+        		return h;  // Chiave già presente
+    		}
 
-    	corrente = corrente->prossimo;
+    		corrente = corrente->prossimo;
 	}
 
 	abbonato *nodo = malloc(sizeof(abbonato));
 
 	if (nodo == NULL) 
-    return h;
+    		return h;
 
 	nodo->chiave = strdup(nuovo.chiave);
 	strncpy(nodo->nomeutente, nuovo.nomeutente, MAX_CARATTERI - 1);
@@ -166,11 +164,11 @@ abbonato* cerca_hash(char *chiave, tabella_hash h)
 	abbonato *corrente = h->tabella[indice];
 
 	while (corrente != NULL) 
-    {
-    	if (strcmp(corrente->chiave, chiave) == 0) 
-        return corrente;
+    	{
+    		if (strcmp(corrente->chiave, chiave) == 0) 
+        	return corrente;
 
-    	corrente = corrente->prossimo;
+    		corrente = corrente->prossimo;
 	}
 
 	return NULL;
@@ -206,23 +204,22 @@ tabella_hash elimina_hash(char *chiave, tabella_hash h)
 	abbonato *precedente = NULL;
 
 	while (corrente != NULL)
-     {
-    	if (strcmp(corrente->chiave, chiave) == 0) 
-        {
-        	if (precedente == NULL) 
-            {
-            	h->tabella[indice] = corrente->prossimo;
-        	} 
-            else
-            {
-            	precedente->prossimo = corrente->prossimo;
-        	}
-        	free(corrente->chiave);
-        	free(corrente);
-        	return h;
-    	}
-    	precedente = corrente;
-    	corrente = corrente->prossimo;
+     	{
+    		if (strcmp(corrente->chiave, chiave) == 0) 
+        	{
+        		if (precedente == NULL) 
+            		{
+            			h->tabella[indice] = corrente->prossimo;
+        		} else
+            		{
+            			precedente->prossimo = corrente->prossimo;
+        		}
+        		free(corrente->chiave);
+        		free(corrente);
+        		return h;
+    		}
+    		precedente = corrente;
+    		corrente = corrente->prossimo;
 	}
 
 	return h;
@@ -253,32 +250,35 @@ tabella_hash elimina_hash(char *chiave, tabella_hash h)
 */
 tabella_hash carica_abbonati(const char *nome_file)
 {
-    FILE *file = fopen(nome_file, "r");
-    if (!file) {
-        printf("File abbonati non trovato. Verra' creato un nuovo file.\n");
-        return nuova_hash(10);
-    }
+	FILE *file = fopen(nome_file, "r");
+    	if (!file)
+	{
+        	printf("File abbonati non trovato. Verra' creato un nuovo file.\n");
+        	return nuova_hash(10);
+    	}
 
-    tabella_hash h = nuova_hash(10);
-    char riga[200];
+    	tabella_hash h = nuova_hash(10);
+    	char riga[200];
 
-    while (fgets(riga, sizeof(riga), file)) {
-        char *nomeutente = strtok(riga, ";");
-        char *password = strtok(NULL, ";");
-        char *lezioni_str = strtok(NULL, "\n");
+	while (fgets(riga, sizeof(riga), file))
+	{
+        	char *nomeutente = strtok(riga, ";");
+        	char *password = strtok(NULL, ";");
+       		char *lezioni_str = strtok(NULL, "\n");
 
-        if (nomeutente && password && lezioni_str) {
-            abbonato nuovo;
-            strncpy(nuovo.nomeutente, nomeutente, MAX_CARATTERI);
-            strncpy(nuovo.password, password, MAX_CARATTERI);
-            nuovo.lezioni_rimanenti = atoi(lezioni_str);
-            nuovo.chiave = strdup(nuovo.nomeutente);
-            h = inserisci_hash(nuovo, h);
-        }
-    }
+        	if (nomeutente && password && lezioni_str)
+		{
+            		abbonato nuovo;
+            		strncpy(nuovo.nomeutente, nomeutente, MAX_CARATTERI);
+            		strncpy(nuovo.password, password, MAX_CARATTERI);
+            		nuovo.lezioni_rimanenti = atoi(lezioni_str);
+            		nuovo.chiave = strdup(nuovo.nomeutente);
+            		h = inserisci_hash(nuovo, h);
+        	}
+    	}
 
-    fclose(file);
-    return h;
+    	fclose(file);
+    	return h;
 }
 
 /* Funzione: salva_abbonati
@@ -305,19 +305,22 @@ tabella_hash carica_abbonati(const char *nome_file)
 */
 void salva_abbonati(tabella_hash h, const char *nome_file)
 {
-    FILE *file = fopen(nome_file, "w");
-    if (!file) {
-        printf("Errore nell'apertura del file per il salvataggio.\n");
-        return;
-    }
+	FILE *file = fopen(nome_file, "w");
+    	if (!file)
+	{
+        	printf("Errore nell'apertura del file per il salvataggio.\n");
+        	return;
+    	}
 
-    for (int i = 0; i < h->dimensione; i++) {
-        abbonato *corrente = h->tabella[i];
-        while (corrente != NULL) {
-            fprintf(file, "%s;%s;%d\n", corrente->nomeutente, corrente->password, corrente->lezioni_rimanenti);
-            corrente = corrente->prossimo;
-        }
-    }
+    	for (int i = 0; i < h->dimensione; i++)
+	{
+        	abbonato *corrente = h->tabella[i];
+        	while (corrente != NULL)
+		{
+            		fprintf(file, "%s;%s;%d\n", corrente->nomeutente, corrente->password, corrente->lezioni_rimanenti);
+            		corrente = corrente->prossimo;
+        	}
+    	}
 
-    fclose(file);
+	fclose(file);
 }
