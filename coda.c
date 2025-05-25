@@ -621,202 +621,205 @@ void prenota_lezione_abbonato(coda calendario, abbonato *utente_loggato)
 */
 void disdici_iscrizione(coda calendario, const char* lezioni)
 {
-    printf("--- Disdici una prenotazione ---\n");
-    if (coda_vuota(calendario))
-    {
-        printf("Non ci sono lezioni di fitness disponibili.\n");
-        printf("Possiamo fare altro per te? Premi INVIO...");
-        getchar();
-        return;
-    }
+	printf("--- Disdici una prenotazione ---\n");
+	if (coda_vuota(calendario))
+	{
+        	printf("Non ci sono lezioni di fitness disponibili.\n");
+        	printf("Possiamo fare altro per te? Premi INVIO...");
+        	getchar();
+        	return;
+	}
 
-    stampa_lezioni(calendario);
+	stampa_lezioni(calendario);
 
-    char risposta;
-    printf("\nDesideri disdire l'iscrizione ad una lezione? (s/n): ");
-    scanf(" %c", &risposta);
-    getchar();  // consuma il newline
+    	char risposta;
+    	printf("\nDesideri disdire l'iscrizione ad una lezione? (s/n): ");
+    	scanf(" %c", &risposta);
+	getchar();  // consuma il newline
 
-    if (risposta != 's' && risposta != 'S')
-    {
-        printf("Nessuna lezione disdetta.\n");
-        printf("Possiamo fare altro per te? Premi INVIO...");
-        getchar();
-        return;
-    }
+    	if (risposta != 's' && risposta != 'S')
+    	{
+        	printf("Nessuna lezione disdetta.\n");
+        	printf("Possiamo fare altro per te? Premi INVIO...");
+        	getchar();
+        	return;
+    	}
 
-    char scelta[10];
-    printf("Inserisci il numero della lezione a cui vuoi disdire la tua iscrizione: ");
-    fgets(scelta, sizeof(scelta), stdin);
+    	char scelta[10];
+    	printf("Inserisci il numero della lezione a cui vuoi disdire la tua iscrizione: ");
+    	fgets(scelta, sizeof(scelta), stdin);
 
-    // Conta dinamicamente il numero di lezioni nella coda calendario
-    int max_lezioni = 0;
-    struct nodo* temp = calendario->testa;
-    while (temp != NULL) 
-    {
-        max_lezioni++;
-        temp = temp->prossimo;
-    }
+    	// Conta dinamicamente il numero di lezioni nella coda calendario
+    	int max_lezioni = 0;
+    	struct nodo* temp = calendario->testa;
+	while (temp != NULL) 
+    	{
+        	max_lezioni++;
+        	temp = temp->prossimo;
+    	}
 
-    int num_scelta = atoi(scelta);
-    if (num_scelta < 1 || num_scelta > max_lezioni)
-    {
-        printf("Scelta non valida.\n");
-        printf("Possiamo fare altro per te? Premi INVIO...");
-        getchar();
-        return;
-    }
+    	int num_scelta = atoi(scelta);
+    	if (num_scelta < 1 || num_scelta > max_lezioni)
+    	{
+        	printf("Scelta non valida.\n");
+        	printf("Possiamo fare altro per te? Premi INVIO...");
+        	getchar();
+		return;
+    	}
 
-    struct nodo* corrente = calendario->testa;
-    int indice = 0;
-    while (corrente != NULL && indice < num_scelta - 1) 
-    {
-        corrente = corrente->prossimo;
-        indice++;
-    }
+    	struct nodo* corrente = calendario->testa;
+    	int indice = 0;
+    	while (corrente != NULL && indice < num_scelta - 1) 
+    	{
+      		corrente = corrente->prossimo;
+        	indice++;
+    	}
 
-    if (corrente == NULL)
-    {
-        printf("Errore: lezione non trovata.\n");
-        printf("Possiamo fare altro per te? Premi INVIO...");
-        getchar();
-        return;
-    }
+    	if (corrente == NULL)
+    	{
+        	printf("Errore: lezione non trovata.\n");
+        	printf("Possiamo fare altro per te? Premi INVIO...");
+        	getchar();
+        	return;
+    	}
 
-    lezione* selezionata = &corrente->valore; 
+    	lezione* selezionata = &corrente->valore; 
 
-    char nome[50];
-    printf("Inserisci il tuo nome per disdire l'iscrizione: ");
-    fgets(nome, sizeof(nome), stdin);
-    nome[strcspn(nome, "\n")] = 0;  // rimuove newline
+    	char nome[50];
+    	printf("Inserisci il tuo nome oppure, se sei abbonato, il tuo nome utente: ");
+    	fgets(nome, sizeof(nome), stdin);
+    	nome[strcspn(nome, "\n")] = 0;  // rimuove newline
 
-    // Carica la tabella degli abbonati per verificare se il nome è un abbonato
-    tabella_hash tabella = carica_abbonati("abbonati.txt");
-    abbonato* utente = cerca_hash(nome, tabella);
+    	// Carica la tabella degli abbonati per verificare se il nome è un abbonato
+    	tabella_hash tabella = carica_abbonati("abbonati.txt");
+    	abbonato* utente = cerca_hash(nome, tabella);
     
-    if (utente != NULL) {
-        // Se è un abbonato, chiedi la password
-        char password[MAX_CARATTERI];
-        printf("Inserisci la password per confermare la disdetta: ");
-        fgets(password, sizeof(password), stdin);
-        password[strcspn(password, "\n")] = 0;
+    	if (utente != NULL)
+	{
+        	// Se è un abbonato, chiedi la password
+        	char password[MAX_CARATTERI];
+        	printf("Inserisci la password per confermare la disdetta: ");
+        	fgets(password, sizeof(password), stdin);
+        	password[strcspn(password, "\n")] = 0;
         
-        if (strcmp(utente->password, password) != 0) {
-            printf("Password errata. Disdetta annullata.\n");
-            printf("Possiamo fare altro per te? Premi INVIO...");
-            getchar();
-            free(tabella);
-            return;
-        }
-    }
+        	if (strcmp(utente->password, password) != 0)
+		{
+            		printf("Password errata. Disdetta annullata.\n");
+            		printf("Possiamo fare altro per te? Premi INVIO...");
+            		getchar();
+            		free(tabella);
+            		return;
+        	}
+	}
 
-    int trovato = 0;
-    pila supporto = nuova_pila();
-    if (supporto == NULL)
-    {
-        printf("Errore nell'allocazione della pila di supporto.\n");
-        printf("Possiamo fare altro per te? Premi INVIO...");
-        getchar();
-        return;
-    }
+    	int trovato = 0;
+    	pila supporto = nuova_pila();
+    	if (supporto == NULL)
+    	{
+       		printf("Errore nell'allocazione della pila di supporto.\n");
+        	printf("Possiamo fare altro per te? Premi INVIO...");
+        	getchar();
+        	return;
+    	}
 
-    partecipante p;
+    	partecipante p;
 
-    while (!pila_vuota(selezionata->iscritti))
-    {
-        strcpy(p, testa(selezionata->iscritti));
-        estrai_pila(selezionata->iscritti, p);
+    	while (!pila_vuota(selezionata->iscritti))
+    	{
+        	strcpy(p, testa(selezionata->iscritti));
+        	estrai_pila(selezionata->iscritti, p);
 
-        if (strcmp(p, nome) == 0 && !trovato)
-        {
-            trovato = 1;
-            // Se è un abbonato, incrementa le lezioni rimanenti
-            if (utente != NULL) {
-                utente->lezioni_rimanenti++;
-                salva_abbonati(tabella, "abbonati.txt");
-                printf("Lezione disdetta. Lezioni rimanenti: %d\n", utente->lezioni_rimanenti);
-            }
-            // Non reinserisco nella pila di supporto => rimuovo l'iscritto
-        }
-        else
-        {
-            inserisci_pila(p, supporto);
-        }
-    }
+        	if (strcmp(p, nome) == 0 && !trovato)
+        	{
+            		trovato = 1;
+            		// Se è un abbonato, incrementa le lezioni rimanenti
+            		if (utente != NULL)
+			{
+                		utente->lezioni_rimanenti++;
+                		salva_abbonati(tabella, "abbonati.txt");
+                		printf("Lezione disdetta. Lezioni rimanenti: %d\n", utente->lezioni_rimanenti);
+            		}
+            		// Non reinserisco nella pila di supporto => rimuovo l'iscritto
+        	}
+        	else
+        	{
+            		inserisci_pila(p, supporto);
+        	}
+    	}
 
-    while (!pila_vuota(supporto))
-    {
-        strcpy(p, testa(supporto));
-        estrai_pila(supporto, p);
-        inserisci_pila(p, selezionata->iscritti);
-    }
-    free(supporto);
+    	while (!pila_vuota(supporto))
+    	{
+        	strcpy(p, testa(supporto));
+        	estrai_pila(supporto, p);
+        	inserisci_pila(p, selezionata->iscritti);
+    	}
+    	free(supporto);
 
-    if (!trovato)
-    {
-        printf("Partecipante non trovato.\n");
-        printf("Possiamo fare altro per te? Premi INVIO...");
-        getchar();
-        remove("temp.txt");
-        return;
-    }
+    	if (!trovato)
+    	{
+        	printf("Partecipante non trovato.\n");
+        	printf("Possiamo fare altro per te? Premi INVIO...");
+        	getchar();
+        	remove("temp.txt");
+        	return;
+    	}
 
-    FILE* file = fopen(lezioni, "r");
-    if (!file)
-    {
-        printf("Errore nell'apertura del file.\n");
-        printf("Premi INVIO\n");
-        getchar();
-        return;
-    }
+    	FILE* file = fopen(lezioni, "r");
+    	if (!file)
+    	{
+        	printf("Errore nell'apertura del file.\n");
+        	printf("Premi INVIO\n");
+        	getchar();
+        	return;
+    	}
 
-    FILE* temp_file = fopen("temp_file.txt", "w");
-    if (!temp_file)
-    {
-        fclose(file);
-        printf("Errore nella creazione del file temporaneo.\n");
-        printf("Possiamo fare altro per te? Premi INVIO...");
-        getchar();
-        return;
-    }
+    	FILE* temp_file = fopen("temp_file.txt", "w");
+    	if (!temp_file)
+    	{
+        	fclose(file);
+        	printf("Errore nella creazione del file temporaneo.\n");
+        	printf("Possiamo fare altro per te? Premi INVIO...");
+        	getchar();
+        	return;
+    	}
 
-    char riga[256];
-    int in_lezione_target = 0;
+    	char riga[256];
+    	int in_lezione_target = 0;
 
-    while (fgets(riga, sizeof(riga), file))
-    {
-        // Rimuove newline
-        riga[strcspn(riga, "\n")] = 0;
+    	while (fgets(riga, sizeof(riga), file))
+    	{
+        	// Rimuove newline
+        	riga[strcspn(riga, "\n")] = 0;
 
-        // Se contiene la data, è intestazione di una nuova lezione
-        if (strstr(riga, "/") && strstr(riga, ";"))
-        {
-            if (strstr(riga, selezionata->data))
-                in_lezione_target = 1;
-            else
-                in_lezione_target = 0;
+        	// Se contiene la data, è intestazione di una nuova lezione
+        	if (strstr(riga, "/") && strstr(riga, ";"))
+        	{
+            		if (strstr(riga, selezionata->data))
+                		in_lezione_target = 1;
+            		else
+                		in_lezione_target = 0;
 
-            fputs(riga, temp_file);
-            fputc('\n', temp_file);
-            continue;
-        }
+            		fputs(riga, temp_file);
+            		fputc('\n', temp_file);
+            		continue;
+        	}
 
-        // Se è partecipante nella lezione giusta e corrisponde al nome da eliminare, salta la riga
-        if (in_lezione_target && strcmp(riga, nome) == 0)
-            continue;
+        	// Se è partecipante nella lezione giusta e corrisponde al nome da eliminare, salta la riga
+        	if (in_lezione_target && strcmp(riga, nome) == 0)
+            		continue;
 
-        // Altrimenti scrive normalmente
-        fputs(riga, temp_file);
-        fputc('\n', temp_file);
-    }
+		// Altrimenti scrive normalmente
+        	fputs(riga, temp_file);
+        	fputc('\n', temp_file);
+	}
 
-    fclose(file);
-    fclose(temp_file);
-    remove(lezioni);
-    rename("temp_file.txt", lezioni);
+    	fclose(file);
+    	fclose(temp_file);
+    	remove(lezioni);
+    	rename("temp_file.txt", lezioni);
 
-    printf("Iscrizione disdetta con successo.\nPremi INVIO per continuare...");
-    getchar();
+    	printf("Iscrizione disdetta con successo.\nPremi INVIO per continuare...");
+    	getchar();
 }
 
 /* Funzione: salva_lezioni
