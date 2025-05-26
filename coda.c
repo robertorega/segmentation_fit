@@ -6,8 +6,6 @@
 #include "lezione.h"
 #include "hash.h"
 
-#define ELEMENTO_NULLO ((lezione){ NULL, "", "", "" })
-
 // Nodo della coda
 struct nodo
 {
