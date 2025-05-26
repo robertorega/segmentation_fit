@@ -4,6 +4,7 @@
 #include "partecipante.h"
 #include "pila.h"
 
+// Struttura della pila
 struct c_pila
  {
 	partecipante vet[MASSIMO_PILA];
@@ -26,12 +27,14 @@ struct c_pila
 */
 pila nuova_pila(void)
  {
+	// Alloca la struttura pila
 	pila iscritti;
 	iscritti = malloc(sizeof(struct c_pila));
 
 	if (iscritti == NULL)
 	return NULL;
 
+	// Inizializza l'indice di testa
 	iscritti->testa = 0;
 	return iscritti;
 }
@@ -81,10 +84,14 @@ int pila_vuota(pila iscritti)
 */
 int inserisci_pila(partecipante val, pila iscritti) 
 {
+	// Verifica se c'è spazio
 	if (iscritti->testa == MASSIMO_PILA)
     		return 0;
 
+	// Copia il partecipante nella posizione corrente
 	strcpy(iscritti->vet[iscritti->testa], val);
+	
+	// Incrementa l'indice di testa
 	(iscritti->testa)++;
 	return 1;
 }
@@ -113,12 +120,14 @@ int inserisci_pila(partecipante val, pila iscritti)
 * Side-effect:
 * Modifica la pila decrementando `testa`
 */
-int estrai_pila(pila iscritti, partecipante estratto) {
+int estrai_pila(pila iscritti, partecipante estratto)
+{
+	// Verifica se la pila è vuota
 	if (iscritti->testa == 0)
 		return 0;
 
-    	iscritti->testa--;
-    	strcpy(estratto, iscritti->vet[iscritti->testa]);
+    	iscritti->testa--; // Decrementa l'indice
+    	strcpy(estratto, iscritti->vet[iscritti->testa]); // Copia il partecipante estratto
     	return 1;
 }
 
@@ -142,8 +151,9 @@ int estrai_pila(pila iscritti, partecipante estratto) {
 */
 char* testa(pila iscritti)
  {
+	 // Verifica se la pila è vuota
 	if (iscritti->testa > 0)
-    		return iscritti->vet[iscritti->testa - 1];
+    		return iscritti->vet[iscritti->testa - 1]; // Elemento in cima
 
 	else
     		return NESSUN_PARTECIPANTE;
@@ -168,6 +178,7 @@ char* testa(pila iscritti)
 */
 int dimensione_pila(pila iscritti)
  {
+	// Controllo parametro NULL
 	if (iscritti == NULL)
     		return -1;  
 
