@@ -76,23 +76,6 @@ tabella_hash inserisci_hash(abbonato item, tabella_hash tabella);
 */
 abbonato *cerca_hash(char *chiave, tabella_hash tabella);
 
-/* Funzione: elimina_hash
-*
-* Rimuove dalla tabella hash h l’elemento con chiave uguale a chiave, se presente
-* Parametri:
-* chiave: elemento da eliminare nella tabella h
-* h: tabella hash da cui elimare l'elemento 
-*
-* Pre-condizione:
-* chiave è una stringa non vuota e h è una tabella hash valida
-*
-* Post-condizione:
-*  l’elemento viene rimosso dalla tabella, se non è presente non accade nulla
-*
-* Side-effect:
-* viene deallocata la memoria associata all’elemento rimosso
-*/
-tabella_hash elimina_hash(char *chiave, tabella_hash tabella);
 
 /* Funzione: carica_abbonati
 *

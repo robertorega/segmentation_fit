@@ -182,60 +182,6 @@ abbonato* cerca_hash(char *chiave, tabella_hash h)
 	return NULL;
 }
 
-/* Funzione: elimina_hash
-*
-* Rimuove dalla tabella hash h l’elemento con chiave uguale a chiave, se presente
-*
-* Descrizione:
-* La funzione calcola l'indice associato alla chiave usando calcola_indice
-* Scorre poi la lista collegata in quella posizione per cercare un nodo con chiave uguale
-* Se lo trova lo rimuove dalla lista scollegandolo e deallocando la memoria associata
-* Se la chiave non è presente non viene eseguita alcuna modifica
-*
-* Parametri:
-* chiave: elemento da eliminare nella tabella h
-* h: tabella hash da cui elimare l'elemento 
-*
-* Pre-condizione:
-* chiave è una stringa non vuota e h è una tabella hash valida
-*
-* Post-condizione:
-*  l’elemento viene rimosso dalla tabella, se non è presente non accade nulla
-*
-* Side-effect:
-* viene deallocata la memoria associata all’elemento rimosso
-*/
-tabella_hash elimina_hash(char *chiave, tabella_hash h) 
-{
-	// Calcola la posizione nella tabella
-	int indice = calcola_indice(chiave, h->dimensione);
-	abbonato *corrente = h->tabella[indice];
-	abbonato *precedente = NULL;
-
-	// Cerca il nodo da eliminare
-	while (corrente != NULL)
-     	{
-    		if (strcmp(corrente->chiave, chiave) == 0) 
-        	{
-        		if (precedente == NULL) 
-            		{
-            			h->tabella[indice] = corrente->prossimo;
-        		} else
-            		{
-            			precedente->prossimo = corrente->prossimo;
-        		}
-			// Libera la memoria
-        		free(corrente->chiave);
-        		free(corrente);
-        		return h;
-    		}
-    		precedente = corrente;
-    		corrente = corrente->prossimo;
-	}
-
-	return h;
-}
-
 /* Funzione: carica_abbonati
 *
 * Carica da file i dati degli abbonati e li inserisce in una nuova tabella hash
