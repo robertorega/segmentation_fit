@@ -94,7 +94,7 @@ abbonato *cerca_hash(char *chiave, tabella_hash tabella);
 * Side-effect:
 * Lettura da file e allocazione dinamica di memoria per ciascun abbonato caricato
 */
-tabella_hash carica_abbonati(const char *filename);
+tabella_hash carica_abbonati(const char *nome_file);
 
 /* Funzione: salva_abbonati
 *
@@ -113,6 +113,6 @@ tabella_hash carica_abbonati(const char *filename);
 * Side-effect:
 * Scrittura su file. Se il file non può essere aperto, viene stampato un messaggio di errore
 */
-void salva_abbonati(tabella_hash h, const char *filename);
+void salva_abbonati(tabella_hash h, const char *nome_file);
 
 #endif
