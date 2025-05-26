@@ -3,6 +3,7 @@
 #include <string.h>
 #include "hash.h"  
 
+// Struttura della tabella hash
 struct c_hash 
 {
 	int dimensione;
@@ -32,7 +33,7 @@ struct c_hash
 */
 tabella_hash nuova_hash(int dimensione) 
 {
-
+	// Alloca la struttura principale
 	tabella_hash h = malloc(sizeof(struct c_hash));
 	if (h == NULL) 
     		return NULL;
@@ -72,11 +73,13 @@ int calcola_indice(char *chiave, int dimensione)
 {
 	unsigned int hash = 0;
 
+	// Calcola il valore hash moltiplicativo
 	while (*chiave)
     	{
     		hash = hash * 31 + *chiave++;
 	}
 
+	// Applica il modulo per ottenere l'indice
 	return hash % dimensione;
 }
 
@@ -108,9 +111,11 @@ int calcola_indice(char *chiave, int dimensione)
 */
 tabella_hash inserisci_hash(abbonato nuovo, tabella_hash h) 
 {
+	// Calcola la posizione nella tabella
 	int indice = calcola_indice(nuovo.chiave, h->dimensione);
 	abbonato *corrente = h->tabella[indice];
 
+	// Verifica se la chiave esiste già
 	while (corrente != NULL)
 	{
     		if (strcmp(corrente->chiave, nuovo.chiave) == 0)
@@ -121,17 +126,19 @@ tabella_hash inserisci_hash(abbonato nuovo, tabella_hash h)
     		corrente = corrente->prossimo;
 	}
 
+	// Alloca il nuovo nodo
 	abbonato *nodo = malloc(sizeof(abbonato));
-
 	if (nodo == NULL) 
     		return h;
 
+	// Copia i dati dell'abbonato
 	nodo->chiave = strdup(nuovo.chiave);
 	strncpy(nodo->nomeutente, nuovo.nomeutente, MAX_CARATTERI - 1);
 	nodo->nomeutente[MAX_CARATTERI - 1] = '\0';
 	strncpy(nodo->password, nuovo.password, MAX_CARATTERI - 1);
 	nodo->password[MAX_CARATTERI - 1] = '\0';
 
+	// Inserisce in testa
 	nodo->lezioni_rimanenti = nuovo.lezioni_rimanenti;
 	nodo->prossimo = h->tabella[indice];
 	h->tabella[indice] = nodo;
@@ -160,9 +167,11 @@ tabella_hash inserisci_hash(abbonato nuovo, tabella_hash h)
 */
 abbonato* cerca_hash(char *chiave, tabella_hash h) 
 {
+	// Calcola la posizione nella tabella
 	int indice = calcola_indice(chiave, h->dimensione);
 	abbonato *corrente = h->tabella[indice];
 
+	// Scorre la lista cercando la chiave
 	while (corrente != NULL) 
     	{
     		if (strcmp(corrente->chiave, chiave) == 0) 
@@ -170,7 +179,6 @@ abbonato* cerca_hash(char *chiave, tabella_hash h)
 
     		corrente = corrente->prossimo;
 	}
-
 	return NULL;
 }
 
@@ -199,10 +207,12 @@ abbonato* cerca_hash(char *chiave, tabella_hash h)
 */
 tabella_hash elimina_hash(char *chiave, tabella_hash h) 
 {
+	// Calcola la posizione nella tabella
 	int indice = calcola_indice(chiave, h->dimensione);
 	abbonato *corrente = h->tabella[indice];
 	abbonato *precedente = NULL;
 
+	// Cerca il nodo da eliminare
 	while (corrente != NULL)
      	{
     		if (strcmp(corrente->chiave, chiave) == 0) 
@@ -214,6 +224,7 @@ tabella_hash elimina_hash(char *chiave, tabella_hash h)
             		{
             			precedente->prossimo = corrente->prossimo;
         		}
+			// Libera la memoria
         		free(corrente->chiave);
         		free(corrente);
         		return h;
@@ -250,6 +261,7 @@ tabella_hash elimina_hash(char *chiave, tabella_hash h)
 */
 tabella_hash carica_abbonati(const char *nome_file)
 {
+	// Prova ad aprire il file
 	FILE *file = fopen(nome_file, "r");
     	if (!file)
 	{
@@ -257,15 +269,18 @@ tabella_hash carica_abbonati(const char *nome_file)
         	return nuova_hash(10);
     	}
 
+	// Crea una nuova tabella hash
     	tabella_hash h = nuova_hash(10);
     	char riga[200];
 
+	// Legge il file riga per riga
 	while (fgets(riga, sizeof(riga), file))
 	{
         	char *nomeutente = strtok(riga, ";");
         	char *password = strtok(NULL, ";");
        		char *lezioni_str = strtok(NULL, "\n");
 
+		// Crea un nuovo abbonato
         	if (nomeutente && password && lezioni_str)
 		{
             		abbonato nuovo;
@@ -273,7 +288,7 @@ tabella_hash carica_abbonati(const char *nome_file)
             		strncpy(nuovo.password, password, MAX_CARATTERI);
             		nuovo.lezioni_rimanenti = atoi(lezioni_str);
             		nuovo.chiave = strdup(nuovo.nomeutente);
-            		h = inserisci_hash(nuovo, h);
+            		h = inserisci_hash(nuovo, h); // Inserisce nella tabella
         	}
     	}
 
@@ -305,6 +320,7 @@ tabella_hash carica_abbonati(const char *nome_file)
 */
 void salva_abbonati(tabella_hash h, const char *nome_file)
 {
+	// Apre il file in scrittura
 	FILE *file = fopen(nome_file, "w");
     	if (!file)
 	{
@@ -312,9 +328,11 @@ void salva_abbonati(tabella_hash h, const char *nome_file)
         	return;
     	}
 
+	// Scorre tutti gli slot della tabella
     	for (int i = 0; i < h->dimensione; i++)
 	{
         	abbonato *corrente = h->tabella[i];
+		// Scrive gli abbonati
         	while (corrente != NULL)
 		{
             		fprintf(file, "%s;%s;%d\n", corrente->nomeutente, corrente->password, corrente->lezioni_rimanenti);
