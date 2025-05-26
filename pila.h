@@ -2,7 +2,7 @@
 #define PILA_H
 
 #include "partecipante.h"
-#define MASSIMO_PILA 20 //numero massimo partecipanti
+#define MASSIMO_PILA 20 // Capacità massima della pila
 
 typedef struct c_pila *pila;
 
