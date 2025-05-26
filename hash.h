@@ -82,10 +82,10 @@ abbonato *cerca_hash(char *chiave, tabella_hash tabella);
 * Carica da file i dati degli abbonati e li inserisce in una nuova tabella hash
 *
 * Parametri:
-* filename: nome del file da cui leggere i dati
+* nome_file: nome del file da cui leggere i dati
 *
 * Pre-condizione:
-* filename è un puntatore a stringa non nullo
+* nome_file è un puntatore a stringa non nullo
 *
 * Post-condizione:
 * Restituisce una tabella hash inizializzata contenente tutti gli abbonati letti dal file.
@@ -102,13 +102,10 @@ tabella_hash carica_abbonati(const char *nome_file);
 *
 * Parametri:
 * h: tabella hash contenente gli abbonati da salvare
-* filename: nome del file su cui salvare i dati
+* nome_file: nome del file su cui salvare i dati
 *
 * Pre-condizione:
-* h è una tabella hash valida e filename è un puntatore a stringa non nullo
-*
-* Post-condizione:
-* Se il file è accessibile in scrittura, i dati degli abbonati sono salvati correttamente
+* h è una tabella hash valida e nome_file è un puntatore a stringa non nullo
 *
 * Side-effect:
 * Scrittura su file. Se il file non può essere aperto, viene stampato un messaggio di errore
