@@ -381,6 +381,7 @@ void stampa_lezioni(coda calendario)
 
 	printf("\nLezioni di fitness disponibili:\n");
 
+	// Itera su tutte le lezioni
 	while (corrente != NULL)
 	{
     		int num_iscritti = dimensione_pila(corrente->valore.iscritti); // Calcola numero iscritti
@@ -422,6 +423,7 @@ void stampa_lezioni(coda calendario)
 */
 void prenota_lezione(coda calendario)
 {
+	// Verifica se ci sono lezioni disponibili
 	if (coda_vuota(calendario))
 	{
     		printf("Non ci sono lezioni disponibili.\n");
@@ -447,8 +449,9 @@ void prenota_lezione(coda calendario)
 		return;
     	}
 
+	// Acquisisce la scelta dell'utente
 	char scelta[10];
-	printf("Inserisci il numero della lezione a cui vuoi iscriverti: "); //CONTROLLO VALORE!!!
+	printf("Inserisci il numero della lezione a cui vuoi iscriverti: ");
 	fgets(scelta, sizeof(scelta), stdin);
 
 	// Naviga alla lezione scelta
@@ -460,6 +463,7 @@ void prenota_lezione(coda calendario)
     		indice++;
 	}
 
+	// Verifica la validità della selezione
 	if (corrente == NULL)
 	{
     		printf("Scelta non valida.\n");
@@ -468,6 +472,7 @@ void prenota_lezione(coda calendario)
     		return;
 	}
 
+	// Controlla disponibilità posti
 	if (dimensione_pila(corrente->valore.iscritti) >= MASSIMO_PILA)
 	{
     		printf("Mi dispiace, la lezione è al completo!\n");
@@ -476,11 +481,13 @@ void prenota_lezione(coda calendario)
     		return;
 	}
 
+	// Acquisisce il nome dell'utente
 	partecipante nome;
 	printf("Inserisci il tuo nome per prenotarti: ");
 	fgets(nome, sizeof(nome), stdin);
-	nome[strcspn(nome, "\n")] = 0; // rimuove newline
+	nome[strcspn(nome, "\n")] = 0; // Rimuove newline
 
+	// Effettua la prenotazione
 	if (inserisci_pila(nome, corrente->valore.iscritti))
 	{
         	printf("Prenotazione completata per %s\nTi è stato addebitato il costo di 15€\n", nome);
@@ -524,6 +531,7 @@ void prenota_lezione(coda calendario)
 */
 void prenota_lezione_abbonato(coda calendario, abbonato *utente_loggato)
 {
+	// Verifica disponibilità lezioni
 	if (coda_vuota(calendario))
 	{
     		printf("Non ci sono lezioni disponibili.\n");
@@ -537,7 +545,7 @@ void prenota_lezione_abbonato(coda calendario, abbonato *utente_loggato)
 	char risposta;
 	printf("\nDesideri prenotare una lezione, %s? (s/n): ", utente_loggato->nomeutente);
 	scanf(" %c", &risposta);
-	getchar();  // consuma newline
+	getchar();  // Consuma newline
 
 	if (risposta != 's' && risposta != 'S')
 	{
@@ -547,6 +555,7 @@ void prenota_lezione_abbonato(coda calendario, abbonato *utente_loggato)
     		return;
 	}
 
+	// Verifica lezioni rimanenti all'utente
 	if (utente_loggato->lezioni_rimanenti <= 0)
 	{
     		printf("Non hai lezioni rimanenti. Rinnova l'abbonamento o acquista più lezioni.\n");
@@ -555,11 +564,13 @@ void prenota_lezione_abbonato(coda calendario, abbonato *utente_loggato)
     		return;
 	}
 
+	// Acquisisce la scelta dell'utente
 	char scelta[10];
 	printf("Inserisci il numero della lezione a cui vuoi iscriverti: ");
 	fgets(scelta, sizeof(scelta), stdin);
 	scelta[strcspn(scelta, "\n")] = 0;
 
+	// Naviga alla lezione selezionata
 	struct nodo *corrente = calendario->testa;
 	int indice = 1;
 	while (corrente != NULL && indice < atoi(scelta))
@@ -568,6 +579,7 @@ void prenota_lezione_abbonato(coda calendario, abbonato *utente_loggato)
     		indice++;
 	}
 
+	// Verifica validità selezione
 	if (corrente == NULL)
 	{
     		printf("Scelta non valida.\n");
@@ -576,6 +588,7 @@ void prenota_lezione_abbonato(coda calendario, abbonato *utente_loggato)
     		return;
 	}
 
+	// Controlla disponibilità posti
 	if (dimensione_pila(corrente->valore.iscritti) >= MASSIMO_PILA)
 	{
     		printf("Mi dispiace, la lezione è al completo!\n");
@@ -597,6 +610,8 @@ void prenota_lezione_abbonato(coda calendario, abbonato *utente_loggato)
 	    	}
 		inserisci_pila(p, temp);
 	}
+
+	// Ripristina la pila originale
 	while (!pila_vuota(temp))
 	{
 		estrai_pila(temp, p);
@@ -612,7 +627,7 @@ void prenota_lezione_abbonato(coda calendario, abbonato *utente_loggato)
 	    	return;
 	}
 	
-	// Aggiunge il nome utente nella pila iscritti
+	// Effettua la prenotazione
 	if (inserisci_pila(utente_loggato->nomeutente, corrente->valore.iscritti))
 	{
     		utente_loggato->lezioni_rimanenti--;
@@ -656,6 +671,8 @@ void prenota_lezione_abbonato(coda calendario, abbonato *utente_loggato)
 void disdici_iscrizione(coda calendario, const char* lezioni)
 {
 	printf("--- Disdici una prenotazione ---\n");
+
+	// Verifica presenza lezioni
 	if (coda_vuota(calendario))
 	{
         	printf("Non ci sono lezioni di fitness disponibili.\n");
@@ -679,11 +696,12 @@ void disdici_iscrizione(coda calendario, const char* lezioni)
         	return;
     	}
 
+	// Acquisisce la scelta dell'utente
     	char scelta[10];
     	printf("Inserisci il numero della lezione a cui vuoi disdire la tua iscrizione: ");
     	fgets(scelta, sizeof(scelta), stdin);
 
-    	// Conta dinamicamente il numero di lezioni nella coda calendario
+    	// Calcola il numero totale di lezioni
     	int max_lezioni = 0;
     	struct nodo* temp = calendario->testa;
 	while (temp != NULL) 
@@ -692,6 +710,7 @@ void disdici_iscrizione(coda calendario, const char* lezioni)
         	temp = temp->prossimo;
     	}
 
+	// Verifica validità input
     	int num_scelta = atoi(scelta);
     	if (num_scelta < 1 || num_scelta > max_lezioni)
     	{
@@ -701,6 +720,7 @@ void disdici_iscrizione(coda calendario, const char* lezioni)
 		return;
     	}
 
+	// Naviga alla lezione selezionata
     	struct nodo* corrente = calendario->testa;
     	int indice = 0;
     	while (corrente != NULL && indice < num_scelta - 1) 
@@ -719,18 +739,19 @@ void disdici_iscrizione(coda calendario, const char* lezioni)
 
     	lezione* selezionata = &corrente->valore; 
 
+	// Acquisisce l'identità dell'utente
     	char nome[50];
     	printf("Inserisci il tuo nome oppure, se sei abbonato, il tuo nome utente: ");
     	fgets(nome, sizeof(nome), stdin);
     	nome[strcspn(nome, "\n")] = 0;  // rimuove newline
 
-    	// Carica la tabella degli abbonati per verificare se il nome è un abbonato
+    	// Verifica se è un abbonato
     	tabella_hash tabella = carica_abbonati("abbonati.txt");
     	abbonato* utente = cerca_hash(nome, tabella);
-    
+
+	// Se abbonato, richiede la password
     	if (utente != NULL)
 	{
-        	// Se è un abbonato, chiedi la password
         	char password[MAX_CARATTERI];
         	printf("Inserisci la password per confermare la disdetta: ");
         	fgets(password, sizeof(password), stdin);
@@ -746,6 +767,7 @@ void disdici_iscrizione(coda calendario, const char* lezioni)
         	}
 	}
 
+	// Cerca e rimuove l'utente dalla lista iscritti
     	int trovato = 0;
     	pila supporto = nuova_pila();
     	if (supporto == NULL)
@@ -766,14 +788,13 @@ void disdici_iscrizione(coda calendario, const char* lezioni)
         	if (strcmp(p, nome) == 0 && !trovato)
         	{
             		trovato = 1;
-            		// Se è un abbonato, incrementa le lezioni rimanenti
+            		// Se abbonato, incrementa le lezioni rimanenti
             		if (utente != NULL)
 			{
                 		utente->lezioni_rimanenti++;
                 		salva_abbonati(tabella, "abbonati.txt");
                 		printf("Lezione disdetta. Lezioni rimanenti: %d\n", utente->lezioni_rimanenti);
             		}
-            		// Non reinserisco nella pila di supporto => rimuovo l'iscritto
         	}
         	else
         	{
@@ -781,6 +802,7 @@ void disdici_iscrizione(coda calendario, const char* lezioni)
         	}
     	}
 
+	// Ripristina la pila originale
     	while (!pila_vuota(supporto))
     	{
         	strcpy(p, testa(supporto));
@@ -798,6 +820,7 @@ void disdici_iscrizione(coda calendario, const char* lezioni)
         	return;
     	}
 
+	// Aggiorna il file delle lezioni
     	FILE* file = fopen(lezioni, "r");
     	if (!file)
     	{
@@ -883,7 +906,8 @@ void disdici_iscrizione(coda calendario, const char* lezioni)
 */
 void salva_lezioni(coda calendario, const char *nome_file)
 {
-	FILE *fp = fopen(nome_file, "w"); // Apre il file in modalità scrittura
+	// Apre il file in modalità scrittura
+	FILE *fp = fopen(nome_file, "w");
     	if (fp == NULL)
 	{
         	perror("Errore apertura file");
@@ -966,6 +990,7 @@ int data_passata(const char *data_str)
 
     	time_t tempo_data = mktime(&data);
 
+	// Ottiene la data corrente
     	time_t oggi = time(NULL);
     	struct tm oggi_tm = *localtime(&oggi);
     	oggi_tm.tm_hour = 0; oggi_tm.tm_min = 0; oggi_tm.tm_sec = 0;
@@ -1022,14 +1047,14 @@ void pulisci_lezioni_passate(coda calendario, const char *nome_file)
 
 		if (data_passata(corrente->valore.data))
 		{
-        		// Scrivi su file storico
+        		// Archivia la lezione
             		fprintf(fp, "%s;%s;%s;%d\n",
                 	corrente->valore.data,
                 	corrente->valore.giorno,
                 	corrente->valore.orario,
                 	dimensione_pila(corrente->valore.iscritti));
 
-            		// Salva anche tutti gli iscritti
+            		// Archivia gli iscritti
             		pila iscritti_tmp = nuova_pila();
             		partecipante p;
             		while (!pila_vuota(corrente->valore.iscritti))
@@ -1040,13 +1065,15 @@ void pulisci_lezioni_passate(coda calendario, const char *nome_file)
                     			inserisci_pila(p, iscritti_tmp);
                 		}
             		}
+
+			// Ripristina la pila
             		while (!pila_vuota(iscritti_tmp))
 			{
                 		if (estrai_pila(iscritti_tmp, p))
                     			inserisci_pila(p, corrente->valore.iscritti);
             		}
 
-			// Rimuovi il nodo dalla coda
+			// Rimuove il nodo dalla coda
             		if (precedente == NULL)
                 		calendario->testa = prossimo;
 			else
@@ -1112,7 +1139,7 @@ void report_mensile()
         		return;
     		}
 
-    		// Primo passaggio: estrai mesi e anni unici dal file
+    		// Estrai mesi e anni unici dal file
 		int mesi[120], anni[120], count = 0;
 		char riga[256];
 
