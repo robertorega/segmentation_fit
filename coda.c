@@ -35,7 +35,7 @@ struct c_coda
 * calendario: la coda dove verranno inserite le lezioni lette dal file.
 * nome_file: nome del file da cui leggere le lezioni e gli iscritti.
 *
-* Pre-condizione:
+* Pre-condizioni:
 * - 'calendario' deve essere una coda inizializzata.
 * - 'nome_file' deve essere un puntatore valido a una stringa non nulla.
 *
