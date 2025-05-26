@@ -50,17 +50,14 @@ void pulisci_schermo(void);
 int main()
 {
 	char scelta[10];
-    coda calendario = nuova_coda();
-      
-    carica_lezioni(calendario, "lezioni.txt");
+    	coda calendario = nuova_coda();
+	carica_lezioni(calendario, "lezioni.txt");
 
-    // Genera nuove lezioni solo se la coda è vuota
-    if (coda_vuota(calendario))
-    {
-        genera_lezioni(calendario);
-    }
-
-	
+	// Genera nuove lezioni solo se la coda è vuota
+    	if (coda_vuota(calendario))
+    	{
+        	genera_lezioni(calendario);
+    	}
 
 	while (1) 
 	{
@@ -71,7 +68,7 @@ int main()
 
 		printf("\nSelezionare un’opzione:\n");
     		printf("1 - Area abbonati\n");
-    		printf("2 - Lezioni\n");
+    		printf("2 - Ingresso Singolo\n");
     		printf("3 - Disdici\n");
     		printf("4 - Report mensili\n");
     		printf("5 - Contattaci\n");
