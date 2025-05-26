@@ -3,6 +3,7 @@
 
 #include "abbonati.h"
 #include "lezione.h"
+#define ELEMENTO_NULLO ((lezione){ NULL, "", "", "" }) // Lezione nulla/vuota
 
 typedef struct c_coda *coda;
 
