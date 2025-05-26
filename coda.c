@@ -22,28 +22,26 @@ struct c_coda
 
 /* Funzione: carica_lezioni
 *
-* Carica le lezioni salvate da un file e le inserisce nella coda calendario
+* Carica le lezioni salvate da un file e le inserisce nella coda calendario.
 *
 * Descrizione:
-* La funzione apre il file indicato in modalità lettura e scrittura
-* Per ogni lezione trovata nel file legge la data il giorno l'orario e il numero di iscritti
-* Crea una nuova pila per gli iscritti e li inserisce uno alla volta leggendo righe successive
-* Alla fine inserisce la lezione completa nella coda calendario
-* Se il file non esiste viene creato automaticamente
+* La funzione apre il file indicato in modalità lettura e scrittura.
+* Per ogni lezione trovata nel file legge la data, il giorno, l'orario e il numero di iscritti.
+* Crea una nuova pila per gli iscritti e li inserisce uno alla volta leggendo righe successive.
+* Alla fine, inserisce la lezione completa nella coda calendario.
+* Se il file non esiste, viene creato automaticamente.
 *
 * Parametri:
-* calendario: la coda dove verranno inserite le lezioni lette dal file
-* partecipanti: nome del file da cui leggere le lezioni e gli iscritti
+* calendario: la coda dove verranno inserite le lezioni lette dal file.
+* nome_file: nome del file da cui leggere le lezioni e gli iscritti.
 *
 * Pre-condizione:
-* calendario deve essere una coda inizializzata
-* partecipanti deve essere un puntatore valido a una stringa non nulla
-*
-* Post-condizione:
-* Inserisce nella coda tutte le lezioni lette correttamente dal file, con i rispettivi iscritti
+* calendario deve essere una coda inizializzata.
+* nome_file deve essere un puntatore valido a una stringa non nulla.
 *
 * Side-effect:
-* Legge da file e alloca dinamicamente memoria per le pile di iscritti e per i nodi della coda
+* Legge da file.
+* Alloca dinamicamente memoria per le pile di iscritti e per i nodi della coda.
 */
 void carica_lezioni(coda calendario, const char *nome_file)
 {
@@ -282,26 +280,25 @@ int giorno_lezione(int giorno_settimana, char *giorno, char *orario)
 
 /* Funzione: genera_lezioni
 *
-* Genera e aggiunge alla coda calendario le lezioni previste nei prossimi 30 giorni, evitando duplicati
+* Genera e aggiunge alla coda calendario le lezioni previste nei prossimi 30 giorni, evitando duplicati.
 *
 * Descrizione:
-* La funzione analizza i prossimi 30 giorni a partire dalla data odierna
-* Per ogni giorno controlla se è previsto lo svolgimento di una lezione
-* Se il giorno è valido e la lezione con quella data e orario non è già presente nella coda
-* allora crea una nuova lezione vuota e la inserisce nel calendario
+* La funzione analizza i prossimi 30 giorni a partire dalla data odierna.
+* Per ciascun giorno, verifica se è previsto lo svolgimento di una lezione (Lunedì, Mercoledì, Venerdì, Sabato).
+* Se il giorno è valido e non è già presente una lezione con la stessa data e orario nella coda,
+* crea una nuova lezione vuota e la inserisce nel calendario.
 *
 * Parametri:
-* calendario: la coda dove inserire le nuove lezioni generate
+* calendario: la coda dove inserire le nuove lezioni generate.
 *
 * Pre-condizione:
-* calendario deve essere una coda inizializzata contenente eventualmente lezioni già caricate da file
-*
-* Post-condizione:
-* Inserisce nella coda le lezioni valide (Lun, Mer, Ven, Sab) che non sono già presenti per data e orario
+* calendario deve essere una coda inizializzata, eventualmente già contenente lezioni caricate da file.
 *
 * Side-effect:
-* Analizza le prossime 30 date a partire da oggi, verifica i giorni di lezione, controlla duplicati
-* e alloca dinamicamente nuove lezioni da inserire nella coda
+* Analizza le prossime 30 date a partire da oggi.
+* Verifica i giorni validi per le lezioni.
+* Controlla la presenza di duplicati nella coda.
+* Alloca dinamicamente nuove lezioni da inserire nella coda.
 */
 void genera_lezioni(coda calendario)
 {
@@ -355,21 +352,22 @@ void genera_lezioni(coda calendario)
 
 /* Funzione: stampa_lezioni
 *
-* Stampa l’elenco delle lezioni presenti nella coda, con data, giorno, orario e disponibilità
+* Stampa l’elenco delle lezioni presenti nella coda, con data, giorno, orario e disponibilità.
 *
 * Descrizione:
-* La funzione scorre la coda delle lezioni e per ogni lezione mostra le informazioni principali
-* Viene indicato se ci sono posti disponibili o se la lezione è al completo
-* Ogni lezione è numerata per facilitare eventuali selezioni da parte dell'utente
+* La funzione scorre la coda delle lezioni e, per ciascuna di esse, mostra le informazioni principali:
+* data, giorno, orario e disponibilità di posti. Le lezioni sono numerate progressivamente per agevolare
+* una possibile selezione da parte dell'utente.
+* Se il numero massimo di partecipanti è stato raggiunto, viene indicato che i posti sono esauriti.
 *
 * Parametri:
-* calendario: la coda contenente le lezioni da stampare
+* calendario: la coda contenente le lezioni da stampare.
 *
 * Pre-condizione:
-* calendario deve essere una coda inizializzata
+* calendario deve essere una coda inizializzata.
 *
-* Post-condizione:
-* Stampa sullo schermo l’elenco delle lezioni, indicando se i posti sono esauriti o disponibili
+* Side-effect:
+* Stampa a schermo le informazioni delle lezioni contenute nella coda.
 */
 void stampa_lezioni(coda calendario)
 {
@@ -400,24 +398,22 @@ void stampa_lezioni(coda calendario)
 
 /* Funzione: prenota_lezione
 *
-* Permette all’utente di prenotare una lezione tra quelle disponibili nella coda
+* Permette all’utente di prenotare una lezione tra quelle disponibili nella coda.
 *
 * Descrizione:
-* La funzione mostra all'utente l'elenco delle lezioni disponibili e consente di selezionare una lezione
-* Tramite input, l'utente sceglie la lezione desiderata e inserisce il proprio nome per prenotarsi
-* Se ci sono posti disponibili, il nome viene inserito nella pila degli iscritti della lezione scelta
+* La funzione mostra l’elenco delle lezioni attualmente disponibili e consente all’utente di selezionarne una.
+* Dopo la selezione, l’utente inserisce il proprio nome per completare la prenotazione.
+* Se la lezione scelta ha posti disponibili, il nome viene aggiunto alla pila degli iscritti.
 *
 * Parametri:
-* calendario: la coda da cui selezionare la lezione da prenotare
+* calendario: la coda da cui selezionare la lezione da prenotare.
 *
 * Pre-condizione:
-* calendario deve essere una coda inizializzata e contenere almeno una lezione
-*
-* Post-condizione:
-* Se la prenotazione ha successo, aggiunge il partecipante alla pila degli iscritti per quella lezione
+* calendario deve essere una coda inizializzata e contenere almeno una lezione.
 *
 * Side-effect:
-* Modifica la pila degli iscritti per la lezione scelta, interagisce con l’utente tramite input/output
+* Interagisce con l’utente tramite input/output.
+* Modifica la pila degli iscritti della lezione scelta aggiungendo un nuovo partecipante.
 */
 void prenota_lezione(coda calendario)
 {
@@ -503,29 +499,26 @@ void prenota_lezione(coda calendario)
 
 /* Funzione: prenota_lezione_abbonato
 *
-* Prenota una lezione per un utente abbonato
+* Consente a un utente abbonato di prenotare una lezione tra quelle disponibili.
 *
 * Descrizione:
-* La funzione permette a un utente abbonato di prenotare una lezione tra quelle disponibili
-* Dopo aver verificato la disponibilità delle lezioni e delle lezioni rimanenti dell’abbonato,
-* viene richiesto all’utente di selezionare una lezione. Se non è già iscritto e ci sono posti liberi,
-* l’utente viene aggiunto alla pila degli iscritti della lezione e le sue lezioni rimanenti vengono decrementate
+* La funzione mostra l'elenco delle lezioni disponibili e permette all'utente abbonato di selezionare una lezione.
+* Verifica che ci siano posti disponibili, che l’utente non sia già iscritto e che abbia lezioni rimanenti.
+* In caso positivo, l’utente viene aggiunto alla pila degli iscritti della lezione e le sue lezioni rimanenti
+* vengono decrementate.
 *
 * Parametri:
-* calendario: coda contenente le lezioni
-* utente_loggato: abbonato che effettua la prenotazione
+* calendario: la coda contenente le lezioni disponibili.
+* utente_loggato: puntatore alla struttura dell'abbonato che sta effettuando la prenotazione.
 *
 * Pre-condizione:
-* calendario inizializzato e non vuoto
-* utente_loggato valido
-*
-* Post-condizione:
-* Se la prenotazione va a buon fine:
-* - l’utente viene aggiunto alla pila degli iscritti
-* - decrementa le lezioni rimanenti dell’abbonato
+* calendario deve essere inizializzato e non vuoto.
+* utente_loggato deve essere un puntatore valido a un abbonato autenticato.
 *
 * Side-effect:
-* Modifica pila iscritti e lezioni_rimanenti, interazione I/O
+* Interagisce con l’utente tramite input/output.
+* Modifica la pila degli iscritti della lezione selezionata.
+* Decrementa il numero di lezioni rimanenti dell’abbonato.
 */
 void prenota_lezione_abbonato(coda calendario, abbonato *utente_loggato)
 {
@@ -643,28 +636,27 @@ void prenota_lezione_abbonato(coda calendario, abbonato *utente_loggato)
 
 /* Funzione: disdici_iscrizione
 *
-* Permette a un utente di disdire la prenotazione a una lezione
+* Consente a un utente (abbonato o non) di annullare l’iscrizione a una lezione precedentemente prenotata.
 *
 * Descrizione:
-* La funzione mostra le lezioni disponibili, consente all'utente di selezionare una lezione
-* e rimuove il proprio nome dalla lista degli iscritti (pila) se presente. Se l’utente è un abbonato,
-* viene richiesta la password per confermare la disdetta e aggiornate le lezioni rimanenti.
-* Inoltre, il file delle lezioni viene aggiornato per rimuovere l’utente dalla lezione corrispondente.
+* La funzione mostra l'elenco delle lezioni disponibili, consente all’utente di selezionarne una
+* e rimuove il proprio nome dalla pila degli iscritti, se presente.
+* Se l’utente è un abbonato, viene richiesta la password per autorizzare l’operazione e,
+* in caso di conferma, viene incrementato il numero di lezioni rimanenti.
+* Infine, aggiorna il file delle lezioni rimuovendo l’utente dalla lezione specificata.
 *
 * Parametri:
-* calendario: la coda contenente le lezioni
-* lezioni: nome del file da aggiornare dopo la disdetta
+* calendario: la coda contenente le lezioni.
+* lezioni: il nome (percorso) del file da aggiornare con la nuova lista degli iscritti.
 *
 * Pre-condizione:
-* calendario deve essere una coda inizializzata e contenere lezioni
-* lezioni deve essere il percorso valido al file contenente i dati delle lezioni
-*
-* Post-condizione:
-* Se la disdetta va a buon fine, l’utente viene rimosso dalla pila degli iscritti della lezione selezionata
-* e il file delle lezioni aggiornato
+* calendario inizializzato e contenente almeno una lezione.
+* lezioni deve essere un percorso valido al file delle lezioni.
 *
 * Side-effect:
-* Interazione I/O con l’utente, modifica la pila degli iscritti, aggiorna file e lezioni_rimanenti se abbonato
+* Interazione con l’utente tramite input/output.
+* Modifica la pila degli iscritti della lezione selezionata.
+* Scrive sul file 'lezioni' e su 'abbonati.txt' (se l’utente è abbonato).
 */
 void disdici_iscrizione(coda calendario, const char* lezioni)
 {
@@ -879,28 +871,26 @@ void disdici_iscrizione(coda calendario, const char* lezioni)
 
 /* Funzione: salva_lezioni
 *
-* Salva tutte le lezioni presenti nella coda calendario su file, includendo anche gli iscritti
+* Salva tutte le lezioni presenti nella coda calendario su file, includendo anche gli iscritti.
 *
 * Descrizione:
-* La funzione salva tutte le lezioni contenute nella coda calendario in un file
-* Ogni lezione viene scritta con data giorno orario e numero iscritti
-* Gli iscritti vengono temporaneamente estratti dalla pila e scritti su file
-* Dopo la scrittura la pila originale degli iscritti viene ripristinata
+* La funzione salva tutte le lezioni contenute nella coda 'calendario' in un file.
+* Ogni lezione viene scritta con data, giorno, orario e numero di iscritti.
+* Gli iscritti vengono temporaneamente estratti dalla pila per essere scritti su file,
+* quindi la pila originale viene ripristinata mantenendo intatto l’ordine.
 *
 * Parametri:
-* calendario: la coda contenente le lezioni da salvare
-* partecipanti: nome del file su cui salvare i dati (verrà sovrascritto)
+* calendario: la coda contenente le lezioni da salvare.
+* nome_file: nome del file su cui salvare i dati (verrà sovrascritto).
 *
 * Pre-condizione:
-* calendario deve essere una coda inizializzata
-* partecipanti deve essere un puntatore valido a una stringa non nulla
-*
-* Post-condizione:
-* Scrive sul file tutte le lezioni contenute nella coda e i rispettivi partecipanti
+* - 'calendario' deve essere una coda inizializzata.
+* - 'nome_file' deve essere un puntatore valido a una stringa non nulla.
 *
 * Side-effect:
-* Apre il file in modalità scrittura ("w"), estrae temporaneamente gli iscritti dalle pile,
-* li salva su file, e poi ripristina la pila originale
+* - Apre il file in modalità scrittura ("w").
+* - Estrae temporaneamente gli iscritti dalle pile per scriverli su file.
+* - Ripristina le pile originali degli iscritti al termine della scrittura.
 */
 void salva_lezioni(coda calendario, const char *nome_file)
 {
@@ -999,29 +989,28 @@ int data_passata(const char *data_str)
 
 /* Funzione: pulisci_lezioni_passate
 *
-* Rimuove dalla coda tutte le lezioni con data già passata, salvandole su un file storico
+* Rimuove dalla coda tutte le lezioni con data già passata, salvandole su un file storico.
 *
 * Descrizione:
-* La funzione scorre la coda delle lezioni e rimuove tutte quelle con data passata
-* Ogni lezione eliminata viene salvata su un file storico insieme ai relativi iscritti
-* Le lezioni vengono confrontate con la data odierna usando la funzione data_passata
-* La struttura della coda viene modificata eliminando i nodi corrispondenti alle lezioni passate
-* La memoria dei nodi eliminati viene liberata e le informazioni vengono scritte in append su file
+* La funzione scorre la coda delle lezioni e rimuove tutte quelle con data passata,
+* confrontando con la data odierna tramite la funzione data_passata.
+* Ogni lezione eliminata, con i relativi iscritti, viene salvata in append su file storico.
+* La struttura della coda viene modificata rimuovendo i nodi corrispondenti,
+* la memoria dei nodi eliminati viene liberata.
 *
 * Parametri:
-* calendario: la coda contenente le lezioni da analizzare
-* storico_file: nome del file su cui salvare le lezioni eliminate
+* - calendario: coda contenente le lezioni da analizzare.
+* - nome_file: nome del file su cui salvare le lezioni eliminate.
 *
 * Pre-condizione:
-* calendario deve essere una coda inizializzata contenente lezioni
-* storico_file deve essere un puntatore valido a una stringa non nulla
-*
-* Post-condizione:
-* Le lezioni con data passata vengono rimosse dalla coda e salvate nel file storico
+* - calendario deve essere una coda inizializzata e non vuota.
+* - nome_file deve essere un puntatore valido a una stringa non nulla.
 *
 * Side-effect:
-* Apre il file in modalità append ("a"), modifica la struttura della coda,
-* scrive su file e libera la memoria dei nodi eliminati
+* - Apre il file in modalità append ("a").
+* - Modifica la struttura della coda rimuovendo nodi.
+* - Scrive su file le lezioni passate e i relativi iscritti.
+* - Libera la memoria dei nodi eliminati.
 */
 void pulisci_lezioni_passate(coda calendario, const char *nome_file)
 {
@@ -1097,30 +1086,21 @@ void pulisci_lezioni_passate(coda calendario, const char *nome_file)
 /* Funzione: report_mensile
 *
 * Genera e stampa un report ordinato delle lezioni svolte in un mese specifico,
-* elencando solo quelle con almeno un partecipante, ordinate per numero di partecipanti in ordine decrescente
+* elencando solo quelle con almeno un partecipante, ordinate per numero di partecipanti decrescente.
 *
 * Descrizione:
-* La funzione chiede all’utente di selezionare un mese tra quelli presenti nel file storico
-* Per ogni lezione nel file che corrisponde al mese e anno scelti e ha almeno un partecipante
-* memorizza data, giorno, orario e numero di partecipanti in array temporanei
-* Ordina poi le lezioni trovate in ordine decrescente in base al numero di partecipanti
-* Infine stampa il report mensile ordinato delle lezioni a schermo
-*
-* (utilizzando bubble sort), quindi stampa il report ordinato a video.
-*
-* Parametri:
-* Nessun parametro di input
+* La funzione legge il file "storico.txt" per estrarre mesi/anni unici disponibili,
+* chiede all'utente di selezionare uno di questi,
+* quindi filtra le lezioni di quel mese/anno con almeno un partecipante.
+* Memorizza data, giorno, orario e numero partecipanti in array temporanei,
+* ordina le lezioni in ordine decrescente di partecipanti usando bubble sort,
+* e stampa il report ordinato a video.
 *
 * Pre-condizione:
-* Il file "storico.txt" deve essere presente nella directory del programma e formattato correttamente
-*
-* Post-condizione:
-* Se esistono lezioni nel mese/anno specificati con almeno un partecipante, viene stampato un elenco ordinato
-* Se non ci sono lezioni corrispondenti, viene stampato un messaggio informativo
+* - Il file "storico.txt" deve esistere e rispettare il formato previsto.
 *
 * Side-effect:
-* Lettura da file, acquisizione input da tastiera, stampa a schermo
-* Nessuna modifica ai dati persistenti o alla memoria dinamica
+* - Legge da file, acquisisce input da tastiera, stampa a schermo.
 */
 void report_mensile()
 {
