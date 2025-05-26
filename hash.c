@@ -258,9 +258,6 @@ tabella_hash carica_abbonati(const char *nome_file)
 * Pre-condizione:
 * h è una tabella hash valida e nome_file è un puntatore a stringa non nullo
 *
-* Post-condizione:
-* Se il file è accessibile in scrittura, i dati degli abbonati sono salvati correttamente
-*
 * Side-effect:
 * Scrittura su file. Se il file non può essere aperto, viene stampato un messaggio di errore
 */
