@@ -1134,10 +1134,10 @@ void report_mensile(const char* filename)
         }
 
         // Estrai mesi e anni unici dal file
-        int mesi[120], anni[120], count = 0;
+        int mesi[12], anni[12], count = 0;
         char riga[256];
 
-        while (fgets(riga, sizeof(riga), file_storico))
+        while (fgets(riga, sizeof(riga), file_storico)
         {
             int giorno, mese, anno, num;
             char data[11], giorno_s[15], orario[10];
@@ -1219,7 +1219,7 @@ void report_mensile(const char* filename)
         int totale_lezioni = 0;
 
         // Lettura del file riga per riga
-        while (fgets(riga, sizeof(riga), file_storico) 
+        while (fgets(riga, sizeof(riga), file_storico)) 
         {
             char data_lettura[11];
             char giorno_lettura[15];
