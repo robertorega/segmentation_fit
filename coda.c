@@ -1408,20 +1408,20 @@ void caso_test_2(coda calendario)
     	nuovo.chiave = strdup(nuovo.nomeutente);
     	nuovo.lezioni_rimanenti = 0;
 
-    	tabella_hash tabella = carica_abbonati("abbonati.txt");
+    	tabella_hash tabella = carica_abbonati("ct2_abbonati.txt");
     	tabella = inserisci_hash(nuovo, tabella);
-    	salva_abbonati(tabella, "abbonati.txt");
+    	salva_abbonati(tabella, "ct2_abbonati.txt");
 
     	printf("Abbonato creato: %s\n", nuovo.nomeutente);
 
 	// 3. Ricarica tabella e cerca utente
-    	tabella = carica_abbonati("abbonati.txt");
+    	tabella = carica_abbonati("ct2_abbonati.txt");
     	abbonato *trovato = cerca_hash(nomeutente, tabella);
 
     	if (!trovato) 
 	{
         	printf("ERRORE: Utente non trovato dopo la creazione.\n");
-		printf("Possiamo fare altro per te? Premi INVIO\n");
+		printf("Possiamo fare altro per te? Premi INVIO....");
         	getchar();
         	return;
     	}
@@ -1439,7 +1439,7 @@ void caso_test_2(coda calendario)
 
     	// 5. Ricarica abbonamento
     	trovato->lezioni_rimanenti += 12;
-    	salva_abbonati(tabella, "abbonati.txt");
+    	salva_abbonati(tabella, "ct2_abbonati");
     	printf("Lezioni rimanenti dopo ricarica: %d\n\n", trovato->lezioni_rimanenti);
 
     	// 6. Prenotazione automatica della prima lezione
@@ -1457,8 +1457,8 @@ void caso_test_2(coda calendario)
     	if (inserisci_pila(trovato->nomeutente, lezione_test->valore.iscritti)) 
 	{
         	trovato->lezioni_rimanenti--;
-        	salva_abbonati(tabella, "abbonati.txt");
-        	salva_lezioni(calendario, "lezioni.txt");
+        	salva_abbonati(tabella, "ct2_abbonati");
+        	salva_lezioni(calendario, "ct2_lezioni.txt");
 
         	int iscritti_post = dimensione_pila(lezione_test->valore.iscritti);
         	printf("Prenotazione riuscita. Iscritti prima: %d, dopo: %d\n", iscritti_pre, iscritti_post);
@@ -1502,19 +1502,19 @@ void caso_test_2(coda calendario)
 */
 void caso_test_3(coda calendario)
 {
-    printf("\n--- TEST 3: Verifica Report Mensile ---\n");
-    printf("Questo test verifica che il report mensile contenga dati corretti sulle prenotazioni.\n");
-    printf("Crea una data passata per provare il report ad ogni chiamata della funzione, ogni volta salva i dati correttamente.\n\n");
-    printf("Premi INVIO per iniziare...\n");
-    getchar();
+	printf("\n--- TEST 3: Verifica Report Mensile ---\n");
+    	printf("Questo test verifica che il report mensile contenga dati corretti sulle prenotazioni.\n");
+    	printf("Crea una data passata per provare il report ad ogni chiamata della funzione, ogni volta salva i dati correttamente.\n\n");
+    	printf("Premi INVIO per iniziare...");
+    	getchar();
 
-    // 1. Trova l'ultima data usata dal file storico
-    struct tm ultima_data = {0};
-    int data_trovata = 0;
-    FILE *file_storico = fopen("ct3_storico.txt", "r");
+    	// 1. Trova l'ultima data usata dal file storico
+    	struct tm ultima_data = {0};
+    	int data_trovata = 0;
+    	FILE *file_storico = fopen("ct3_storico.txt", "r");
     
-    if (file_storico)
-    {
+    	if (file_storico)
+    	{
         char riga[256];
         char ultima_data_str[11] = "";
         
@@ -1603,7 +1603,7 @@ void caso_test_3(coda calendario)
     if (!lezione_creata)
     {
         printf("Nessuna data valida trovata per creare una lezione (siamo già arrivati alla data odierna).\n");
-        printf("Premi INVIO per tornare al menu principale...\n");
+        printf("Premi INVIO per tornare al menu principale...");
         getchar();
         return;
     }
@@ -1616,6 +1616,6 @@ void caso_test_3(coda calendario)
     report_mensile();
 
     // 11. Fine test
-    printf("Verifica completata. Premi INVIO per tornare al menu principale...\n");
+    printf("Verifica completata. Premi INVIO per tornare al menu principale...");
     getchar();
 }
