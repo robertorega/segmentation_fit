@@ -1377,109 +1377,88 @@ void caso_test_1(coda calendario)
 */
 void caso_test_2(coda calendario) 
 {
-	printf("\n--- TEST 2: Gestione Abbonamenti ---\n");
-    	printf("Test della gestione degli abbonamenti e della verifica della validita'.\n");
-	printf("Crea 'Abbonato_Test' diverso ogni volta, cerca di prenotare senza lezioni fallendo, ricarica l'abbonamento e l'utente viene iscritto.\n\n");
-    	printf("Premi INVIO per iniziare...");
-    	getchar();
+    printf("\n--- TEST 2: Gestione Abbonamenti ---\n");
+    printf("Test della gestione degli abbonamenti e della verifica della validita'.\n");
+    printf("Crea 'Abbonato_Test', verifica prenotazione senza lezioni, ricarica e prenota.\n\n");
+    printf("Premi INVIO per iniziare...");
+    getchar();
 
-    	// 1. Genera nome utente univoco
-    	FILE *fc = fopen("counter.txt", "r+");
-    	int counter = 1;
-    	if (fc) 
-	{
-        	fscanf(fc, "%d", &counter);
-        	rewind(fc);
-    	} 
-	else 
-	{
-        	fc = fopen("counter.txt", "w+");
-    	}
-    	fprintf(fc, "%d", counter + 1);
-    	fclose(fc);
+    // 1. Genera nome utente univoco basato sul timestamp
+    char nomeutente[MAX_CARATTERI];
+    time_t now = time(NULL);
+    snprintf(nomeutente, MAX_CARATTERI, "Abbonato_Test%ld", now);
 
-    	char nomeutente[MAX_CARATTERI];
-    	snprintf(nomeutente, MAX_CARATTERI, "Abbonato_Test%d", counter);
+    // 2. Crea nuovo abbonato
+    abbonato nuovo;
+    strcpy(nuovo.nomeutente, nomeutente);
+    strcpy(nuovo.password, "1234");
+    nuovo.chiave = strdup(nuovo.nomeutente);
+    nuovo.lezioni_rimanenti = 0;
 
-    	// 2. Crea nuovo abbonato
-	abbonato nuovo;
-    	strcpy(nuovo.nomeutente, nomeutente);
-    	strcpy(nuovo.password, "1234");
-    	nuovo.chiave = strdup(nuovo.nomeutente);
-    	nuovo.lezioni_rimanenti = 0;
+    // Carica e salva abbonati
+    tabella_hash tabella = carica_abbonati("ct2_abbonati.txt");
+    tabella = inserisci_hash(nuovo, tabella);
+    salva_abbonati(tabella, "ct2_abbonati.txt");
 
-    	tabella_hash tabella = carica_abbonati("ct2_abbonati.txt");
-    	tabella = inserisci_hash(nuovo, tabella);
-    	salva_abbonati(tabella, "ct2_abbonati.txt");
+    printf("Abbonato creato: %s\n", nuovo.nomeutente);
 
-    	printf("Abbonato creato: %s\n", nuovo.nomeutente);
+    // 3. Ricarica tabella e cerca utente
+    tabella = carica_abbonati("ct2_abbonati.txt");
+    abbonato *trovato = cerca_hash(nomeutente, tabella);
 
-	// 3. Ricarica tabella e cerca utente
-    	tabella = carica_abbonati("ct2_abbonati.txt");
-    	abbonato *trovato = cerca_hash(nomeutente, tabella);
+    if (!trovato) {
+        printf("ERRORE: Utente non trovato dopo la creazione.\n");
+        printf("Premi INVIO per tornare al menu principale...");
+        getchar();
+        return;
+    }
 
-    	if (!trovato) 
-	{
-        	printf("ERRORE: Utente non trovato dopo la creazione.\n");
-		printf("Possiamo fare altro per te? Premi INVIO....");
-        	getchar();
-        	return;
-    	}
+    // 4. Tentativo di prenotazione SENZA lezioni disponibili
+    printf("\nTentativo di prenotazione senza lezioni disponibili...\n");
+    if (trovato->lezioni_rimanenti <= 0) {
+        printf("Comportamento corretto: prenotazione rifiutata per mancanza di lezioni.\n\n");
+    } else {
+        printf("ERRORE: L'utente ha ancora lezioni disponibili, ma non dovrebbe.\n\n");
+    }
 
-	// 4. Tentativo automatico di prenotazione SENZA lezioni disponibili
-    	printf("\nTentativo automatico di prenotazione senza lezioni disponibili...\n");
-    	if (trovato->lezioni_rimanenti <= 0) 
-	{
-        	printf("Comportamento corretto: prenotazione rifiutata per mancanza di lezioni.\n\n");
-    	} 
-	else 
-	{
-        	printf("ERRORE: L'utente ha ancora lezioni disponibili, ma non dovrebbe.\n\n");
-	}
+    // 5. Ricarica abbonamento
+    trovato->lezioni_rimanenti = 12;  // Imposta direttamente a 12 invece di +=
+    salva_abbonati(tabella, "ct2_abbonati.txt");  // Assicurati l'estensione completa
+    printf("Lezioni rimanenti dopo ricarica: %d\n\n", trovato->lezioni_rimanenti);
 
-    	// 5. Ricarica abbonamento
-    	trovato->lezioni_rimanenti += 12;
-    	salva_abbonati(tabella, "ct2_abbonati");
-    	printf("Lezioni rimanenti dopo ricarica: %d\n\n", trovato->lezioni_rimanenti);
+    // 6. Prenotazione automatica
+    printf("Prenotazione automatica della prima lezione...\n");
+    struct nodo *lezione_test = calendario->testa;
+    if (!lezione_test) {
+        printf("ERRORE: Nessuna lezione disponibile.\n");
+        printf("Premi INVIO per tornare al menu principale...");
+        getchar();
+        return;
+    }
 
-    	// 6. Prenotazione automatica della prima lezione
-    	printf("\nPrenotazione automatica della prima lezione...\n");
-    	struct nodo *lezione_test = calendario->testa;
-    	if (!lezione_test) 
-	{
-        	printf("ERRORE: Nessuna lezione disponibile.\n");
-        	return;
-    	}
+    int iscritti_pre = dimensione_pila(lezione_test->valore.iscritti);
+    int lezioni_pre = trovato->lezioni_rimanenti;
 
-    	int iscritti_pre = dimensione_pila(lezione_test->valore.iscritti);
-    	int lezioni_pre = trovato->lezioni_rimanenti;
+    if (inserisci_pila(trovato->nomeutente, lezione_test->valore.iscritti)) {
+        trovato->lezioni_rimanenti--;
+        salva_abbonati(tabella, "ct2_abbonati.txt");
+        salva_lezioni(calendario, "ct2_lezioni.txt");
 
-    	if (inserisci_pila(trovato->nomeutente, lezione_test->valore.iscritti)) 
-	{
-        	trovato->lezioni_rimanenti--;
-        	salva_abbonati(tabella, "ct2_abbonati");
-        	salva_lezioni(calendario, "ct2_lezioni.txt");
+        int iscritti_post = dimensione_pila(lezione_test->valore.iscritti);
+        printf("Prenotazione riuscita. Iscritti prima: %d, dopo: %d\n", iscritti_pre, iscritti_post);
+        printf("Lezioni rimanenti: %d\n", trovato->lezioni_rimanenti);
 
-        	int iscritti_post = dimensione_pila(lezione_test->valore.iscritti);
-        	printf("Prenotazione riuscita. Iscritti prima: %d, dopo: %d\n", iscritti_pre, iscritti_post);
-        	printf("Lezioni rimanenti: %d\n", trovato->lezioni_rimanenti);
+        if (lezioni_pre - 1 == trovato->lezioni_rimanenti) {
+            printf("Lezione scalata correttamente.\n");
+        } else {
+            printf("ERRORE: Lezione non scalata correttamente.\n");
+        }
+    } else {
+        printf("ERRORE: Prenotazione fallita dopo ricarica.\n");
+    }
 
-        	if (lezioni_pre - 1 == trovato->lezioni_rimanenti) 
-		{
-        		printf("Lezione scalata correttamente.\n");
-        	} 
-		else 
-		{
-        		printf("ERRORE: Lezione non scalata correttamente.\n");
-        	}
-    	} 
-	else 
-	{
-        	printf("ERRORE: Prenotazione fallita dopo ricarica.\n");
-    	}
-
-    	printf("Premi INVIO per tornare al menu principale...");
-    	getchar();
+    printf("Premi INVIO per tornare al menu principale...");
+    getchar();
 }
 
 /* Funzione: caso_test_3
