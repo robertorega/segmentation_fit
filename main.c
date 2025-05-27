@@ -95,7 +95,7 @@ int main()
             			break;
  			case 4:
 				pulisci_schermo();
-            			report_mensile();
+            			report_mensile("storico.txt");
 				break;
     			case 5:
            			contattaci();
