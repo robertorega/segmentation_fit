@@ -975,25 +975,32 @@ void salva_lezioni(coda calendario, const char *nome_file)
 */
 int data_passata(const char *data_str)
 {
-	struct tm data = {0};
-
+	struct tm data_lezione = {0};
     	int giorno, mese, anno;
+    
     	if (sscanf(data_str, "%d/%d/%d", &giorno, &mese, &anno) != 3)
-        	return 0;  // Formato invalido, per sicurezza la consideriamo non passata
+        	return 0;  // Formato invalido, consideriamo non passata
 
-    	data.tm_mday = giorno;
-    	data.tm_mon = mese - 1;  // mesi da 0 a 11
-    	data.tm_year = anno - 1900;
+    	data_lezione.tm_mday = giorno;
+    	data_lezione.tm_mon = mese - 1;  // mesi da 0 a 11
+    	data_lezione.tm_year = anno - 1900;
+    	data_lezione.tm_hour = 23;      // Fine giornata
+	data_lezione.tm_min = 59;
+	data_lezione.tm_sec = 59;
+    	data_lezione.tm_isdst = -1;     // Ignora daylight saving
 
-    	time_t tempo_data = mktime(&data);
+    	time_t tempo_lezione = mktime(&data_lezione);
 
-	// Ottiene la data corrente
+    	// Ottiene la data corrente (inizio giornata)
     	time_t oggi = time(NULL);
-    	struct tm oggi_tm = *localtime(&oggi);
-    	oggi_tm.tm_hour = 0; oggi_tm.tm_min = 0; oggi_tm.tm_sec = 0;
-    	time_t tempo_oggi = mktime(&oggi_tm);
+    	struct tm *oggi_tm = localtime(&oggi);
+    	oggi_tm->tm_hour = 0;
+    	oggi_tm->tm_min = 0;
+    	oggi_tm->tm_sec = 0;
+    	oggi_tm->tm_isdst = -1;
+    	time_t tempo_oggi = mktime(oggi_tm);
 
-    	return difftime(tempo_data, tempo_oggi) < 0;
+    	return difftime(tempo_lezione, tempo_oggi) < 0;
 }
 
 /* Funzione: pulisci_lezioni_passate
@@ -1025,25 +1032,23 @@ void pulisci_lezioni_passate(coda calendario, const char *nome_file)
 {
 	if (calendario == NULL || coda_vuota(calendario)) return;
 
-	FILE *fp = fopen(nome_file, "a");
-	if (fp == NULL)
-	{
-        	printf("Errore apertura file storico");
-		printf("Premi INVIO\n");
-        	getchar();
+    	FILE *fp = fopen(nome_file, "a");
+    	if (fp == NULL)
+    	{
+        	perror("Errore apertura file storico");
         	return;
     	}
 
     	struct nodo *corrente = calendario->testa;
     	struct nodo *precedente = NULL;
 
-	while (corrente != NULL)
-	{
+    	while (corrente != NULL)
+    	{
         	struct nodo *prossimo = corrente->prossimo;
 
-		if (data_passata(corrente->valore.data))
-		{
-        		// Archivia la lezione
+        	if (data_passata(corrente->valore.data))
+        	{
+            		// Archivia la lezione
             		fprintf(fp, "%s;%s;%s;%d\n",
                 	corrente->valore.data,
                 	corrente->valore.giorno,
@@ -1054,42 +1059,44 @@ void pulisci_lezioni_passate(coda calendario, const char *nome_file)
             		pila iscritti_tmp = nuova_pila();
             		partecipante p;
             		while (!pila_vuota(corrente->valore.iscritti))
-			{
+            		{
                 		if (estrai_pila(corrente->valore.iscritti, p))
-				{
+                		{
                     			fprintf(fp, "%s\n", p);
                     			inserisci_pila(p, iscritti_tmp);
                 		}
             		}
 
-			// Ripristina la pila
+            		// Ripristina la pila
             		while (!pila_vuota(iscritti_tmp))
-			{
+            		{
                 		if (estrai_pila(iscritti_tmp, p))
                     			inserisci_pila(p, corrente->valore.iscritti);
             		}
 
-			// Rimuove il nodo dalla coda
+            		// Rimuove il nodo dalla coda
             		if (precedente == NULL)
                 		calendario->testa = prossimo;
-			else
+            		else
                 		precedente->prossimo = prossimo;
 
             		if (corrente == calendario->coda)
-			{
+            		{
                 		calendario->coda = precedente;
             		}
 
-        		free(corrente);
+            		free(corrente);
             		calendario->numel--;
-		}
-		else 
+        	}
+        	else 
+        	{
             		precedente = corrente;
+        	}
 
         	corrente = prossimo;
-	}
+    	}
 
-	fclose(fp);
+    	fclose(fp);
 }
 
 /* Funzione: report_mensile
