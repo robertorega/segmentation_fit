@@ -1352,12 +1352,14 @@ void caso_test_1(coda calendario)
 
     int iscritti_iniziali = dimensione_pila(lezione_test.iscritti);
 
-    // 3. Inserisce partecipante di test (CORRETTO)
+    // 3. Inserisce partecipante di test
     partecipante nome_test;
-    strcpy(nome_test, "Utente_Test"); // <-- Correzione chiave qui
+    strcpy(nome_test, "Utente_Test");
     
     if (inserisci_pila(nome_test, lezione_test.iscritti)) 
     {
+        int iscritti_dopo = dimensione_pila(lezione_test.iscritti); // <-- MISURA QUI PRIMA DI SALVARE
+
         // 4. Salva SOLO nel file di test
         FILE *f_test = fopen("ct1_lezioni.txt", "w");
         if (f_test) {
@@ -1365,9 +1367,8 @@ void caso_test_1(coda calendario)
                    lezione_test.data, 
                    lezione_test.giorno, 
                    lezione_test.orario, 
-                   dimensione_pila(lezione_test.iscritti));
+                   iscritti_dopo); // <-- Usa il valore già misurato
             
-            // Salva iscritti (in ordine inverso per simulare una pila)
             pila temp_stack = nuova_pila();
             while (!pila_vuota(lezione_test.iscritti)) {
                 estrai_pila(lezione_test.iscritti, p);
@@ -1385,7 +1386,7 @@ void caso_test_1(coda calendario)
         printf("SUCCESSO: Prenotazione test registrata in ct1_lezioni.txt\n");
         printf("Iscritti prima: %d, dopo: %d\n", 
               iscritti_iniziali, 
-              dimensione_pila(lezione_test.iscritti));
+              iscritti_dopo); // <-- Usa il valore salvato
     } 
     else 
     {
