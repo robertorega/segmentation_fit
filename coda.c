@@ -1316,10 +1316,11 @@ void report_mensile()
 */
 void caso_test_1(coda calendario) 
 {
-    printf("\n--- TEST 1: Registrazione Prenotazione (Modalità Test) ---\n");
-    printf("Verifica la registrazione SENZA modificare i dati reali\n\n");
-    printf("Premi INVIO per iniziare...");
+	printf("Permette di verificare la corretta registrazione delle prenotazioni e dell'aggiornamento delle disponibilita'.\n");
+	printf("Viene creato 'Utente_Test' che viene iscritto alla prima lezione disponibile aggiornando la disponibilita'.\n\n");
+	printf("Premi INVIO per iniziare...");
     getchar(); 
+
 
     // 1. Verifica presenza lezioni
     if (coda_vuota(calendario))
@@ -1333,15 +1334,29 @@ void caso_test_1(coda calendario)
     // 2. Crea una copia della prima lezione per il test
     lezione lezione_test;
     memcpy(&lezione_test, &(calendario->testa->valore), sizeof(lezione));
-    lezione_test.iscritti = nuova_pila(); // Nuova pila indipendente
+    lezione_test.iscritti = nuova_pila();
 
-    // Copia gli iscritti esistenti
+    // 3. Contatore per utenti test (lettura/scrittura da file)
+    int test_counter = 1;
+    FILE *counter_file = fopen("ct1_counter.txt", "r+");
+    if (counter_file) {
+        fscanf(counter_file, "%d", &test_counter);
+        rewind(counter_file);
+    } else {
+        counter_file = fopen("ct1_counter.txt", "w+");
+    }
+    fprintf(counter_file, "%d", test_counter + 1);
+    fclose(counter_file);
+
+    // 4. Copia iscritti esistenti e aggiungi nuovo utente test
     pila temp = nuova_pila();
     partecipante p;
+    
+    // Copia iscritti originali
     while (!pila_vuota(calendario->testa->valore.iscritti)) {
         estrai_pila(calendario->testa->valore.iscritti, p);
         inserisci_pila(p, lezione_test.iscritti);
-        inserisci_pila(p, temp); // Mantiene l'originale
+        inserisci_pila(p, temp);
     }
     // Ripristina pila originale
     while (!pila_vuota(temp)) {
@@ -1352,22 +1367,26 @@ void caso_test_1(coda calendario)
 
     int iscritti_iniziali = dimensione_pila(lezione_test.iscritti);
 
-    // 3. Inserisce partecipante di test
+    // 5. Crea utente test univoco
     partecipante nome_test;
-    strcpy(nome_test, "Utente_Test");
+    snprintf(nome_test, sizeof(nome_test), "Utente_Test%d", test_counter);
     
     if (inserisci_pila(nome_test, lezione_test.iscritti)) 
     {
-        int iscritti_dopo = dimensione_pila(lezione_test.iscritti); // <-- MISURA QUI PRIMA DI SALVARE
+        int iscritti_dopo = dimensione_pila(lezione_test.iscritti);
 
-        // 4. Salva SOLO nel file di test
-        FILE *f_test = fopen("ct1_lezioni.txt", "w");
+        // 6. Salva in modalità APPEND (non sovrascrive)
+        FILE *f_test = fopen("ct1_lezioni.txt", "a"); // 'a' per append
         if (f_test) {
-            fprintf(f_test, "%s;%s;%s;%d\n", 
+            if (ftell(f_test) == 0) { // Se file vuoto, scrivi intestazione
+                fprintf(f_test, "=== TEST SESSION ===\n");
+            }
+            fprintf(f_test, "[Run %d] %s;%s;%s;%d\n", 
+                   test_counter,
                    lezione_test.data, 
                    lezione_test.giorno, 
                    lezione_test.orario, 
-                   iscritti_dopo); // <-- Usa il valore già misurato
+                   iscritti_dopo);
             
             pila temp_stack = nuova_pila();
             while (!pila_vuota(lezione_test.iscritti)) {
@@ -1376,30 +1395,29 @@ void caso_test_1(coda calendario)
             }
             while (!pila_vuota(temp_stack)) {
                 estrai_pila(temp_stack, p);
-                fprintf(f_test, "%s\n", p);
+                fprintf(f_test, "  - %s\n", p);
             }
             free(temp_stack);
             
             fclose(f_test);
         }
 
-        printf("SUCCESSO: Prenotazione test registrata in ct1_lezioni.txt\n");
-        printf("Iscritti prima: %d, dopo: %d\n", 
-              iscritti_iniziali, 
-              iscritti_dopo); // <-- Usa il valore salvato
+        printf("SUCCESSO: Prenotazione test #%d registrata\n", test_counter);
+        printf("Utente: %s\n", nome_test);
+        printf("Iscritti prima: %d, dopo: %d\n", iscritti_iniziali, iscritti_dopo);
     } 
     else 
     {
         printf("ERRORE: Prenotazione test fallita\n");
     }
 
-    // 5. Pulizia
+    // 7. Pulizia
     free(lezione_test.iscritti);
-
+    
+    printf("\nI dati sono stati salvati nel file ct1_lezioni.txt\n");
     printf("Premi INVIO per tornare al menu...");
     getchar();
 }
-
 /* Funzione: caso_test_2
 *
 * Verifica la gestione degli abbonamenti e la prenotazione da parte di un abbonato
