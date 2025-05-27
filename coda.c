@@ -1314,6 +1314,13 @@ void report_mensile()
 * Side-effect:
 * - Inserisce un partecipante fittizio nella prima lezione della coda
 */
+void caso_test_1(coda calendario) 
+{
+    printf("\n--- TEST 1: Registrazione Prenotazione (Modalità Test) ---\n");
+    printf("Verifica la registrazione SENZA modificare i dati reali\n\n");
+    printf("Premi INVIO per iniziare...");
+    getchar(); 
+
     // 1. Verifica presenza lezioni
     if (coda_vuota(calendario))
     {
