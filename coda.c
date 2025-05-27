@@ -1183,7 +1183,7 @@ void report_mensile(const char* filename)
         for (int i = 0; i < count; i++)
             printf("%d) %02d/%d\n", i + 1, mesi[i], anni[i]);
 
-        printf("0) Torna al menu principale\n");
+        printf("0 - Esci dal Report\n");
 
         char scelta[10];
         int scelta_numero = 0;
@@ -1300,8 +1300,8 @@ void report_mensile(const char* filename)
         }
 
         // Menu uscita
-        printf("\n1) Scegli un altro mese");
-        printf("\n0) Torna al menu principale");
+        printf("\n1 - Scegli un altro mese");
+        printf("\n0 - Esci dal Report");
         printf("\nScelta: ");
         
         fgets(scelta, sizeof(scelta), stdin);
