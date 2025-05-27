@@ -265,7 +265,7 @@ void pulisci_lezioni_passate(coda calendario, const char *nome_file);
 * Side-effect:
 * - Legge da file, acquisisce input da tastiera, stampa a schermo.
 */
-void report_mensile(void);
+void report_mensile(const char* filename);
 
 /* Funzione: caso_test_1
 *
