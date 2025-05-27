@@ -1314,93 +1314,82 @@ void report_mensile()
 * Side-effect:
 * - Inserisce un partecipante fittizio nella prima lezione della coda
 */
-void caso_test_1(coda calendario) 
-{
-	printf("\n--- TEST 1: Registrazione Prenotazione e Disponibilità ---\n");
-	printf("Permette di verificare la corretta registrazione delle prenotazioni e dell'aggiornamento delle disponibilita'.\n");
-	printf("Viene creato 'Utente_Test' che viene iscritto alla prima lezione disponibile aggiornando la disponibilita'.\n\n");
-    	printf("Premi INVIO per iniziare...");
-    	getchar(); 
+    // 1. Verifica presenza lezioni
+    if (coda_vuota(calendario))
+    {
+        printf("ERRORE: Nessuna lezione disponibile.\n");
+        printf("Premi INVIO per tornare al menu...");
+        getchar();
+        return;
+    }
 
-    	// 1. Verifica presenza lezioni
-    	if (coda_vuota(calendario))
-    	{
-        	printf("ERRORE: Nessuna lezione disponibile.\n");
-        	printf("Premi INVIO per tornare al menu...");
-       		getchar();
-        	return;
-    	}
+    // 2. Crea una copia della prima lezione per il test
+    lezione lezione_test;
+    memcpy(&lezione_test, &(calendario->testa->valore), sizeof(lezione));
+    lezione_test.iscritti = nuova_pila(); // Nuova pila indipendente
 
-    	// 2. Crea una copia della prima lezione per il test
-    	lezione lezione_test;
-    	memcpy(&lezione_test, &(calendario->testa->valore), sizeof(lezione));
-    	lezione_test.iscritti = nuova_pila(); // Nuova pila indipendente
+    // Copia gli iscritti esistenti
+    pila temp = nuova_pila();
+    partecipante p;
+    while (!pila_vuota(calendario->testa->valore.iscritti)) {
+        estrai_pila(calendario->testa->valore.iscritti, p);
+        inserisci_pila(p, lezione_test.iscritti);
+        inserisci_pila(p, temp); // Mantiene l'originale
+    }
+    // Ripristina pila originale
+    while (!pila_vuota(temp)) {
+        estrai_pila(temp, p);
+        inserisci_pila(p, calendario->testa->valore.iscritti);
+    }
+    free(temp);
 
-    	// Copia gli iscritti esistenti
-    	pila temp = nuova_pila();
-    	partecipante p;
-    	while (!pila_vuota(calendario->testa->valore.iscritti))
-	{
-        	estrai_pila(calendario->testa->valore.iscritti, p);
-        	inserisci_pila(p, lezione_test.iscritti);
-        	inserisci_pila(p, temp); // Mantiene l'originale
-    	}
-	
-    	// Ripristina pila originale
-    	while (!pila_vuota(temp))
-	{
-        	estrai_pila(temp, p);
-        	inserisci_pila(p, calendario->testa->valore.iscritti);
-    	}
-    	free(temp);
+    int iscritti_iniziali = dimensione_pila(lezione_test.iscritti);
 
-    	int iscritti_iniziali = dimensione_pila(lezione_test.iscritti);
-
-    	// 3. Inserisce partecipante di test
-    	if (inserisci_pila("Utente_Test", lezione_test.iscritti)) 
-    	{
-        	// 4. Salva SOLO nel file di test
-        	FILE *f_test = fopen("ct1_lezioni.txt", "w");
-        	if (f_test)
-		{
-            		fprintf(f_test, "%s;%s;%s;%d\n", 
-                   	lezione_test.data, 
-                	lezione_test.giorno, 
-                   	lezione_test.orario, 
-                   	dimensione_pila(lezione_test.iscritti));
-            
-            		// Salva iscritti (in ordine inverso per simulare una pila)
-            		pila temp_stack = nuova_pila();
-            		while (!pila_vuota(lezione_test.iscritti))
-			{
-                		estrai_pila(lezione_test.iscritti, p);
-                		inserisci_pila(p, temp_stack);
-            		}
-            		while (!pila_vuota(temp_stack))
-			{
-                		estrai_pila(temp_stack, p);
-                		fprintf(f_test, "%s\n", p);
-	            	}
-            		free(temp_stack);
-            
-            		fclose(f_test);
-        	}
-
-        	printf("SUCCESSO: Prenotazione test registrata in ct1_lezioni.txt\n");
-        	printf("Iscritti prima: %d, dopo: %d\n", 
-        	iscritti_iniziali, 
-        	dimensione_pila(lezione_test.iscritti));
-    	} 
-    	else 
-    	{
-        	printf("ERRORE: Prenotazione test fallita\n");
-	}
-
-	// 5. Pulizia
-	free(lezione_test.iscritti);
+    // 3. Inserisce partecipante di test (CORRETTO)
+    partecipante nome_test;
+    strcpy(nome_test, "Utente_Test"); // <-- Correzione chiave qui
     
-	printf("Premi INVIO per tornare al menu...");
-	getchar();
+    if (inserisci_pila(nome_test, lezione_test.iscritti)) 
+    {
+        // 4. Salva SOLO nel file di test
+        FILE *f_test = fopen("ct1_lezioni.txt", "w");
+        if (f_test) {
+            fprintf(f_test, "%s;%s;%s;%d\n", 
+                   lezione_test.data, 
+                   lezione_test.giorno, 
+                   lezione_test.orario, 
+                   dimensione_pila(lezione_test.iscritti));
+            
+            // Salva iscritti (in ordine inverso per simulare una pila)
+            pila temp_stack = nuova_pila();
+            while (!pila_vuota(lezione_test.iscritti)) {
+                estrai_pila(lezione_test.iscritti, p);
+                inserisci_pila(p, temp_stack);
+            }
+            while (!pila_vuota(temp_stack)) {
+                estrai_pila(temp_stack, p);
+                fprintf(f_test, "%s\n", p);
+            }
+            free(temp_stack);
+            
+            fclose(f_test);
+        }
+
+        printf("SUCCESSO: Prenotazione test registrata in ct1_lezioni.txt\n");
+        printf("Iscritti prima: %d, dopo: %d\n", 
+              iscritti_iniziali, 
+              dimensione_pila(lezione_test.iscritti));
+    } 
+    else 
+    {
+        printf("ERRORE: Prenotazione test fallita\n");
+    }
+
+    // 5. Pulizia
+    free(lezione_test.iscritti);
+
+    printf("Premi INVIO per tornare al menu...");
+    getchar();
 }
 
 /* Funzione: caso_test_2
