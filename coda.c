@@ -1623,7 +1623,7 @@ void caso_test_3(coda calendario)
 
     // 10. Esegue il report mensile per verificare la presenza della lezione
     printf("\nEsecuzione del report mensile...\n");
-    report_mensile("ct1_lezioni.txt");
+    report_mensile("ct3_storico.txt");
 
     // 11. Fine test
     printf("Verifica completata. Premi INVIO per tornare al menu principale...");
