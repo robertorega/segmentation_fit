@@ -811,54 +811,65 @@ void disdici_iscrizione(coda calendario, const char* lezioni)
     	}
 
 	// Aggiorna il file delle lezioni
-    	FILE* file = fopen(lezioni, "r");
-    	if (!file)
-    	{
-        	printf("Errore nell'apertura del file.\n");
-        	printf("Premi INVIO\n");
-        	getchar();
-        	return;
-    	}
+    FILE* file = fopen(lezioni, "r");
+    if (!file)
+    {
+        printf("Errore nell'apertura del file.\n");
+        printf("Premi INVIO\n");
+        getchar();
+        return;
+    }
 
-    	FILE* temp_file = fopen("temp_file.txt", "w");
-    	if (!temp_file)
-    	{
-        	fclose(file);
-        	printf("Errore nella creazione del file temporaneo.\n");
-        	printf("Possiamo fare altro per te? Premi INVIO...");
-        	getchar();
-        	return;
-    	}
+    FILE* temp_file = fopen("temp_file.txt", "w");
+    if (!temp_file)
+    {
+        fclose(file);
+        printf("Errore nella creazione del file temporaneo.\n");
+        printf("Possiamo fare altro per te? Premi INVIO...");
+        getchar();
+        return;
+    }
 
-    	char riga[256];
-    	int in_lezione_target = 0;
+    char riga[256];
+    int in_lezione_target = 0;
+    int nuovo_numero_iscritti = dimensione_pila(selezionata->iscritti); // Ottieni il nuovo numero di iscritti
 
-    	while (fgets(riga, sizeof(riga), file))
-    	{
-        	// Rimuove newline
-        	riga[strcspn(riga, "\n")] = 0;
+    while (fgets(riga, sizeof(riga), file))
+    {
+        // Rimuove newline
+        riga[strcspn(riga, "\n")] = 0;
 
-        	// Se contiene la data, è intestazione di una nuova lezione
-        	if (strstr(riga, "/") && strstr(riga, ";"))
-        	{
-            		if (strstr(riga, selezionata->data))
-                		in_lezione_target = 1;
-            		else
-                		in_lezione_target = 0;
+        // Se contiene la data, è intestazione di una nuova lezione
+        if (strstr(riga, "/") && strstr(riga, ";"))
+        {
+            if (strstr(riga, selezionata->data))
+            {
+                in_lezione_target = 1;
+                // Modifica la riga con il nuovo numero di iscritti
+                char data[11], giorno[15], orario[10];
+                int vecchio_numero;
+                sscanf(riga, "%[^;];%[^;];%[^;];%d", data, giorno, orario, &vecchio_numero);
+                fprintf(temp_file, "%s;%s;%s;%d\n", data, giorno, orario, nuovo_numero_iscritti);
+                continue;
+            }
+            else
+            {
+                in_lezione_target = 0;
+            }
+            
+            fputs(riga, temp_file);
+            fputc('\n', temp_file);
+            continue;
+        }
 
-            		fputs(riga, temp_file);
-            		fputc('\n', temp_file);
-            		continue;
-        	}
+        // Se è partecipante nella lezione giusta e corrisponde al nome da eliminare, salta la riga
+        if (in_lezione_target && strcmp(riga, nome) == 0)
+            continue;
 
-        	// Se è partecipante nella lezione giusta e corrisponde al nome da eliminare, salta la riga
-        	if (in_lezione_target && strcmp(riga, nome) == 0)
-            		continue;
-
-		// Altrimenti scrive normalmente
-        	fputs(riga, temp_file);
-        	fputc('\n', temp_file);
-	}
+        // Altrimenti scrive normalmente
+        fputs(riga, temp_file);
+        fputc('\n', temp_file);
+    }
 
     	fclose(file);
     	fclose(temp_file);
