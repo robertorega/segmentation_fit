@@ -7,6 +7,7 @@
 #include "hash.h"
 #include "utile_coda.h"
 #include "test_programma.h"
+#include "pila.h"
 
 // Nodo della coda
 struct nodo
@@ -132,7 +133,7 @@ void caso_test_1(coda calendario)
 
     // Aggiungi l'utente alla pila della prima lezione
     lezione *lez = &calendario->testa->valore;
-    push(&(lez->iscritti), utenti[num_iscritti - 1]); // ultimo utente aggiunto
+    inserisci_pila(&(lez->iscritti), utenti[num_iscritti - 1]); // ultimo utente aggiunto
 
     // Salva lo stato reale
     salva_lezioni(calendario, "caso_test_1_output.txt");
