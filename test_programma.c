@@ -118,24 +118,7 @@ void caso_test_1(coda calendario)
     printf("Premi INVIO per iniziare...");
     getchar();
 
-    // 1. Crea input se non esiste
-    FILE *check = fopen("caso_test_1_input.txt", "r");
-    if (!check) {
-        FILE *f = fopen("caso_test_1_input.txt", "w");
-        if (f) {
-            fprintf(f, "Data;Giorno;Orario;NumeroIscritti\n");
-            fprintf(f, "30/05/2025;Venerdi;16-18;0\n");
-            fclose(f);
-            printf("Creato file input di test.\n");
-        } else {
-            printf("Errore nella creazione del file input.\n");
-            return;
-        }
-    } else {
-        fclose(check);
-    }
-
-    // 2. Carica/genera lezioni
+    // 1. Carica/genera lezioni
     if (coda_vuota(calendario)) {
         genera_lezioni(calendario);
         carica_lezioni(calendario, "caso_test_1_input.txt");
@@ -147,7 +130,7 @@ void caso_test_1(coda calendario)
         return;
     }
 
-    // 3. Aggiungi utente fittizio
+    // 2. Aggiungi utente fittizio
     char utenti[MASSIMO_UTENTI][MASSIMO_LINEA];
     int num_iscritti = aggiorna_input_e_oracle("caso_test_1_input.txt", utenti);
     if (num_iscritti == -1) {
@@ -162,11 +145,11 @@ void caso_test_1(coda calendario)
     }
     inserisci_pila(utenti[num_iscritti - 1], lez->iscritti);
 
-    // 4. Salva sia output che oracle
+    // 3. Salva sia output che oracle
     salva_lezioni(calendario, "caso_test_1_output.txt");
     salva_lezioni(calendario, "caso_test_1_oracle.txt");
 
-    // 5. Confronta output con oracle
+    // 4. Confronta output con oracle
     int esito = confronta_file("caso_test_1_output.txt", "caso_test_1_oracle.txt");
     printf("RISULTATO TEST 1: %s\n", esito ? "PASS" : "FAIL");
 
