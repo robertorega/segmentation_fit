@@ -139,7 +139,7 @@ if (lez->iscritti == NULL)
 
     // Stampa risultato
     printf("RISULTATO TEST 1: %s\n", esito ? "PASS" : "FAIL");
-    if(esito == "FAIL")
+    if(esito == 0)
     {
         printf("Premi INVIO per tornare al menu...");
         getchar();
