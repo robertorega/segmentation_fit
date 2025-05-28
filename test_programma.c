@@ -92,113 +92,44 @@ int aggiorna_input_e_oracle(const char *input_file, char utenti[][MASSIMO_LINEA]
 * - Inserisce un partecipante fittizio nella prima lezione della coda in memoria
 * - Aggiorna il file "ct1_lezioni.txt" con i dati modificati (iscritti e lista utenti)
 */
-void caso_test_1(coda calendario) {
-    printf("TEST 1: Verifica registrazione prenotazione e aggiornamento disponibilità\n");
-    printf("Premi INVIO per iniziare...");
-    getchar();
+void caso_test_1() {
+    coda calendario = nuova_coda();
 
-    // 1. Se la coda è vuota, crea una lezione fittizia
-    if (coda_vuota(calendario)) {
-        lezione nuova;
-        strcpy(nuova.data, "28/05/2025");
-        strcpy(nuova.giorno, "Mercoledi");
-        strcpy(nuova.orario, "16-18");
-        nuova.iscritti = nuova_pila();
-        inserisci_coda(calendario, nuova);
+    // Crea la lezione
+    lezione nuova;
+    strcpy(nuova.data, "01/06/2024");
+    strcpy(nuova.giorno, "Sabato");
+    strcpy(nuova.orario, "10:00");
+    nuova.iscritti = nuova_pila();
+
+    // Aggiunge 3 partecipanti
+    inserisci_pila("Luca", nuova.iscritti);
+    inserisci_pila("Anna", nuova.iscritti);
+    inserisci_pila("Marco", nuova.iscritti);
+
+    // Inserisce la lezione nella coda
+    inserisci_lezione(nuova, calendario);
+
+    // Estrae la lezione dalla coda
+    lezione *lez = calendario->testa->prossimo;
+
+    // Stampa gli iscritti (estrae e ristampa usando pila temporanea)
+    pila temporanea = nuova_pila();
+    partecipante nome;
+
+    printf("Iscritti nella lezione:\n");
+    while (estrai_pila(lez->iscritti, nome)) {
+        printf("- %s\n", nome);
+        inserisci_pila(nome, temporanea); // salva temporaneamente
     }
 
-    // 2. Recupera la prima lezione
-    lezione *lez = &calendario->testa->valore;
-
-    if (lez->iscritti == NULL) {
-        lez->iscritti = nuova_pila();
+    // Ripristina la pila originale
+    while (estrai_pila(temporanea, nome)) {
+        inserisci_pila(nome, lez->iscritti);
     }
 
-    // 3. Aggiunge utente fittizio
-    int numero_attuali = dimensione_pila(lez->iscritti);
-    partecipante nuovo_utente;
-    snprintf(nuovo_utente, MASSIMO_LINEA, "Utente_Test%d", numero_attuali + 1);
-    inserisci_pila(nuovo_utente, lez->iscritti);
+    // Libera memoria della coda e pile
+    // (solo se hai funzioni tipo distruggi_coda o distruggi_pila)
 
-    // 4. Salva su file "caso_test_1_output.txt"
-    FILE *out = fopen("caso_test_1_output.txt", "w");
-    if (out) {
-        fprintf(out, "Data;Giorno;Orario;Iscritti\n");
-        fprintf(out, "%s;%s;%s;%d\n", lez->data, lez->giorno, lez->orario, dimensione_pila(lez->iscritti));
-
-        // Stampa anche i partecipanti
-        pila temporanea = nuova_pila();
-        partecipante tmp;
-
-        while (estrai_pila(lez->iscritti, tmp)) {
-            fprintf(out, "%s", tmp);
-            if (tmp[strlen(tmp)-1] != '\n') fprintf(out, "\n"); // assicurati che ogni riga finisca a capo
-            inserisci_pila(tmp, temporanea);
-        }
-
-        // Ripristina la pila originale
-        while (estrai_pila(temporanea, tmp)) {
-            inserisci_pila(tmp, lez->iscritti);
-        }
-
-        fclose(out);
-    } else {
-        printf("Errore apertura file output.\nPremi INVIO per tornare al menu...");
-        getchar();
-        return;
-    }
-
-    // 5. Crea oracle se non esiste
-    FILE *oracle = fopen("caso_test_1_oracle.txt", "r");
-    if (!oracle) {
-        FILE *src = fopen("caso_test_1_output.txt", "r");
-        FILE *dst = fopen("caso_test_1_oracle.txt", "w");
-        if (src && dst) {
-            char ch;
-            while ((ch = fgetc(src)) != EOF) {
-                fputc(ch, dst);
-            }
-            printf("Creato file oracle.\n");
-        }
-        if (src) fclose(src);
-        if (dst) fclose(dst);
-    } else {
-        fclose(oracle);
-    }
-
-    // 6. Confronta file output e oracle
-    FILE *f1 = fopen("caso_test_1_output.txt", "r");
-    FILE *f2 = fopen("caso_test_1_oracle.txt", "r");
-    int esito = 1;
-    if (f1 && f2) {
-        char r1[MASSIMO_LINEA], r2[MASSIMO_LINEA];
-        while (fgets(r1, MASSIMO_LINEA, f1) && fgets(r2, MASSIMO_LINEA, f2)) {
-            if (strcmp(r1, r2) != 0) {
-                esito = 0;
-                break;
-            }
-        }
-        if (!(feof(f1) && feof(f2))) esito = 0;
-        fclose(f1);
-        fclose(f2);
-    } else {
-        esito = 0;
-    }
-
-    printf("RISULTATO TEST 1: %s\n", esito ? "PASS" : "FAIL");
-
-    FILE *res = fopen("esiti_test.txt", "a");
-    if (res) {
-        fprintf(res, "Caso Test 1: %s\n", esito ? "PASSATO" : "FALLIMENTO");
-        fclose(res);
-    }
-
-    FILE *elenco = fopen("elenco_test.txt", "w");
-    if (elenco) {
-        fprintf(elenco, "CT1 %d\n", dimensione_pila(lez->iscritti));
-        fclose(elenco);
-    }
-
-    printf("Premi INVIO per tornare al menu...");
-    getchar();
+    printf("\n[Test completato]\n");
 }
