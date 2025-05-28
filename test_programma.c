@@ -31,8 +31,10 @@ int confronta_file(const char *file1, const char *file2)
     if (!f1 || !f2) return 0;
 
     char r1[MASSIMO_LINEA], r2[MASSIMO_LINEA];
-    while (fgets(r1, sizeof(r1), f1) && fgets(r2, sizeof(r2), f2)) {
+    while (fgets(r1, sizeof(r1), f1) && fgets(r2, sizeof(r2), f2)) 
+    {
         if (strcmp(r1, r2) != 0) {
+
             fclose(f1); fclose(f2);
             return 0;
         }
@@ -114,6 +116,7 @@ void caso_test_1(coda calendario)
     if (coda_vuota(calendario)) 
     {
         genera_lezioni(calendario);
+        carica_lezioni(calendario, "caso_test_1_input.txt");
     }
 
     if (coda_vuota(calendario)) 
