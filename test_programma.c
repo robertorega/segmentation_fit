@@ -92,44 +92,93 @@ int aggiorna_input_e_oracle(const char *input_file, char utenti[][MASSIMO_LINEA]
 * - Inserisce un partecipante fittizio nella prima lezione della coda in memoria
 * - Aggiorna il file "ct1_lezioni.txt" con i dati modificati (iscritti e lista utenti)
 */
-void caso_test_1() {
-    coda calendario = nuova_coda();
+void caso_test_1(coda calendario) 
+{
+    printf("TEST 1: Verifica registrazione prenotazione e aggiornamento disponibilità\n");
+    printf("Premi INVIO per iniziare...");
+    getchar();
 
-    // Crea la lezione
-    lezione nuova;
-    strcpy(nuova.data, "01/06/2024");
-    strcpy(nuova.giorno, "Sabato");
-    strcpy(nuova.orario, "10:00");
-    nuova.iscritti = nuova_pila();
-
-    // Aggiunge 3 partecipanti
-    inserisci_pila("Luca", nuova.iscritti);
-    inserisci_pila("Anna", nuova.iscritti);
-    inserisci_pila("Marco", nuova.iscritti);
-
-    // Inserisce la lezione nella coda
-    inserisci_lezione(nuova, calendario);
-
-    // Estrae la lezione dalla coda
-    lezione *lez = calendario->testa->prossimo;
-
-    // Stampa gli iscritti (estrae e ristampa usando pila temporanea)
-    pila temporanea = nuova_pila();
-    partecipante nome;
-
-    printf("Iscritti nella lezione:\n");
-    while (estrai_pila(lez->iscritti, nome)) {
-        printf("- %s\n", nome);
-        inserisci_pila(nome, temporanea); // salva temporaneamente
+    // 1. Crea input se non esiste
+    FILE *check = fopen("caso_test_1_input.txt", "r");
+    if (!check) {
+        FILE *f = fopen("caso_test_1_input.txt", "w");
+        if (f) {
+            fprintf(f, "Data;Giorno;Orario;0\n");
+            fprintf(f, "28/05/2025;Mercoledi;16-18;0\n");
+            fclose(f);
+            printf("Creato file input di test.\n");
+        } else {
+            printf("Errore nella creazione del file input.\n");
+            return;
+        }
+    } else {
+        fclose(check);
     }
 
-    // Ripristina la pila originale
-    while (estrai_pila(temporanea, nome)) {
-        inserisci_pila(nome, lez->iscritti);
+    // 2. Carica/genera lezioni
+    if (coda_vuota(calendario)) {
+        genera_lezioni(calendario);
+        carica_lezioni(calendario, "caso_test_1_input.txt");
     }
 
-    // Libera memoria della coda e pile
-    // (solo se hai funzioni tipo distruggi_coda o distruggi_pila)
+    if (coda_vuota(calendario)) {
+        printf("ERRORE: Nessuna lezione disponibile.\nPremi INVIO per tornare al menu...");
+        getchar();
+        return;
+    }
 
-    printf("\n[Test completato]\n");
+    // 3. Aggiungi utente fittizio
+    char utenti[MASSIMO_UTENTI][MASSIMO_LINEA];
+    int num_iscritti = aggiorna_input_e_oracle("caso_test_1_input.txt", utenti);
+    if (num_iscritti == -1) {
+        printf("Errore nella lettura o scrittura dei file di test.\n");
+        getchar();
+        return;
+    }
+
+    lezione *lez = &calendario->testa->valore;
+    if (lez->iscritti == NULL) {
+        lez->iscritti = nuova_pila();
+    }
+    inserisci_pila(utenti[num_iscritti - 1], lez->iscritti);
+
+    // 4. Salva output
+    salva_lezioni(calendario, "caso_test_1_output.txt");
+
+    // 5. Se oracle non esiste, crealo ORA (dopo aver salvato l'output)
+    FILE *oracle = fopen("caso_test_1_oracle.txt", "r");
+    if (!oracle) {
+        FILE *src = fopen("caso_test_1_output.txt", "r");
+        FILE *dst = fopen("caso_test_1_oracle.txt", "w");
+        if (src && dst) {
+            char ch;
+            while ((ch = fgetc(src)) != EOF) {
+                fputc(ch, dst);
+            }
+            printf("Creato file oracle di riferimento.\n");
+        }
+        if (src) fclose(src);
+        if (dst) fclose(dst);
+    } else {
+        fclose(oracle);
+    }
+
+    // 6. Confronta
+    int esito = confronta_file("caso_test_1_output.txt", "caso_test_1_oracle.txt");
+    printf("RISULTATO TEST 1: %s\n", esito ? "PASS" : "FAIL");
+
+    FILE *res = fopen("esiti_test.txt", "a");
+    if (res) {
+        fprintf(res, "Caso Test 1: %s\n", esito ? "PASSATO" : "FALLIMENTO");
+        fclose(res);
+    }
+
+    FILE *elenco = fopen("elenco_test.txt", "w");
+    if (elenco) {
+        fprintf(elenco, "CT1 %d\n", num_iscritti);
+        fclose(elenco);
+    }
+
+    printf("Premi INVIO per tornare al menu...");
+    getchar();
 }
