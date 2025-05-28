@@ -232,7 +232,7 @@ void salva_lezioni(coda calendario, const char *nome_file);
 * Post-condizione:
 * - Ritorna 1 se la data è nel passato rispetto a oggi, 0 altrimenti
 */
-int data_passata(const char *data_str);
+int data_passata(const char *data_str, const char *orario);
 
 /* Funzione: pulisci_lezioni_passate
 *
