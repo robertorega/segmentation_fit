@@ -92,67 +92,61 @@ int aggiorna_input_e_oracle(const char *input_file, char utenti[][MASSIMO_LINEA]
 * - Inserisce un partecipante fittizio nella prima lezione della coda in memoria
 * - Aggiorna il file "ct1_lezioni.txt" con i dati modificati (iscritti e lista utenti)
 */
-void caso_test_1(coda calendario) 
-{
+void caso_test_1(coda calendario) {
     printf("TEST 1: Verifica registrazione prenotazione e aggiornamento disponibilità\n");
     printf("Premi INVIO per iniziare...");
     getchar();
 
-    // 1. Crea un file input fisso
-    FILE *f = fopen("caso_test_1_input.txt", "w");
-    if (!f) {
-        printf("Errore nella creazione del file input.\nPremi INVIO per tornare al menu...");
-        getchar();
-        return;
-    }
-    fprintf(f, "Data;Giorno;Orario;0\n");
-    fprintf(f, "28/05/2025;Mercoledi;16-18;0\n");
-    fclose(f);
-
-    // 2. Popola la coda da file
+    // 1. Se la coda è vuota, crea una lezione fittizia
     if (coda_vuota(calendario)) {
-        genera_lezioni(calendario);
-        carica_lezioni(calendario, "caso_test_1_input.txt");
+        lezione nuova;
+        strcpy(nuova.data, "28/05/2025");
+        strcpy(nuova.giorno, "Mercoledi");
+        strcpy(nuova.orario, "16-18");
+        nuova.iscritti = nuova_pila();
+        inserisci_coda(calendario, nuova);
     }
 
-    if (coda_vuota(calendario)) {
-        printf("ERRORE: Nessuna lezione disponibile.\nPremi INVIO per tornare al menu...");
-        getchar();
-        return;
-    }
-
-    // 3. Inserisce un utente fittizio solo se non già presente
-    const char *utente = "Utente_Test1\n";
+    // 2. Recupera la prima lezione
     lezione *lez = &calendario->testa->valore;
 
-    if (lez->iscritti == NULL)
+    if (lez->iscritti == NULL) {
         lez->iscritti = nuova_pila();
-
-    // Controlla se l’utente è già presente scorrendo la pila
-    pila temporanea = nuova_pila();
-    int presente = 0;
-
-    while (!pila_vuota(lez->iscritti)) {
-        char *corrente = pop(lez->iscritti);
-        if (strcmp(corrente, utente) == 0)
-            presente = 1;
-
-        push(temporanea, corrente);
-        free(corrente);
     }
 
-    while (!pila_vuota(temporanea)) {
-        char *corrente = pop(temporanea);
-        push(lez->iscritti, corrente);
-        free(corrente);
-    }
+    // 3. Aggiunge utente fittizio
+    int numero_attuali = dimensione_pila(lez->iscritti);
+    partecipante nuovo_utente;
+    snprintf(nuovo_utente, MASSIMO_LINEA, "Utente_Test%d", numero_attuali + 1);
+    inserisci_pila(nuovo_utente, lez->iscritti);
 
-    if (!presente) {
-        inserisci_pila(utente, lez->iscritti);
-    }
+    // 4. Salva su file "caso_test_1_output.txt"
+    FILE *out = fopen("caso_test_1_output.txt", "w");
+    if (out) {
+        fprintf(out, "Data;Giorno;Orario;Iscritti\n");
+        fprintf(out, "%s;%s;%s;%d\n", lez->data, lez->giorno, lez->orario, dimensione_pila(lez->iscritti));
 
-    // 4. Salva le lezioni su file output
-    salva_lezioni(calendario, "caso_test_1_output.txt");
+        // Stampa anche i partecipanti
+        pila temporanea = nuova_pila();
+        partecipante tmp;
+
+        while (estrai_pila(lez->iscritti, tmp)) {
+            fprintf(out, "%s", tmp);
+            if (tmp[strlen(tmp)-1] != '\n') fprintf(out, "\n"); // assicurati che ogni riga finisca a capo
+            inserisci_pila(tmp, temporanea);
+        }
+
+        // Ripristina la pila originale
+        while (estrai_pila(temporanea, tmp)) {
+            inserisci_pila(tmp, lez->iscritti);
+        }
+
+        fclose(out);
+    } else {
+        printf("Errore apertura file output.\nPremi INVIO per tornare al menu...");
+        getchar();
+        return;
+    }
 
     // 5. Crea oracle se non esiste
     FILE *oracle = fopen("caso_test_1_oracle.txt", "r");
@@ -161,9 +155,10 @@ void caso_test_1(coda calendario)
         FILE *dst = fopen("caso_test_1_oracle.txt", "w");
         if (src && dst) {
             char ch;
-            while ((ch = fgetc(src)) != EOF)
+            while ((ch = fgetc(src)) != EOF) {
                 fputc(ch, dst);
-            printf("Creato file oracle di riferimento.\n");
+            }
+            printf("Creato file oracle.\n");
         }
         if (src) fclose(src);
         if (dst) fclose(dst);
@@ -171,8 +166,25 @@ void caso_test_1(coda calendario)
         fclose(oracle);
     }
 
-    // 6. Confronta file output con oracle
-    int esito = confronta_file("caso_test_1_output.txt", "caso_test_1_oracle.txt");
+    // 6. Confronta file output e oracle
+    FILE *f1 = fopen("caso_test_1_output.txt", "r");
+    FILE *f2 = fopen("caso_test_1_oracle.txt", "r");
+    int esito = 1;
+    if (f1 && f2) {
+        char r1[MASSIMO_LINEA], r2[MASSIMO_LINEA];
+        while (fgets(r1, MASSIMO_LINEA, f1) && fgets(r2, MASSIMO_LINEA, f2)) {
+            if (strcmp(r1, r2) != 0) {
+                esito = 0;
+                break;
+            }
+        }
+        if (!(feof(f1) && feof(f2))) esito = 0;
+        fclose(f1);
+        fclose(f2);
+    } else {
+        esito = 0;
+    }
+
     printf("RISULTATO TEST 1: %s\n", esito ? "PASS" : "FAIL");
 
     FILE *res = fopen("esiti_test.txt", "a");
@@ -183,7 +195,7 @@ void caso_test_1(coda calendario)
 
     FILE *elenco = fopen("elenco_test.txt", "w");
     if (elenco) {
-        fprintf(elenco, "CT1 %s\n", utente);
+        fprintf(elenco, "CT1 %d\n", dimensione_pila(lez->iscritti));
         fclose(elenco);
     }
 
