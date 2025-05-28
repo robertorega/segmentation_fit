@@ -128,6 +128,8 @@ void caso_test_1(coda calendario)
     if (num_iscritti == -1) 
     {
         printf("Errore nella lettura o scrittura dei file di test.\n");
+        printf("Possiamo fare altro per te? Premi INVIO...");
+        getchar();
         return;
     }
 
