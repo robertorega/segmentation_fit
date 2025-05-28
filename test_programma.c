@@ -138,7 +138,7 @@ void caso_test_1(coda calendario)
 
     // Aggiungi l'utente alla pila della prima lezione
     lezione *lez = &calendario->testa->valore;
-    
+    lez->iscritti = nuova_pila();   
     inserisci_pila(utenti[num_iscritti - 1], lez->iscritti); // ultimo utente aggiunto
 
     // Salva lo stato reale
