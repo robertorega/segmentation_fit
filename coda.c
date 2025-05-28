@@ -253,29 +253,33 @@ lezione rimuovi_lezione(coda calendario)
 * Post-condizione:
 * - Se il giorno è valido per una lezione, restituisce 1 e riempie le stringhe giorno e orario, altrimenti 0
 */
-int giorno_lezione(int giorno_settimana, char *giorno, char *orario)
+int giorno_lezione(int giorno_settimana, char *giorno, char *orario, int *ora_inizio)
 {
-	switch (giorno_settimana)
-	{
-    		case 1: // Lunedì
-        	strcpy(giorno, "Lunedi");
-        	strcpy(orario, "10-12");
-        	return 1;
-    		case 3: // Mercoledì
-        	strcpy(giorno, "Mercoledi");
-        	strcpy(orario, "16-18");
-        	return 1;
-    		case 5: // Venerdì
-        	strcpy(giorno, "Venerdi");
-        	strcpy(orario, "16-18");
-        	return 1;
-    		case 6: // Sabato
-        	strcpy(giorno, "Sabato");
-        	strcpy(orario, "10-12");
-        	return 1;
-    		default:
-        	return 0;
-	}
+    switch (giorno_settimana)
+    {
+        case 1: // Lunedì
+            strcpy(giorno, "Lunedi");
+            strcpy(orario, "10-12");
+            *ora_inizio = 10;
+            return 1;
+        case 3: // Mercoledì
+            strcpy(giorno, "Mercoledi");
+            strcpy(orario, "16-18");
+            *ora_inizio = 16;
+            return 1;
+        case 5: // Venerdì
+            strcpy(giorno, "Venerdi");
+            strcpy(orario, "16-18");
+            *ora_inizio = 16;
+            return 1;
+        case 6: // Sabato
+            strcpy(giorno, "Sabato");
+            strcpy(orario, "10-12");
+            *ora_inizio = 10;
+            return 1;
+        default:
+            return 0;
+    }
 }
 
 /* Funzione: genera_lezioni
@@ -319,7 +323,9 @@ void genera_lezioni(coda calendario)
         	char orario[20];
 
 		// Verifica se il giorno è valido per le lezioni
-        	if (giorno_lezione(temp.tm_wday, giorno, orario))
+		int ora_inizio;
+if (giorno_lezione(temp.tm_wday, giorno, orario, &ora_inizio))
+
 		{
             		strftime(data, sizeof(data), "%d/%m/%Y", &temp); // Formatta la data come stringa
 
@@ -973,34 +979,35 @@ void salva_lezioni(coda calendario, const char *nome_file)
 * Post-condizione:
 * - Ritorna 1 se la data è nel passato rispetto a oggi, 0 altrimenti
 */
-int data_passata(const char *data_str)
+int data_passata(const char *data_str, const char *orario)
 {
-	struct tm data_lezione = {0};
-    	int giorno, mese, anno;
+    struct tm data_lezione = {0};
+    int giorno, mese, anno;
+    int ora_inizio;
     
-    	if (sscanf(data_str, "%d/%d/%d", &giorno, &mese, &anno) != 3)
-        	return 0;  // Formato invalido, consideriamo non passata
+    if (sscanf(data_str, "%d/%d/%d", &giorno, &mese, &anno) != 3)
+        return 0;  // Formato invalido
+    
+    // Determina l'ora di inizio in base all'orario
+    if (strcmp(orario, "10-12") == 0)
+        ora_inizio = 10;
+    else if (strcmp(orario, "16-18") == 0)
+        ora_inizio = 16;
+    else
+        return 0;  // Orario non riconosciuto
+    
+    data_lezione.tm_mday = giorno;
+    data_lezione.tm_mon = mese - 1;  // mesi da 0 a 11
+    data_lezione.tm_year = anno - 1900;
+    data_lezione.tm_hour = ora_inizio;  // Ora di inizio lezione
+    data_lezione.tm_min = 0;
+    data_lezione.tm_sec = 0;
+    data_lezione.tm_isdst = -1;     // Ignora daylight saving
 
-    	data_lezione.tm_mday = giorno;
-    	data_lezione.tm_mon = mese - 1;  // mesi da 0 a 11
-    	data_lezione.tm_year = anno - 1900;
-    	data_lezione.tm_hour = 23;      // Fine giornata
-	data_lezione.tm_min = 59;
-	data_lezione.tm_sec = 59;
-    	data_lezione.tm_isdst = -1;     // Ignora daylight saving
+    time_t tempo_lezione = mktime(&data_lezione);
+    time_t tempo_attuale = time(NULL);
 
-    	time_t tempo_lezione = mktime(&data_lezione);
-
-    	// Ottiene la data corrente (inizio giornata)
-    	time_t oggi = time(NULL);
-    	struct tm *oggi_tm = localtime(&oggi);
-    	oggi_tm->tm_hour = 0;
-    	oggi_tm->tm_min = 0;
-    	oggi_tm->tm_sec = 0;
-    	oggi_tm->tm_isdst = -1;
-    	time_t tempo_oggi = mktime(oggi_tm);
-
-    	return difftime(tempo_lezione, tempo_oggi) < 0;
+    return difftime(tempo_lezione, tempo_attuale) < 0;
 }
 
 /* Funzione: pulisci_lezioni_passate
@@ -1030,24 +1037,24 @@ int data_passata(const char *data_str)
 */
 void pulisci_lezioni_passate(coda calendario, const char *nome_file)
 {
-	if (calendario == NULL || coda_vuota(calendario)) return;
+    if (calendario == NULL || coda_vuota(calendario)) return;
 
-    	FILE *fp = fopen(nome_file, "a");
-    	if (fp == NULL)
-    	{
-        	perror("Errore apertura file storico");
-        	return;
-    	}
+    FILE *fp = fopen(nome_file, "a");
+    if (fp == NULL)
+    {
+        perror("Errore apertura file storico");
+        return;
+    }
 
-    	struct nodo *corrente = calendario->testa;
-    	struct nodo *precedente = NULL;
+    struct nodo *corrente = calendario->testa;
+    struct nodo *precedente = NULL;
 
-    	while (corrente != NULL)
-    	{
-        	struct nodo *prossimo = corrente->prossimo;
+    while (corrente != NULL)
+    {
+        struct nodo *prossimo = corrente->prossimo;
 
-        	if (data_passata(corrente->valore.data))
-        	{
+        if (data_passata(corrente->valore.data, corrente->valore.orario))
+        {
             		// Archivia la lezione
             		fprintf(fp, "%s;%s;%s;%d\n",
                 	corrente->valore.data,
@@ -1087,16 +1094,16 @@ void pulisci_lezioni_passate(coda calendario, const char *nome_file)
 
             		free(corrente);
             		calendario->numel--;
-        	}
-        	else 
-        	{
-            		precedente = corrente;
-        	}
+ }
+        else 
+        {
+            precedente = corrente;
+        }
 
-        	corrente = prossimo;
-    	}
+        corrente = prossimo;
+    }
 
-    	fclose(fp);
+    fclose(fp);
 }
 
 /* Funzione: report_mensile
@@ -1585,8 +1592,9 @@ void caso_test_3(coda calendario)
 
         // Verifica se il giorno è valido per una lezione
         char giorno[20], orario[20];
-        if (giorno_lezione(ultima_data.tm_wday, giorno, orario))
-        {
+	int ora_inizio;
+if (giorno_lezione(temp.tm_wday, giorno, orario, &ora_inizio))
+   {
             // 5. Crea una nuova lezione con partecipanti fittizi
             lezione l;
             l.iscritti = nuova_pila();
