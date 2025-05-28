@@ -33,8 +33,11 @@ int confronta_file(const char *file1, const char *file2)
     char r1[MASSIMO_LINEA], r2[MASSIMO_LINEA];
     while (fgets(r1, sizeof(r1), f1) && fgets(r2, sizeof(r2), f2)) 
     {
-        if (strcmp(r1, r2) != 0) {
+        // Rimuove newline e spazi finali
+        r1[strcspn(r1, "\r\n")] = 0;
+        r2[strcspn(r2, "\r\n")] = 0;
 
+        if (strcmp(r1, r2) != 0) {
             fclose(f1); fclose(f2);
             return 0;
         }
