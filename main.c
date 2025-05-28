@@ -6,6 +6,7 @@
 #include "lezione.h"
 #include "pila.h"
 #include "utile_coda.h"
+#include "utile_hash.h"
 
 /* Funzione: abbonamenti
 *
