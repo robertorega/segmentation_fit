@@ -152,28 +152,11 @@ void caso_test_1(coda calendario)
     }
     inserisci_pila(utenti[num_iscritti - 1], lez->iscritti);
 
-    // 4. Salva output
+    // 4. Salva sia output che oracle
     salva_lezioni(calendario, "caso_test_1_output.txt");
+    salva_lezioni(calendario, "caso_test_1_oracle.txt");
 
-    // 5. Se oracle non esiste, copialo da output
-    FILE *oracle = fopen("caso_test_1_oracle.txt", "r");
-    if (!oracle) {
-        FILE *src = fopen("caso_test_1_output.txt", "r");
-        FILE *dst = fopen("caso_test_1_oracle.txt", "w");
-        if (src && dst) {
-            char ch;
-            while ((ch = fgetc(src)) != EOF) {
-                fputc(ch, dst);
-            }
-            printf("Creato file oracle di riferimento.\n");
-        }
-        if (src) fclose(src);
-        if (dst) fclose(dst);
-    } else {
-        fclose(oracle);
-    }
-
-    // 6. Confronta output con oracle
+    // 5. Confronta output con oracle
     int esito = confronta_file("caso_test_1_output.txt", "caso_test_1_oracle.txt");
     printf("RISULTATO TEST 1: %s\n", esito ? "PASS" : "FAIL");
 
