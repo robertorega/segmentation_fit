@@ -1012,7 +1012,7 @@ void report_mensile(const char* filename)
             		}
         	}
 
-        	if (coneteggio == 0)
+        	if (conteggio == 0)
         	{
             		fclose(file_storico);
             		printf("Nessun dato disponibile nel file %s\n", filename);
