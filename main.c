@@ -52,12 +52,8 @@ int main()
 	char scelta[10];
     	coda calendario = nuova_coda();
 	carica_lezioni(calendario, "lezioni.txt");
-
-	// Genera nuove lezioni solo se la coda è vuota
-    	if (coda_vuota(calendario))
-    	{
-        	genera_lezioni(calendario);
-    	}
+	pulisci_lezioni_passate(calendario, "storico.txt");
+	genera_lezioni(calendario);
 
 	while (1) 
 	{
@@ -86,7 +82,8 @@ int main()
         		case 2:
 				pulisci_schermo();
 				pulisci_lezioni_passate(calendario, "storico.txt");
-            			prenota_lezione(calendario);
+				genera_lezioni(calendario); 
+				prenota_lezione(calendario);
 				salva_lezioni(calendario, "lezioni.txt");
             			break;
         		case 3:
