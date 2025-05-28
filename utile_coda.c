@@ -32,12 +32,12 @@
 */
 void carica_lezioni(coda calendario, const char *nome_file)
 {
-  // Apre il file in modalità lettura/scrittura, creandolo se non esiste
-  FILE *fp = fopen(nome_file, "a+");
-  if (fp == NULL)
+	// Apre il file in modalità lettura/scrittura, creandolo se non esiste
+	FILE *fp = fopen(nome_file, "a+");
+	if (fp == NULL)
 	{
-	  perror("Errore apertura file");
-      return;
+		perror("Errore apertura file");
+      		return;
 	}
 
 	rewind(fp); // Torna all'inizio del file
@@ -165,31 +165,31 @@ void salva_lezioni(coda calendario, const char *nome_file)
 */
 int giorno_lezione(int giorno_settimana, char *giorno, char *orario, int *ora_inizio)
 {
-    switch (giorno_settimana)
-    {
-        case 1: // Lunedì
-            strcpy(giorno, "Lunedi");
-            strcpy(orario, "10-12");
-            *ora_inizio = 10;
-            return 1;
-        case 3: // Mercoledì
-            strcpy(giorno, "Mercoledi");
-            strcpy(orario, "16-18");
-            *ora_inizio = 16;
-            return 1;
-        case 5: // Venerdì
-            strcpy(giorno, "Venerdi");
-            strcpy(orario, "16-18");
-            *ora_inizio = 16;
-            return 1;
-        case 6: // Sabato
-            strcpy(giorno, "Sabato");
-            strcpy(orario, "10-12");
-            *ora_inizio = 10;
-            return 1;
-        default:
-            return 0;
-    }
+	switch (giorno_settimana)
+    	{
+        	case 1: // Lunedì
+            		strcpy(giorno, "Lunedi");
+            		strcpy(orario, "10-12");
+            		*ora_inizio = 10;
+            		return 1;
+        	case 3: // Mercoledì
+            		strcpy(giorno, "Mercoledi");
+            		strcpy(orario, "16-18");
+            		*ora_inizio = 16;
+            		return 1;
+        	case 5: // Venerdì
+            		strcpy(giorno, "Venerdi");
+            		strcpy(orario, "16-18");
+            		*ora_inizio = 16;
+            		return 1;
+        	case 6: // Sabato
+            		strcpy(giorno, "Sabato");
+            		strcpy(orario, "10-12");
+            		*ora_inizio = 10;
+            		return 1;
+        	default:
+            		return 0;
+	}
 }
 
 /* Funzione: genera_lezioni
@@ -234,8 +234,7 @@ void genera_lezioni(coda calendario)
 
 		// Verifica se il giorno è valido per le lezioni
 		int ora_inizio;
-if (giorno_lezione(temp.tm_wday, giorno, orario, &ora_inizio))
-
+		if (giorno_lezione(temp.tm_wday, giorno, orario, &ora_inizio))
 		{
             		strftime(data, sizeof(data), "%d/%m/%Y", &temp); // Formatta la data come stringa
 
@@ -818,33 +817,33 @@ void disdici_iscrizione(coda calendario, const char* lezioni)
 */
 int data_passata(const char *data_str, const char *orario)
 {
-    struct tm data_lezione = {0};
-    int giorno, mese, anno;
-    int ora_inizio;
+	struct tm data_lezione = {0};
+    	int giorno, mese, anno;
+    	int ora_inizio;
     
-    if (sscanf(data_str, "%d/%d/%d", &giorno, &mese, &anno) != 3)
-        return 0;  // Formato invalido
+    	if (sscanf(data_str, "%d/%d/%d", &giorno, &mese, &anno) != 3)
+        	return 0;  // Formato invalido
     
-    // Determina l'ora di inizio in base all'orario
-    if (strcmp(orario, "10-12") == 0)
-        ora_inizio = 10;
-    else if (strcmp(orario, "16-18") == 0)
-        ora_inizio = 16;
-    else
-        return 0;  // Orario non riconosciuto
+    	// Determina l'ora di inizio in base all'orario
+    	if (strcmp(orario, "10-12") == 0)
+        	ora_inizio = 10;
+    	else if (strcmp(orario, "16-18") == 0)
+        	ora_inizio = 16;
+    	else
+        	return 0;  // Orario non riconosciuto
     
-    data_lezione.tm_mday = giorno;
-    data_lezione.tm_mon = mese - 1;  // mesi da 0 a 11
-    data_lezione.tm_year = anno - 1900;
-    data_lezione.tm_hour = ora_inizio;  // Ora di inizio lezione
-    data_lezione.tm_min = 0;
-    data_lezione.tm_sec = 0;
-    data_lezione.tm_isdst = -1;     // Ignora daylight saving
+	data_lezione.tm_mday = giorno;
+    	data_lezione.tm_mon = mese - 1;  // mesi da 0 a 11
+    	data_lezione.tm_year = anno - 1900;
+    	data_lezione.tm_hour = ora_inizio;  // Ora di inizio lezione
+    	data_lezione.tm_min = 0;
+    	data_lezione.tm_sec = 0;
+    	data_lezione.tm_isdst = -1;     // Ignora daylight saving
 
-    time_t tempo_lezione = mktime(&data_lezione);
-    time_t tempo_attuale = time(NULL);
+    	time_t tempo_lezione = mktime(&data_lezione);
+    	time_t tempo_attuale = time(NULL);
 
-    return difftime(tempo_lezione, tempo_attuale) < 0;
+    	return difftime(tempo_lezione, tempo_attuale) < 0;
 }
 
 /* Funzione: pulisci_lezioni_passate
@@ -874,24 +873,24 @@ int data_passata(const char *data_str, const char *orario)
 */
 void pulisci_lezioni_passate(coda calendario, const char *nome_file)
 {
-    if (calendario == NULL || coda_vuota(calendario)) return;
+	if (calendario == NULL || coda_vuota(calendario)) return;
 
-    FILE *fp = fopen(nome_file, "a");
-    if (fp == NULL)
-    {
-        perror("Errore apertura file storico");
-        return;
-    }
+    	FILE *fp = fopen(nome_file, "a");
+    	if (fp == NULL)
+    	{
+        	perror("Errore apertura file storico");
+        	return;
+    	}
 
-    struct nodo *corrente = calendario->testa;
-    struct nodo *precedente = NULL;
+    	struct nodo *corrente = calendario->testa;
+    	struct nodo *precedente = NULL;
 
-    while (corrente != NULL)
-    {
-        struct nodo *prossimo = corrente->prossimo;
+    	while (corrente != NULL)
+    	{
+        	struct nodo *prossimo = corrente->prossimo;
 
-        if (data_passata(corrente->valore.data, corrente->valore.orario))
-        {
+        	if (data_passata(corrente->valore.data, corrente->valore.orario))
+        	{
             		// Archivia la lezione
             		fprintf(fp, "%s;%s;%s;%d\n",
                 	corrente->valore.data,
@@ -931,16 +930,16 @@ void pulisci_lezioni_passate(coda calendario, const char *nome_file)
 
             		free(corrente);
             		calendario->numel--;
- }
+ 		}
         else 
         {
-            precedente = corrente;
+        	precedente = corrente;
         }
 
         corrente = prossimo;
-    }
+	}
 
-    fclose(fp);
+	fclose(fp);
 }
 
 /* Funzione: report_mensile
@@ -964,195 +963,195 @@ void pulisci_lezioni_passate(coda calendario, const char *nome_file)
 */
 void report_mensile(const char* filename)
 {
-    while(1)
-    {
-        printf("\n--- Report Mensile ---\n");
-        printf("Visualizza le lezioni di fitness passate, ordinate per numero di partecipanti.\n");
-        FILE *file_storico = fopen(filename, "r");
-        if (!file_storico)
-        {
-            printf("Errore apertura file %s\n", filename);
-            printf("Premi INVIO per continuare...");
-            getchar();
-            return;
-        }
+	while(1)
+    	{
+        	printf("\n--- Report Mensile ---\n");
+        	printf("Visualizza le lezioni di fitness passate, ordinate per numero di partecipanti.\n");
+        	FILE *file_storico = fopen(filename, "r");
+        	if (!file_storico)
+        	{
+            		printf("Errore apertura file %s\n", filename);
+            		printf("Premi INVIO per continuare...");
+            		getchar();
+            		return;
+        	}
 
-        // Estrai mesi e anni unici dal file
-        int mesi[12], anni[12], count = 0;
-        char riga[256];
+        	// Estrai mesi e anni unici dal file
+        	int mesi[12], anni[12], conteggio = 0;
+        	char riga[256];
 
-        while (fgets(riga, sizeof(riga), file_storico))
-        {
-            int giorno, mese, anno, num;
-            char data[11], giorno_s[15], orario[10];
+        	while (fgets(riga, sizeof(riga), file_storico))
+        	{
+            		int giorno, mese, anno, num;
+            		char data[11], giorno_s[15], orario[10];
 
-            if (sscanf(riga, "%10[^;];%14[^;];%9[^;];%d", data, giorno_s, orario, &num) == 4)
-            {
-                if (sscanf(data, "%d/%d/%d", &giorno, &mese, &anno) == 3)
-                {
-                    int già_presente = 0;
-                    for (int i = 0; i < count; i++)
-                    {
-                        if (mesi[i] == mese && anni[i] == anno)
-                        {
-                            già_presente = 1;
-                            break;
-                        }
-                    }
-                    if (!già_presente)
-                    {
-                        mesi[count] = mese;
-                        anni[count] = anno;
-                        count++;
-                    }
-                }
+            		if (sscanf(riga, "%10[^;];%14[^;];%9[^;];%d", data, giorno_s, orario, &num) == 4)
+            		{
+                		if (sscanf(data, "%d/%d/%d", &giorno, &mese, &anno) == 3)
+                		{
+                    			int già_presente = 0;
+                    			for (int i = 0; i < conteggio; i++)
+                    			{
+                        			if (mesi[i] == mese && anni[i] == anno)
+                        			{
+                            				già_presente = 1;
+                            				break;
+                        			}
+                    			}
+                    			if (!già_presente)
+                    			{
+                        			mesi[conteggio] = mese;
+                        			anni[conteggio] = anno;
+                        			conteggio++;
+                    			}
+                		}
 
-                // Salta righe partecipanti
-                for (int i = 0; i < num; i++)
-                    fgets(riga, sizeof(riga), file_storico);
-            }
-        }
+                		// Salta righe partecipanti
+                		for (int i = 0; i < num; i++)
+                    		fgets(riga, sizeof(riga), file_storico);
+            		}
+        	}
 
-        if (count == 0)
-        {
-            fclose(file_storico);
-            printf("Nessun dato disponibile nel file %s\n", filename);
-            printf("Premi INVIO per continuare...");
-            getchar();
-            return;
-        }
+        	if (coneteggio == 0)
+        	{
+            		fclose(file_storico);
+            		printf("Nessun dato disponibile nel file %s\n", filename);
+            		printf("Premi INVIO per continuare...");
+            		getchar();
+            		return;
+        	}
 
-        // Mostra elenco numerato mesi/anni disponibili
-        printf("\nSeleziona il mese da analizzare:\n");
-        for (int i = 0; i < count; i++)
-            printf("%d) %02d/%d\n", i + 1, mesi[i], anni[i]);
+        	// Mostra elenco numerato mesi/anni disponibili
+        	printf("\nSeleziona il mese da analizzare:\n");
+        	for (int i = 0; i < conteggio; i++)
+            		printf("%d) %02d/%d\n", i + 1, mesi[i], anni[i]);
 
-        printf("0 - Esci dal Report\n");
+        	printf("0 - Esci dal Report\n");
 
-        char scelta[10];
-        int scelta_numero = 0;
-        printf("Inserisci il numero della tua scelta: ");
-        fgets(scelta, sizeof(scelta), stdin);
-        scelta_numero = atoi(scelta);
+        	char scelta[10];
+        	int scelta_numero = 0;
+        	printf("Inserisci il numero della tua scelta: ");
+        	fgets(scelta, sizeof(scelta), stdin);
+        	scelta_numero = atoi(scelta);
 
-        if (scelta_numero == 0)
-        {
-            fclose(file_storico);
-            return;
-        }
+        	if (scelta_numero == 0)
+        	{
+            		fclose(file_storico);
+            		return;
+        	}
 
-        if (scelta_numero < 0 || scelta_numero > count)
-        {
-            printf("Scelta non valida.\n");
-            printf("Premi INVIO per continuare...");
-            getchar();
-            fclose(file_storico);
-            continue;
-        }
+        	if (scelta_numero < 0 || scelta_numero > conteggio)
+        	{
+            		printf("Scelta non valida.\n");
+            		printf("Premi INVIO per continuare...");
+            		getchar();
+            		fclose(file_storico);
+            		continue;
+        	}
 
-        int mese_da_cercare = mesi[scelta_numero - 1];
-        int anno_da_cercare = anni[scelta_numero - 1];
+        	int mese_da_cercare = mesi[scelta_numero - 1];
+        	int anno_da_cercare = anni[scelta_numero - 1];
 
-        rewind(file_storico);
+        	rewind(file_storico);
 
-        // Array per memorizzare le lezioni trovate
-        char elenco_date[100][11];
-        char elenco_giorni[100][15];
-        char elenco_orari[100][10];
-        int elenco_partecipanti[100];
-        int totale_lezioni = 0;
+        	// Array per memorizzare le lezioni trovate
+        	char elenco_date[100][11];
+        	char elenco_giorni[100][15];
+        	char elenco_orari[100][10];
+        	int elenco_partecipanti[100];
+        	int totale_lezioni = 0;
 
-        // Lettura del file riga per riga
-        while (fgets(riga, sizeof(riga), file_storico)) 
-        {
-            char data_lettura[11];
-            char giorno_lettura[15];
-            char orario_lettura[10];
-            int numero_partecipanti;
-            int g, m, a;
+        	// Lettura del file riga per riga
+       		while (fgets(riga, sizeof(riga), file_storico)) 
+        	{
+            		char data_lettura[11];
+            		char giorno_lettura[15];
+            		char orario_lettura[10];
+            		int numero_partecipanti;
+           		int g, m, a;
 
-            if (sscanf(riga, "%10[^;];%14[^;];%9[^;];%d", data_lettura, giorno_lettura, orario_lettura, &numero_partecipanti) == 4)
-            {
-                if (sscanf(data_lettura, "%d/%d/%d", &g, &m, &a) == 3 &&
-                    m == mese_da_cercare && a == anno_da_cercare && numero_partecipanti > 0)
-                {
-                    strcpy(elenco_date[totale_lezioni], data_lettura);
-                    strcpy(elenco_giorni[totale_lezioni], giorno_lettura);
-                    strcpy(elenco_orari[totale_lezioni], orario_lettura);
-                    elenco_partecipanti[totale_lezioni] = numero_partecipanti;
-                    totale_lezioni++;
-                }
+            		if (sscanf(riga, "%10[^;];%14[^;];%9[^;];%d", data_lettura, giorno_lettura, orario_lettura, &numero_partecipanti) == 4)
+            		{
+                		if (sscanf(data_lettura, "%d/%d/%d", &g, &m, &a) == 3 && m == mese_da_cercare && a == anno_da_cercare && numero_partecipanti > 0)
+                		{
+                    			strcpy(elenco_date[totale_lezioni], data_lettura);
+                    			strcpy(elenco_giorni[totale_lezioni], giorno_lettura);
+                    			strcpy(elenco_orari[totale_lezioni], orario_lettura);
+                    			elenco_partecipanti[totale_lezioni] = numero_partecipanti;
+                    			totale_lezioni++;
+                		}
 
-                for (int i = 0; i < numero_partecipanti; i++)
-                    fgets(riga, sizeof(riga), file_storico);
-            }
-        }
+                		for (int i = 0; i < numero_partecipanti; i++)
+                    		fgets(riga, sizeof(riga), file_storico);
+            		}
+        	}
 
-        fclose(file_storico);
+        	fclose(file_storico);
 
-        if (totale_lezioni == 0) 
-        {
-            printf("Nessuna lezione trovata per il mese %d/%d.\n", mese_da_cercare, anno_da_cercare);
-            printf("Premi INVIO per continuare...");
-            getchar();
-            continue;
-        }
+        	if (totale_lezioni == 0) 
+        	{
+            		printf("Nessuna lezione trovata per il mese %d/%d.\n", mese_da_cercare, anno_da_cercare);
+            		printf("Premi INVIO per continuare...");
+            		getchar();
+            		continue;
+        	}
 
-        // Bubble sort
-        for (int i = 0; i < totale_lezioni - 1; i++)
-        {
-            for (int j = i + 1; j < totale_lezioni; j++)
-            {
-                if (elenco_partecipanti[j] > elenco_partecipanti[i])
-                {
-                    // Swap partecipanti
-                    int tmp_part = elenco_partecipanti[i];
-                    elenco_partecipanti[i] = elenco_partecipanti[j];
-                    elenco_partecipanti[j] = tmp_part;
+        	// Bubble sort
+        	for (int i = 0; i < totale_lezioni - 1; i++)
+        	{
+            		for (int j = i + 1; j < totale_lezioni; j++)
+            		{
+                		if (elenco_partecipanti[j] > elenco_partecipanti[i])
+                		{
+                    			// Swap partecipanti
+                    			int tmp_part = elenco_partecipanti[i];
+                    			elenco_partecipanti[i] = elenco_partecipanti[j];
+                    			elenco_partecipanti[j] = tmp_part;
 
-                    // Swap date
-                    char tmp_data[11];
-                    strcpy(tmp_data, elenco_date[i]);
-                    strcpy(elenco_date[i], elenco_date[j]);
-                    strcpy(elenco_date[j], tmp_data);
+                    			// Swap date
+                    			char tmp_data[11];
+                    			strcpy(tmp_data, elenco_date[i]);
+                    			strcpy(elenco_date[i], elenco_date[j]);
+                    			strcpy(elenco_date[j], tmp_data);
 
-                    // Swap giorni
-                    char tmp_giorno[15];
-                    strcpy(tmp_giorno, elenco_giorni[i]);
-                    strcpy(elenco_giorni[i], elenco_giorni[j]);
-                    strcpy(elenco_giorni[j], tmp_giorno);
+                    			// Swap giorni
+                    			char tmp_giorno[15];
+                    			strcpy(tmp_giorno, elenco_giorni[i]);
+                    			strcpy(elenco_giorni[i], elenco_giorni[j]);
+                    			strcpy(elenco_giorni[j], tmp_giorno);
 
-                    // Swap orari
-                    char tmp_orario[10];
-                    strcpy(tmp_orario, elenco_orari[i]);
-                    strcpy(elenco_orari[i], elenco_orari[j]);
-                    strcpy(elenco_orari[j], tmp_orario);
-                }
-            }
-        }
+                    			// Swap orari
+                    			char tmp_orario[10];
+                    			strcpy(tmp_orario, elenco_orari[i]);
+                    			strcpy(elenco_orari[i], elenco_orari[j]);
+                    			strcpy(elenco_orari[j], tmp_orario);
+                		}
+            		}
+        	}
 
-        // Stampa risultati
-        printf("\n--- Lezioni %02d/%d ---\n", mese_da_cercare, anno_da_cercare);
-        for (int i = 0; i < totale_lezioni; i++) 
-        {
-            printf("%d) Data: %s - Giorno: %s - Orario: %s - Partecipanti: %d\n",
-                i + 1,
-                elenco_date[i],
-                elenco_giorni[i],
-                elenco_orari[i],
-                elenco_partecipanti[i]);
-        }
+        	// Stampa risultati
+        	printf("\n--- Lezioni %02d/%d ---\n", mese_da_cercare, anno_da_cercare);
+        	for (int i = 0; i < totale_lezioni; i++) 
+        	{
+            		printf("%d) Data: %s - Giorno: %s - Orario: %s - Partecipanti: %d\n",
+                	i + 1,
+                	elenco_date[i],
+                	elenco_giorni[i],
+                	elenco_orari[i],
+                	elenco_partecipanti[i]);
+        	}
 
-        // Menu uscita
-        printf("\n1 - Scegli un altro mese");
-        printf("\n0 - Esci dal Report");
-        printf("\nScelta: ");
+        	// Menu uscita
+        	printf("\n1 - Scegli un altro mese");
+        	printf("\n0 - Esci dal Report");
+        	printf("\nScelta: ");
         
-        fgets(scelta, sizeof(scelta), stdin);
-        if (scelta[0] == '0') {
-            return;
-        }
-    }
+        	fgets(scelta, sizeof(scelta), stdin);
+        	if (scelta[0] == '0')
+		{
+            		return;
+        	}
+    	}
 }
 
 /* Funzione: caso_test_1
@@ -1180,56 +1179,59 @@ void caso_test_1(coda calendario)
     	getchar(); 
 
 
-    // 1. Verifica presenza lezioni
-    if (coda_vuota(calendario))
-    {
-        printf("ERRORE: Nessuna lezione disponibile.\n");
-        printf("Premi INVIO per tornare al menu...");
-        getchar();
-        return;
-    }
+	// 1. Verifica presenza lezioni
+    	if (coda_vuota(calendario))
+    	{
+        	printf("ERRORE: Nessuna lezione disponibile.\n");
+        	printf("Premi INVIO per tornare al menu...");
+        	getchar();
+        	return;
+    	}
 
-    // 2. Apre o crea il file test in modalità lettura/scrittura
-    FILE *f_test = fopen("ct1_lezioni.txt", "r+");
-    if (!f_test) {
-        f_test = fopen("ct1_lezioni.txt", "w+");
-    }
+	// 2. Apre o crea il file test in modalità lettura/scrittura
+    	FILE *f_test = fopen("ct1_lezioni.txt", "r+");
+    	if (!f_test)
+	{
+        	f_test = fopen("ct1_lezioni.txt", "w+");
+    	}
 
-    // 3. Legge il numero attuale di iscritti dal file
-    int current_iscritti = 0;
-    char line[256];
-    rewind(f_test);
-    if (fgets(line, sizeof(line), f_test)) {
-        sscanf(line, "%*[^;];%*[^;];%*[^;];%d", &current_iscritti);
-    }
+    	// 3. Legge il numero attuale di iscritti dal file
+    	int current_iscritti = 0;
+    	char line[256];
+    	rewind(f_test);
+    	if (fgets(line, sizeof(line), f_test))
+	{
+        	sscanf(line, "%*[^;];%*[^;];%*[^;];%d", &current_iscritti);
+    	}
 
-    // 4. Crea utente test incrementale
-    partecipante nome_test;
-    snprintf(nome_test, sizeof(nome_test), "Utente_Test%d", current_iscritti + 1);
+    	// 4. Crea utente test incrementale
+    	partecipante nome_test;
+    	snprintf(nome_test, sizeof(nome_test), "Utente_Test%d", current_iscritti + 1);
 
-    // 5. Simula la prenotazione (in memoria)
-    int iscritti_dopo = current_iscritti + 1;
+    	// 5. Simula la prenotazione (in memoria)
+    	int iscritti_dopo = current_iscritti + 1;
 
-    // 6. Sovrascrive il file con i nuovi dati
-    rewind(f_test);
-    fprintf(f_test, "%s;%s;%s;%d\n", 
-           calendario->testa->valore.data,
-           calendario->testa->valore.giorno,
-           calendario->testa->valore.orario,
-           iscritti_dopo);
+    	// 6. Sovrascrive il file con i nuovi dati
+    	rewind(f_test);
+    	fprintf(f_test, "%s;%s;%s;%d\n", 
+        calendario->testa->valore.data,
+        calendario->testa->valore.giorno,
+        calendario->testa->valore.orario,
+        iscritti_dopo);
     
-    // Scrivi tutti gli utenti (esistenti + nuovo)
-    for (int i = 1; i <= iscritti_dopo; i++) {
-        fprintf(f_test, "Utente_Test%d\n", i);
-    }
-    fclose(f_test);
+    	// Scrivi tutti gli utenti (esistenti + nuovo)
+	for (int i = 1; i <= iscritti_dopo; i++)
+	{
+        	fprintf(f_test, "Utente_Test%d\n", i);
+    	}
+    	fclose(f_test);
 
-    // 7. Output risultati
-    printf("SUCCESSO: Aggiunto %s\n", nome_test);
-    printf("Iscritti prima: %d, dopo: %d\n", current_iscritti, iscritti_dopo);
-    printf("\nDati salvati in ct1_lezioni.txt\n");
-    printf("Premi INVIO per tornare al menu...");
-    getchar();
+    	// 7. Output risultati
+    	printf("SUCCESSO: Aggiunto %s\n", nome_test);
+    	printf("Iscritti prima: %d, dopo: %d\n", current_iscritti, iscritti_dopo);
+    	printf("\nDati salvati in ct1_lezioni.txt\n");
+   	 printf("Premi INVIO per tornare al menu...");
+    	getchar();
 }
 
 /* Funzione: caso_test_2
@@ -1252,88 +1254,96 @@ void caso_test_1(coda calendario)
 */
 void caso_test_2(coda calendario) 
 {
-    printf("\n--- TEST 2: Gestione Abbonamenti ---\n");
-    printf("Test della gestione degli abbonamenti e della verifica della validita'.\n");
-    printf("Crea 'Abbonato_Test', verifica prenotazione senza lezioni, ricarica e prenota.\n\n");
-    printf("Premi INVIO per iniziare...");
-    getchar();
+	printf("\n--- TEST 2: Gestione Abbonamenti ---\n");
+    	printf("Test della gestione degli abbonamenti e della verifica della validita'.\n");
+    	printf("Crea 'Abbonato_Test', verifica prenotazione senza lezioni, ricarica e prenota.\n\n");
+    	printf("Premi INVIO per iniziare...");
+    	getchar();
 
-    // 1. Genera nome utente univoco basato sul timestamp
-    char nomeutente[MAX_CARATTERI];
-    time_t now = time(NULL);
-    snprintf(nomeutente, MAX_CARATTERI, "Abbonato_Test%ld", now);
+    	// 1. Genera nome utente univoco basato sul timestamp
+    	char nomeutente[MAX_CARATTERI];
+    	time_t now = time(NULL);
+    	snprintf(nomeutente, MAX_CARATTERI, "Abbonato_Test%ld", now);
 
-    // 2. Crea nuovo abbonato
-    abbonato nuovo;
-    strcpy(nuovo.nomeutente, nomeutente);
-    strcpy(nuovo.password, "1234");
-    nuovo.chiave = strdup(nuovo.nomeutente);
-    nuovo.lezioni_rimanenti = 0;
+    	// 2. Crea nuovo abbonato
+    	abbonato nuovo;
+    	strcpy(nuovo.nomeutente, nomeutente);
+    	strcpy(nuovo.password, "1234");
+    	nuovo.chiave = strdup(nuovo.nomeutente);
+    	nuovo.lezioni_rimanenti = 0;
 
-    // Carica e salva abbonati
-    tabella_hash tabella = carica_abbonati("ct2_abbonati.txt");
-    tabella = inserisci_hash(nuovo, tabella);
-    salva_abbonati(tabella, "ct2_abbonati.txt");
+   	// Carica e salva abbonati
+    	tabella_hash tabella = carica_abbonati("ct2_abbonati.txt");
+    	tabella = inserisci_hash(nuovo, tabella);
+    	salva_abbonati(tabella, "ct2_abbonati.txt");
 
-    printf("Abbonato creato: %s\n", nuovo.nomeutente);
+    	printf("Abbonato creato: %s\n", nuovo.nomeutente);
 
-    // 3. Ricarica tabella e cerca utente
-    tabella = carica_abbonati("ct2_abbonati.txt");
-    abbonato *trovato = cerca_hash(nomeutente, tabella);
+   	// 3. Ricarica tabella e cerca utente
+    	tabella = carica_abbonati("ct2_abbonati.txt");
+    	abbonato *trovato = cerca_hash(nomeutente, tabella);
 
-    if (!trovato) {
-        printf("ERRORE: Utente non trovato dopo la creazione.\n");
-        printf("Premi INVIO per tornare al menu principale...");
-        getchar();
-        return;
-    }
+    	if (!trovato)
+	{
+        	printf("ERRORE: Utente non trovato dopo la creazione.\n");
+        	printf("Premi INVIO per tornare al menu principale...");
+        	getchar();
+        	return;
+    	}
 
-    // 4. Tentativo di prenotazione SENZA lezioni disponibili
-    printf("\nTentativo di prenotazione senza lezioni disponibili...\n");
-    if (trovato->lezioni_rimanenti <= 0) {
-        printf("Comportamento corretto: prenotazione rifiutata per mancanza di lezioni.\n\n");
-    } else {
-        printf("ERRORE: L'utente ha ancora lezioni disponibili, ma non dovrebbe.\n\n");
-    }
+    	// 4. Tentativo di prenotazione SENZA lezioni disponibili
+    	printf("\nTentativo di prenotazione senza lezioni disponibili...\n");
+    	if (trovato->lezioni_rimanenti <= 0)
+	{
+        	printf("Comportamento corretto: prenotazione rifiutata per mancanza di lezioni.\n\n");
+    	} else
+	{
+        	printf("ERRORE: L'utente ha ancora lezioni disponibili, ma non dovrebbe.\n\n");
+	}
 
-    // 5. Ricarica abbonamento
-    trovato->lezioni_rimanenti = 12;  // Imposta direttamente a 12 invece di +=
-    salva_abbonati(tabella, "ct2_abbonati.txt");  // Assicurati l'estensione completa
-    printf("Lezioni rimanenti dopo ricarica: %d\n\n", trovato->lezioni_rimanenti);
+    	// 5. Ricarica abbonamento
+    	trovato->lezioni_rimanenti = 12;  // Imposta direttamente a 12 invece di +=
+    	salva_abbonati(tabella, "ct2_abbonati.txt");  // Assicurati l'estensione completa
+    	printf("Lezioni rimanenti dopo ricarica: %d\n\n", trovato->lezioni_rimanenti);
 
-    // 6. Prenotazione automatica
-    printf("Prenotazione automatica della prima lezione...\n");
-    struct nodo *lezione_test = calendario->testa;
-    if (!lezione_test) {
-        printf("ERRORE: Nessuna lezione disponibile.\n");
-        printf("Premi INVIO per tornare al menu principale...");
-        getchar();
-        return;
-    }
+    	// 6. Prenotazione automatica
+    	printf("Prenotazione automatica della prima lezione...\n");
+   	struct nodo *lezione_test = calendario->testa;
+    	if (!lezione_test)
+	{
+        	printf("ERRORE: Nessuna lezione disponibile.\n");
+        	printf("Premi INVIO per tornare al menu principale...");
+        	getchar();
+        	return;
+    	}
 
-    int iscritti_pre = dimensione_pila(lezione_test->valore.iscritti);
-    int lezioni_pre = trovato->lezioni_rimanenti;
+	int iscritti_pre = dimensione_pila(lezione_test->valore.iscritti);
+    	int lezioni_pre = trovato->lezioni_rimanenti;
 
-    if (inserisci_pila(trovato->nomeutente, lezione_test->valore.iscritti)) {
-        trovato->lezioni_rimanenti--;
-        salva_abbonati(tabella, "ct2_abbonati.txt");
-        salva_lezioni(calendario, "ct2_lezioni.txt");
+    	if (inserisci_pila(trovato->nomeutente, lezione_test->valore.iscritti))
+	{
+        	trovato->lezioni_rimanenti--;
+        	salva_abbonati(tabella, "ct2_abbonati.txt");
+        	salva_lezioni(calendario, "ct2_lezioni.txt");
 
-        int iscritti_post = dimensione_pila(lezione_test->valore.iscritti);
-        printf("Prenotazione riuscita. Iscritti prima: %d, dopo: %d\n", iscritti_pre, iscritti_post);
-        printf("Lezioni rimanenti: %d\n", trovato->lezioni_rimanenti);
+        	int iscritti_post = dimensione_pila(lezione_test->valore.iscritti);
+        	printf("Prenotazione riuscita. Iscritti prima: %d, dopo: %d\n", iscritti_pre, iscritti_post);
+        	printf("Lezioni rimanenti: %d\n", trovato->lezioni_rimanenti);
 
-        if (lezioni_pre - 1 == trovato->lezioni_rimanenti) {
-            printf("Lezione scalata correttamente.\n");
-        } else {
-            printf("ERRORE: Lezione non scalata correttamente.\n");
-        }
-    } else {
-        printf("ERRORE: Prenotazione fallita dopo ricarica.\n");
-    }
+        	if (lezioni_pre - 1 == trovato->lezioni_rimanenti)
+		{
+            		printf("Lezione scalata correttamente.\n");
+        	} else
+		{
+            		printf("ERRORE: Lezione non scalata correttamente.\n");
+        	}
+    	} else
+	{
+        	printf("ERRORE: Prenotazione fallita dopo ricarica.\n");
+    	}
 
-    printf("Premi INVIO per tornare al menu principale...");
-    getchar();
+	printf("Premi INVIO per tornare al menu principale...");
+    	getchar();
 }
 
 /* Funzione: caso_test_3
@@ -1369,108 +1379,108 @@ void caso_test_3(coda calendario)
     
     	if (file_storico)
     	{
-        char riga[256];
-        char ultima_data_str[11] = "";
+        	char riga[256];
+        	char ultima_data_str[11] = "";
         
-        while (fgets(riga, sizeof(riga), file_storico))
-        {
-            char data[11], giorno[15], orario[10];
-            int num;
+        	while (fgets(riga, sizeof(riga), file_storico))
+        	{
+            		char data[11], giorno[15], orario[10];
+            		int num;
             
-            if (sscanf(riga, "%10[^;];%14[^;];%9[^;];%d", data, giorno, orario, &num) == 4)
-            {
-                strcpy(ultima_data_str, data);
-                // Salta le righe dei partecipanti
-                for (int i = 0; i < num; i++)
-                    fgets(riga, sizeof(riga), file_storico);
-            }
-        }
+            		if (sscanf(riga, "%10[^;];%14[^;];%9[^;];%d", data, giorno, orario, &num) == 4)
+            		{
+                		strcpy(ultima_data_str, data);
+                		// Salta le righe dei partecipanti
+                		for (int i = 0; i < num; i++)
+                    			fgets(riga, sizeof(riga), file_storico);
+            		}
+        	}
         
-        fclose(file_storico);
+        	fclose(file_storico);
         
-        // Se abbiamo trovato una data, convertila in struct tm
-        if (strlen(ultima_data_str) > 0)
-        {
-            int giorno, mese, anno;
-            if (sscanf(ultima_data_str, "%d/%d/%d", &giorno, &mese, &anno) == 3)
-            {
-                ultima_data.tm_mday = giorno;
-                ultima_data.tm_mon = mese - 1;
-                ultima_data.tm_year = anno - 1900;
-                data_trovata = 1;
-            }
-        }
-    }
+        	// Se abbiamo trovato una data, convertila in struct tm
+        	if (strlen(ultima_data_str) > 0)
+        	{
+        		int giorno, mese, anno;
+            		if (sscanf(ultima_data_str, "%d/%d/%d", &giorno, &mese, &anno) == 3)
+            		{
+                		ultima_data.tm_mday = giorno;
+                		ultima_data.tm_mon = mese - 1;
+                		ultima_data.tm_year = anno - 1900;
+                		data_trovata = 1;
+            		}
+        	}
+    	}
 
-    // 2. Se non c'era un file storico o non si è potuto leggere, usa 1 Aprile 2025 come data iniziale
-    if (!data_trovata)
-    {
-        ultima_data.tm_mday = 1;
-        ultima_data.tm_mon = 3;
-        ultima_data.tm_year = 2025 - 1900;
-    }
+    	// 2. Se non c'era un file storico o non si è potuto leggere, usa 1 Aprile 2025 come data iniziale
+    	if (!data_trovata)
+    	{
+        	ultima_data.tm_mday = 1;
+        	ultima_data.tm_mon = 3;
+        	ultima_data.tm_year = 2025 - 1900;
+    	}
 
-    // 3. Normalizza la struttura tm e calcola la data odierna
-    mktime(&ultima_data);
-    time_t oggi_t = time(NULL);
-    struct tm *oggi_tm = localtime(&oggi_t);
-    oggi_tm->tm_hour = 0;
-    oggi_tm->tm_min = 0;
-    oggi_tm->tm_sec = 0;
-    mktime(oggi_tm);
+    	// 3. Normalizza la struttura tm e calcola la data odierna
+    	mktime(&ultima_data);
+    	time_t oggi_t = time(NULL);
+    	struct tm *oggi_tm = localtime(&oggi_t);
+    	oggi_tm->tm_hour = 0;
+    	oggi_tm->tm_min = 0;
+    	oggi_tm->tm_sec = 0;
+    	mktime(oggi_tm);
 
-    // 4. Trova la prossima data valida per una lezione
-    int lezione_creata = 0;
-    while (difftime(mktime(&ultima_data), oggi_t) < 0 && !lezione_creata)
-    {
-        // Avanza di un giorno
-        ultima_data.tm_mday++;
-        mktime(&ultima_data);
+    	// 4. Trova la prossima data valida per una lezione
+    	int lezione_creata = 0;
+    	while (difftime(mktime(&ultima_data), oggi_t) < 0 && !lezione_creata)
+    	{
+        	// Avanza di un giorno
+        	ultima_data.tm_mday++;
+        	mktime(&ultima_data);
 
-        // Verifica se il giorno è valido per una lezione
-        char giorno[20], orario[20];
-	int ora_inizio;
-if (giorno_lezione(ultima_data.tm_wday, giorno, orario, &ora_inizio))  
-{
-            // 5. Crea una nuova lezione con partecipanti fittizi
-            lezione l;
-            l.iscritti = nuova_pila();
-            strftime(l.data, sizeof(l.data), "%d/%m/%Y", &ultima_data);
-            strcpy(l.giorno, giorno);
-            strcpy(l.orario, orario);
+        	// Verifica se il giorno è valido per una lezione
+        	char giorno[20], orario[20];
+		int ora_inizio;
+		if (giorno_lezione(ultima_data.tm_wday, giorno, orario, &ora_inizio))  
+		{
+            		// 5. Crea una nuova lezione con partecipanti fittizi
+            		lezione l;
+            		l.iscritti = nuova_pila();
+            		strftime(l.data, sizeof(l.data), "%d/%m/%Y", &ultima_data);
+            		strcpy(l.giorno, giorno);
+            		strcpy(l.orario, orario);
 
-            // 6. Aggiunge da 1 a 5 partecipanti chiamati report1, report2, ...
-            int num_partecipanti = (rand() % 5) + 1;
-            char nome[50];
-            for (int j = 1; j <= num_partecipanti; j++)
-            {
-                snprintf(nome, sizeof(nome), "report%d", j);
-                inserisci_pila(nome, l.iscritti);
-            }
+            		// 6. Aggiunge da 1 a 5 partecipanti chiamati report1, report2, ...
+            		int num_partecipanti = (rand() % 5) + 1;
+            		char nome[50];
+            		for (int j = 1; j <= num_partecipanti; j++)
+            		{
+                		snprintf(nome, sizeof(nome), "report%d", j);
+                		inserisci_pila(nome, l.iscritti);
+            		}
 
-            // 7. Inserisce la lezione nella coda
-            inserisci_lezione(l, calendario);
-            lezione_creata = 1;
-        }
-    }
+            		// 7. Inserisce la lezione nella coda
+            		inserisci_lezione(l, calendario);
+            		lezione_creata = 1;
+        	}
+    	}
 
-    // 8. Se nessuna lezione è stata creata, termina il test
-    if (!lezione_creata)
-    {
-        printf("Nessuna data valida trovata per creare una lezione (siamo già arrivati alla data odierna).\n");
-        printf("Premi INVIO per tornare al menu principale...");
-        getchar();
-        return;
-    }
+    	// 8. Se nessuna lezione è stata creata, termina il test
+	if (!lezione_creata)
+    	{
+        	printf("Nessuna data valida trovata per creare una lezione (siamo già arrivati alla data odierna).\n");
+        	printf("Premi INVIO per tornare al menu principale...");
+        	getchar();
+        	return;
+    	}
 
-    // 9. Salva la lezione nel file storico
-    pulisci_lezioni_passate(calendario, "ct3_storico.txt");
+    	// 9. Salva la lezione nel file storico
+    	pulisci_lezioni_passate(calendario, "ct3_storico.txt");
 
-    // 10. Esegue il report mensile per verificare la presenza della lezione
-    printf("\nEsecuzione del report mensile...\n");
-    report_mensile("ct3_storico.txt");
+   	// 10. Esegue il report mensile per verificare la presenza della lezione
+    	printf("\nEsecuzione del report mensile...\n");
+    	report_mensile("ct3_storico.txt");
 
-    // 11. Fine test
-    printf("Verifica completata. Premi INVIO per tornare al menu principale...");
-    getchar();
+    	// 11. Fine test
+    	printf("Verifica completata. Premi INVIO per tornare al menu principale...");
+    	getchar();
 }
