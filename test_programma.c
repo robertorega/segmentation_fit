@@ -65,7 +65,7 @@ int aggiorna_input_e_oracle(const char *input_file, char utenti[][MASSIMO_LINEA]
     fclose(f);
 
     // Aggiunge nuovo utente
-    snprintf(utenti[num_iscritti], MASSIMO_LINEA, "Utente_Test%d\n", num_iscritti + 1);
+    snprintf(utenti[num_iscritti], MASSIMO_LINEA, "Utente_Test%d", num_iscritti + 1);
     num_iscritti++;
 
     return num_iscritti;
@@ -139,6 +139,12 @@ if (lez->iscritti == NULL)
 
     // Stampa risultato
     printf("RISULTATO TEST 1: %s\n", esito ? "PASS" : "FAIL");
+    if(esito == "FAIL")
+    {
+        printf("Premi INVIO per tornare al menu...");
+        getchar();
+        return;
+    }
     
 FILE *res = fopen("esiti_test.txt", "a");
 if (res) 
