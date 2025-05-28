@@ -7,7 +7,7 @@
 #include "pila.h"
 #include "utile_coda.h"
 #include "utile_hash.h"
-#include "test_programma.H"
+#include "test_programma.h"
 
 /* Funzione: abbonamenti
 *
