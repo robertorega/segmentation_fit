@@ -3,7 +3,7 @@ CFLAGS = -Wall -g
 
 TARGET = segmentation_fit
 
-SRCS = main.c coda.c hash.c pila.c utile_coda.c
+SRCS = main.c coda.c hash.c pila.c utile_coda.c utile_hash.c
 
 OBJS = $(SRCS:.c=.o)
 
