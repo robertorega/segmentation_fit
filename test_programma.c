@@ -31,21 +31,28 @@ int confronta_file(const char *file1, const char *file2)
     if (!f1 || !f2) return 0;
 
     char r1[MASSIMO_LINEA], r2[MASSIMO_LINEA];
-    while (fgets(r1, sizeof(r1), f1) && fgets(r2, sizeof(r2), f2)) 
-    {
-        // Rimuove newline e spazi finali
+    while (1) {
+        char *s1 = fgets(r1, sizeof(r1), f1);
+        char *s2 = fgets(r2, sizeof(r2), f2);
+
+        if (s1 == NULL || s2 == NULL) {
+            // PASS solo se entrambi finiscono insieme
+            int ok = (s1 == NULL && s2 == NULL);
+            fclose(f1);
+            fclose(f2);
+            return ok;
+        }
+
+        // rimuovo newline e CR residui
         r1[strcspn(r1, "\r\n")] = 0;
         r2[strcspn(r2, "\r\n")] = 0;
 
         if (strcmp(r1, r2) != 0) {
-            fclose(f1); fclose(f2);
+            fclose(f1);
+            fclose(f2);
             return 0;
         }
     }
-
-    int fine1 = feof(f1), fine2 = feof(f2);
-    fclose(f1); fclose(f2);
-    return fine1 && fine2;
 }
 
 // Legge utenti da file e aggiunge un nuovo utente alla lista in memoria
