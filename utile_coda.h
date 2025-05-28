@@ -202,23 +202,6 @@ void pulisci_lezioni_passate(coda calendario, const char *nome_file);
 */
 void report_mensile(const char* nome_file);
 
-/* Funzione: caso_test_1
-*
-* Verifica la corretta registrazione di una prenotazione e l’aggiornamento della disponibilità
-*
-* Parametri:
-* - calendario: la coda contenente le lezioni su cui effettuare il test, deve essere inizializzata e non vuota
-*
-* Pre-condizione:
-* - 'calendario' deve contenere almeno una lezione disponibile
-* - il file "ct1_lezioni.txt" viene creato o aggiornato durante il test
-*
-* Side-effect:
-* - Inserisce un partecipante fittizio nella prima lezione della coda in memoria
-* - Aggiorna il file "ct1_lezioni.txt" con i dati modificati (iscritti e lista utenti)
-*/
-void caso_test_1(coda calendario);
-
 /* Funzione: caso_test_2
 *
 * Verifica la gestione degli abbonamenti e la prenotazione da parte di un abbonato

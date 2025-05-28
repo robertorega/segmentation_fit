@@ -7,6 +7,7 @@
 #include "pila.h"
 #include "utile_coda.h"
 #include "utile_hash.h"
+#include "test_programma.c"
 
 /* Funzione: abbonamenti
 *
@@ -119,7 +120,6 @@ int main()
 					{
 						case 1:
 							caso_test_1(calendario);
-                            salva_lezioni(calendario, "lezioni.txt");
 							break;
 						case 2:
 							caso_test_2(calendario);
