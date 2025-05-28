@@ -151,16 +151,18 @@ void caso_test_1(coda calendario)
 
     // 4. Confronta output con oracle
     int esito = confronta_file("caso_test_1_output.txt", "caso_test_1_oracle.txt");
-    printf("RISULTATO TEST 1: %s\n", esito ? "PASS" : "FAIL");
+    printf("RISULTATO TEST 1: %s\n", esito ? "PASSATO" : "FALLIMENTO");
 
     FILE *res = fopen("esiti_test.txt", "a");
-    if (res) {
+    if (res) 
+    {
         fprintf(res, "Caso Test 1: %s\n", esito ? "PASSATO" : "FALLIMENTO");
         fclose(res);
     }
 
     FILE *elenco = fopen("elenco_test.txt", "w");
-    if (elenco) {
+    if (elenco) 
+    {
         fprintf(elenco, "CT1 %d\n", num_iscritti);
         fclose(elenco);
     }
