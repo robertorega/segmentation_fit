@@ -164,7 +164,7 @@ void caso_test_1(coda calendario)
     // 4. Salva output
     salva_lezioni(calendario, "caso_test_1_output.txt");
 
-    // 5. Se oracle non esiste, crealo ORA (dopo aver salvato l'output)
+    // 5. Se oracle non esiste, copialo da output
     FILE *oracle = fopen("caso_test_1_oracle.txt", "r");
     if (!oracle) {
         FILE *src = fopen("caso_test_1_output.txt", "r");
@@ -182,7 +182,7 @@ void caso_test_1(coda calendario)
         fclose(oracle);
     }
 
-    // 6. Confronta
+    // 6. Confronta output con oracle
     int esito = confronta_file("caso_test_1_output.txt", "caso_test_1_oracle.txt");
     printf("RISULTATO TEST 1: %s\n", esito ? "PASS" : "FAIL");
 
