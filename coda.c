@@ -1593,8 +1593,8 @@ void caso_test_3(coda calendario)
         // Verifica se il giorno è valido per una lezione
         char giorno[20], orario[20];
 	int ora_inizio;
-if (giorno_lezione(temp.tm_wday, giorno, orario, &ora_inizio))
-   {
+if (giorno_lezione(ultima_data.tm_wday, giorno, orario, &ora_inizio))  
+{
             // 5. Crea una nuova lezione con partecipanti fittizi
             lezione l;
             l.iscritti = nuova_pila();
