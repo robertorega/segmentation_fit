@@ -111,7 +111,7 @@ lezione rimuovi_lezione(coda calendario);
 * Post-condizione:
 * - Se il giorno è valido per una lezione, restituisce 1 e riempie le stringhe giorno e orario, altrimenti 0
 */
-int giorno_lezione(int giorno_settimana, char *giorno, char *orario);
+int giorno_lezione(int giorno_settimana, char *giorno, char *orario, int *ora_inizio);
 
 /* Funzione: genera_lezioni
 *
