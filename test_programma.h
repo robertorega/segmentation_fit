@@ -11,7 +11,7 @@
 
 int confronta_file(const char *file1, const char *file2);
 
-int aggiorna_input_e_oracle(const char *input_file, const char *oracle_file, char utenti[][MASSIMO_LINEA]);
+int aggiorna_input_e_oracle(const char *input_file, char utenti[][MASSIMO_LINEA]);
 
 
 /* Funzione: caso_test_1
