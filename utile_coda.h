@@ -44,18 +44,21 @@ void salva_lezioni(coda calendario, const char *nome_file);
 
 /* Funzione: giorno_lezione
 *
-* Verifica se il giorno della settimana corrente è previsto per una lezione
+* Verifica se il giorno della settimana corrente è previsto per una lezione.
 *
 * Parametri:
-* giornoSettimana: intero rappresentante il giorno della settimana (0 = Domenica, 6 = Sabato)
-* giorno: stringa dove verrà salvato il nome del giorno
-* orario: stringa dove verrà salvata la fascia oraria della lezione
+* giorno_settimana: intero rappresentante il giorno della settimana (0 = Domenica, 6 = Sabato)
+* giorno: stringa (allocata dall'esterno) dove verrà salvato il nome del giorno (es. "Lunedi")
+* orario: stringa (allocata dall'esterno) dove verrà salvata la fascia oraria della lezione (es. "10-12")
+* ora_inizio: puntatore a intero dove viene salvata l'ora di inizio della lezione
 *
 * Pre-condizione:
-* - Le stringhe 'giorno' e 'orario' devono essere allocate correttamente
+* - Le stringhe 'giorno' e 'orario' devono essere allocate con dimensione sufficiente (almeno 10 caratteri).
+* - 'ora_inizio' deve essere un puntatore valido.
 *
 * Post-condizione:
-* - Se il giorno è valido per una lezione, restituisce 1 e riempie le stringhe giorno e orario, altrimenti 0
+* - Se il giorno è valido per una lezione, restituisce 1 e riempie le stringhe giorno e orario, 
+*   e imposta 'ora_inizio', altrimenti restituisce 0.
 */
 int giorno_lezione(int giorno_settimana, char *giorno, char *orario, int *ora_inizio);
 
@@ -148,16 +151,18 @@ void disdici_iscrizione(coda calendario, const char* lezioni);
 
 /* Funzione: data_passata
 *
-* Verifica se una data nel formato "dd/mm/yyyy" è precedente alla data odierna
+* Verifica se una data nel formato "gg/mm/aaaa" con orario associato è precedente alla data e ora attuali.
 *
 * Parametri:
-* data_str: stringa contenente la data da analizzare
+* - data_str: stringa con la data da verificare (formato "gg/mm/aaaa")
+* - orario: stringa che indica l'orario della lezione ("10-12" o "16-18")
 *
 * Pre-condizione:
-* - 'data_str' deve essere una stringa valida nel formato "dd/mm/yyyy"
+* - 'data_str' deve essere valida e ben formattata
+* - 'orario' deve essere uno dei valori riconosciuti
 *
 * Post-condizione:
-* - Ritorna 1 se la data è nel passato rispetto a oggi, 0 altrimenti
+* - Ritorna 1 se la data/orario indicati sono passati rispetto all'ora corrente, 0 altrimenti
 */
 int data_passata(const char *data_str, const char *orario);
 
@@ -183,29 +188,34 @@ void pulisci_lezioni_passate(coda calendario, const char *nome_file);
 
 /* Funzione: report_mensile
 *
-* Genera e stampa un report ordinato delle lezioni svolte in un mese specifico,
-* elencando solo quelle con almeno un partecipante, ordinate per numero di partecipanti decrescente.
+* Genera un report mensile delle lezioni passate con almeno un partecipante,
+* ordinate per numero di partecipanti decrescente.
+*
+* Parametri:
+* - nome_file: nome del file storico da cui leggere i dati
 *
 * Pre-condizione:
-* - Il file "storico.txt" deve esistere e rispettare il formato previsto.
+* - Il file storico deve esistere e rispettare il formato previsto.
 *
 * Side-effect:
-* - Legge da file, acquisisce input da tastiera, stampa a schermo.
+* - Legge da file, acquisisce input da tastiera, stampa a video.
 */
-void report_mensile(const char* filename);
+void report_mensile(const char* nome_file);
 
 /* Funzione: caso_test_1
 *
 * Verifica la corretta registrazione di una prenotazione e l’aggiornamento della disponibilità
 *
 * Parametri:
-* calendario: la coda contenente le lezioni su cui effettuare il test
+* - calendario: la coda contenente le lezioni su cui effettuare il test, deve essere inizializzata e non vuota
 *
 * Pre-condizione:
-* - 'calendario' deve essere inizializzato e contenere almeno una lezione
+* - 'calendario' deve contenere almeno una lezione disponibile
+* - il file "ct1_lezioni.txt" viene creato o aggiornato durante il test
 *
 * Side-effect:
-* - Inserisce un partecipante fittizio nella prima lezione della coda
+* - Inserisce un partecipante fittizio nella prima lezione della coda in memoria
+* - Aggiorna il file "ct1_lezioni.txt" con i dati modificati (iscritti e lista utenti)
 */
 void caso_test_1(coda calendario);
 
@@ -214,13 +224,16 @@ void caso_test_1(coda calendario);
 * Verifica la gestione degli abbonamenti e la prenotazione da parte di un abbonato
 *
 * Parametri:
-* calendario: la coda contenente le lezioni su cui effettuare il test
+* - calendario: la coda contenente le lezioni su cui effettuare il test, deve essere inizializzata e contenere almeno una lezione
 *
 * Pre-condizione:
-* - 'calendario' deve essere inizializzato e contenere almeno una lezione
+* - 'calendario' deve essere inizializzato e non vuoto
+* - il file "ct2_abbonati.txt" viene letto, modificato e salvato durante il test
+* - il file "ct2_lezioni.txt" viene aggiornato con i nuovi dati di iscritti
 *
 * Side-effect:
-* - Modifica il file `abbonati.txt`, inserisce un nuovo abbonato e aggiorna le lezioni
+* - Modifica e salva il file "ct2_abbonati.txt" con il nuovo abbonato e i dati aggiornati
+* - Modifica e salva il file "ct2_lezioni.txt" con la prenotazione aggiornata
 */
 void caso_test_2(coda calendario);
 
@@ -229,13 +242,16 @@ void caso_test_2(coda calendario);
 * Verifica la generazione del report mensile con lezioni passate
 *
 * Parametri:
-* calendario: la coda contenente le lezioni su cui effettuare il test
+* - calendario: la coda contenente le lezioni su cui effettuare il test, deve essere inizializzata
 *
 * Pre-condizione:
 * - 'calendario' deve essere inizializzato
+* - il file "ct3_storico.txt" viene letto e aggiornato durante il test
 *
 * Side-effect:
-* - Scrive nel file `storico.txt`, modifica la coda e interagisce con l’utente tramite I/O
+* - Scrive e aggiorna il file "ct3_storico.txt" con le lezioni passate
+* - Modifica la coda 'calendario' aggiungendo la lezione creata
+* - Interagisce con l’utente tramite I/O per mostrare il report
 */
 void caso_test_3(coda calendario);
 
