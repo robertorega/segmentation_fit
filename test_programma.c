@@ -59,6 +59,7 @@ int aggiorna_input_e_oracle(const char *input_file, char utenti[][MASSIMO_LINEA]
 
     // Legge utenti già presenti
     while (fgets(linea, sizeof(linea), f) && num_iscritti < MASSIMO_UTENTI - 1) {
+        linea[strcspn(linea, "\n")] = 0; // rimuove newline
         strcpy(utenti[num_iscritti], linea);
         num_iscritti++;
     }
@@ -67,6 +68,24 @@ int aggiorna_input_e_oracle(const char *input_file, char utenti[][MASSIMO_LINEA]
     // Aggiunge nuovo utente
     snprintf(utenti[num_iscritti], MASSIMO_LINEA, "Utente_Test%d", num_iscritti + 1);
     num_iscritti++;
+
+    // Scrive di nuovo tutti gli utenti nel file input
+    f = fopen(input_file, "w");
+    if (!f) return -1;
+    fprintf(f, "Data;Giorno;Orario;NumeroIscritti\n");
+    for (int i = 0; i < num_iscritti; i++) {
+        fprintf(f, "%s\n", utenti[i]);
+    }
+    fclose(f);
+
+    // Scrive anche nel file oracle (opzionale)
+    FILE *oracle = fopen("caso_test_1_oracle.txt", "a");
+    if (oracle) {
+        for (int i = 0; i < num_iscritti; i++) {
+            fprintf(oracle, "%s\n", utenti[i]);
+        }
+        fclose(oracle);
+    }
 
     return num_iscritti;
 }
