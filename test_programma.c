@@ -45,44 +45,29 @@ int confronta_file(const char *file1, const char *file2)
     return fine1 && fine2;
 }
 
-// Legge input, aggiunge un utente, aggiorna input e oracle
-int aggiorna_input_e_oracle(const char *input_file, const char *oracle_file, char utenti[][MASSIMO_LINEA ]) 
+// Legge utenti da file e aggiunge un nuovo utente alla lista in memoria
+int aggiorna_input_e_oracle(const char *input_file, char utenti[][MASSIMO_LINEA]) 
 {
     FILE *f = fopen(input_file, "r");
     if (!f) return -1;
 
-    char intestazione[MASSIMO_LINEA];
-    fgets(intestazione, sizeof(intestazione), f);
+    char linea[MASSIMO_LINEA];
+    int num_iscritti = 0;
 
-    int num_iscritti;
-    sscanf(intestazione, "%*[^;];%*[^;];%*[^;];%d", &num_iscritti);
+    // Salta intestazione
+    fgets(linea, sizeof(linea), f);
 
-    for (int i = 0; i < num_iscritti; i++) {
-        fgets(utenti[i], MASSIMO_LINEA, f);
+    // Legge utenti già presenti
+    while (fgets(linea, sizeof(linea), f) && num_iscritti < MASSIMO_UTENTI - 1) {
+        strcpy(utenti[num_iscritti], linea);
+        num_iscritti++;
     }
     fclose(f);
 
-    // Aggiungi nuovo utente
+    // Aggiunge nuovo utente
     snprintf(utenti[num_iscritti], MASSIMO_LINEA, "Utente_Test%d\n", num_iscritti + 1);
     num_iscritti++;
 
-    // Riscrivi input e oracle aggiornati
-    char nuova_intestazione[MASSIMO_LINEA];
-    sscanf(intestazione, "%[^;];%*[^;];%*[^;];", nuova_intestazione);
-    char giorno[20], orario[20];
-    sscanf(intestazione, "%*[^;];%[^;];%[^;];", giorno, orario);
-    FILE *out1 = fopen(input_file, "w");
-    FILE *out2 = fopen(oracle_file, "w");
-    if (!out1 || !out2) return -1;
-
-    fprintf(out1, "%s;%s;%s;%d\n", nuova_intestazione, giorno, orario, num_iscritti);
-    fprintf(out2, "%s;%s;%s;%d\n", nuova_intestazione, giorno, orario, num_iscritti);
-    for (int i = 0; i < num_iscritti; i++) {
-        fputs(utenti[i], out1);
-        fputs(utenti[i], out2);
-    }
-    fclose(out1);
-    fclose(out2);
     return num_iscritti;
 }
 
@@ -138,7 +123,12 @@ void caso_test_1(coda calendario)
 
     // Aggiungi l'utente alla pila della prima lezione
     lezione *lez = &calendario->testa->valore;
-    lez->iscritti = nuova_pila();   
+    
+if (lez->iscritti == NULL) 
+{ 
+    lez->iscritti = nuova_pila();
+}
+   
     inserisci_pila(utenti[num_iscritti - 1], lez->iscritti); // ultimo utente aggiunto
 
     // Salva lo stato reale
