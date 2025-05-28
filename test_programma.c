@@ -78,15 +78,6 @@ int aggiorna_input_e_oracle(const char *input_file, char utenti[][MASSIMO_LINEA]
     }
     fclose(f);
 
-    // Scrive anche nel file oracle (opzionale)
-    FILE *oracle = fopen("caso_test_1_oracle.txt", "a");
-    if (oracle) {
-        for (int i = 0; i < num_iscritti; i++) {
-            fprintf(oracle, "%s\n", utenti[i]);
-        }
-        fclose(oracle);
-    }
-
     return num_iscritti;
 }
 
@@ -122,8 +113,8 @@ void caso_test_1(coda calendario)
     if (!check) {
         FILE *f = fopen("caso_test_1_input.txt", "w");
         if (f) {
-            fprintf(f, "Data;Giorno;Orario;0\n");
-            fprintf(f, "28/05/2025;Mercoledi;16-18;0\n");
+            fprintf(f, "Data;Giorno;Orario;NumeroIscritti\n");
+            fprintf(f, "30/05/2025;Venerdi;16-18;0\n");
             fclose(f);
             printf("Creato file input di test.\n");
         } else {
