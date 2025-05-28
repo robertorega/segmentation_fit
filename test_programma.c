@@ -6,6 +6,7 @@
 #include "lezione.h"
 #include "hash.h"
 #include "utile_coda.h"
+#include "test_programma.h"
 
 // Nodo della coda
 struct nodo
@@ -21,9 +22,6 @@ struct c_coda
 	int numel;
 };
 
-#define MAX_LINE 256
-#define MAX_UTENTI 100
-
 // Confronta due file riga per riga
 int confronta_file(const char *file1, const char *file2)
 {
@@ -31,7 +29,7 @@ int confronta_file(const char *file1, const char *file2)
     FILE *f2 = fopen(file2, "r");
     if (!f1 || !f2) return 0;
 
-    char r1[MAX_LINE], r2[MAX_LINE];
+    char r1[MASSIMO_LINEA], r2[MASSIMO_LINEA];
     while (fgets(r1, sizeof(r1), f1) && fgets(r2, sizeof(r2), f2)) {
         if (strcmp(r1, r2) != 0) {
             fclose(f1); fclose(f2);
@@ -45,28 +43,28 @@ int confronta_file(const char *file1, const char *file2)
 }
 
 // Legge input, aggiunge un utente, aggiorna input e oracle
-int aggiorna_input_e_oracle(const char *input_file, const char *oracle_file, char utenti[][MAX_LINE]) 
+int aggiorna_input_e_oracle(const char *input_file, const char *oracle_file, char utenti[][MASSIMO_LINEA ]) 
 {
     FILE *f = fopen(input_file, "r");
     if (!f) return -1;
 
-    char intestazione[MAX_LINE];
+    char intestazione[MASSIMO_LINEA];
     fgets(intestazione, sizeof(intestazione), f);
 
     int num_iscritti;
     sscanf(intestazione, "%*[^;];%*[^;];%*[^;];%d", &num_iscritti);
 
     for (int i = 0; i < num_iscritti; i++) {
-        fgets(utenti[i], MAX_LINE, f);
+        fgets(utenti[i], MASSIMO_LINEA, f);
     }
     fclose(f);
 
     // Aggiungi nuovo utente
-    snprintf(utenti[num_iscritti], MAX_LINE, "Utente_Test%d\n", num_iscritti + 1);
+    snprintf(utenti[num_iscritti], MASSIMO_LINEA, "Utente_Test%d\n", num_iscritti + 1);
     num_iscritti++;
 
     // Riscrivi input e oracle aggiornati
-    char nuova_intestazione[MAX_LINE];
+    char nuova_intestazione[MASSIMO_LINEA];
     sscanf(intestazione, "%[^;];%*[^;];%*[^;];", nuova_intestazione);
     char giorno[20], orario[20];
     sscanf(intestazione, "%*[^;];%[^;];%[^;];", giorno, orario);
@@ -124,7 +122,7 @@ void caso_test_1(coda calendario)
         return;
     }
 
-    char utenti[MAX_UTENTI][MAX_LINE];
+    char utenti[MASSIMO_UTENTI][MASSIMO_LINEA];
     int num_iscritti = aggiorna_input_e_oracle("caso_test_1_input.txt", "caso_test_1_oracle.txt", utenti);
     if (num_iscritti == -1) 
     {

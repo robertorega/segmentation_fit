@@ -6,9 +6,12 @@
 #include "lezione.h"
 #include "hash.h"
 
+#define MASSIMO_LINEA 256
+#define MASSIMO_UTENTI 100
+
 int confronta_file(const char *file1, const char *file2);
 
-int aggiorna_input_e_oracle(const char *input_file, const char *oracle_file, char utenti[][MAX_LINE])
+int aggiorna_input_e_oracle(const char *input_file, const char *oracle_file, char utenti[][MASSIMO_LINEA]);
 
 
 /* Funzione: caso_test_1
