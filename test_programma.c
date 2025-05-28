@@ -112,7 +112,7 @@ void caso_test_1(coda calendario)
     }
 
     char utenti[MASSIMO_UTENTI][MASSIMO_LINEA];
-    int num_iscritti = aggiorna_input_e_oracle("caso_test_1_input.txt", "caso_test_1_oracle.txt", utenti);
+    int num_iscritti = aggiorna_input_e_oracle("caso_test_1_input.txt", utenti);
     if (num_iscritti == -1) 
     {
         printf("Errore nella lettura o scrittura dei file di test.\n");
