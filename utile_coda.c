@@ -6,6 +6,7 @@
 #include "hash.h"
 #include "lezione.h"
 #include "utile_coda.h"
+#include "utile_hash.h"
 
 // Nodo della coda
 struct nodo
