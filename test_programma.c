@@ -145,7 +145,7 @@ void caso_test_1(coda calendario)
     // 4. Salva output
     salva_lezioni(calendario, "caso_test_1_output.txt");
 
-    // 5. Se oracle non esiste, crealo
+    // 5. Se oracle non esiste, crealo ORA (dopo aver salvato l'output)
     FILE *oracle = fopen("caso_test_1_oracle.txt", "r");
     if (!oracle) {
         FILE *src = fopen("caso_test_1_output.txt", "r");
