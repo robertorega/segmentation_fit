@@ -7,6 +7,20 @@
 #include "lezione.h"
 #include "utile_coda.h"
 
+// Nodo della coda
+struct nodo
+{
+	lezione valore;
+	struct nodo *prossimo;
+};
+
+// Struttura della coda
+struct c_coda
+{
+	struct nodo *testa,*coda;
+	int numel;
+};
+
 /* Funzione: carica_lezioni
 *
 * Carica le lezioni salvate da un file e le inserisce nella coda calendario.
