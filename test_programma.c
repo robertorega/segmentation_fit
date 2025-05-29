@@ -369,24 +369,20 @@ void caso_test_3(coda calendario)
     mktime(&data_corrente);
 
     // 2. Verifica se la data è passata
-    time_t oggi = time(NULL);
-    if (difftime(mktime(&data_corrente), oggi) >= 0) {
-        printf("Tutte le lezioni passate sono già state generate.\n");
-        printf("Premi INVIO per tornare al menu principale...");
-        getchar();
-        return;
-    }
-
-    // 3. Verifica se è un giorno valido per le lezioni
-    char giorno[20], orario[20];
+    char data_str[11];
+    strftime(data_str, sizeof(data_str), "%d/%m/%Y", &data_corrente);
+    char orario[20], giorno[20];
     int ora_inizio;
+
     int lezione_generata = 0;
 
-    if (giorno_lezione(data_corrente.tm_wday, giorno, orario, &ora_inizio)) {
-        // 4. Crea la lezione
+    if (giorno_lezione(data_corrente.tm_wday, giorno, orario, &ora_inizio) &&
+        data_passata(data_str, orario)) {
+
+        // 3. Crea la lezione
         lezione l;
         l.iscritti = nuova_pila();
-        strftime(l.data, sizeof(l.data), "%d/%m/%Y", &data_corrente);
+        strcpy(l.data, data_str);
         strcpy(l.giorno, giorno);
         strcpy(l.orario, orario);
 
@@ -401,7 +397,7 @@ void caso_test_3(coda calendario)
         lezione_generata = 1;
     }
 
-    // 5. Aggiorna la data per la prossima esecuzione
+    // 4. Aggiorna la data per la prossima esecuzione
     data_corrente.tm_mday++;
     mktime(&data_corrente);
     FILE *next = fopen("ct3_data_corrente.txt", "w");
@@ -411,20 +407,26 @@ void caso_test_3(coda calendario)
     }
 
     if (!lezione_generata) {
-        printf("Giorno non valido per le lezioni. Nessuna lezione generata oggi.\n");
+        printf("Nessuna lezione generata: la data non è valida o non è ancora passata.\n");
         printf("Premi INVIO per tornare al menu principale...");
         getchar();
         return;
     }
 
-    // 6. Rimuove eventuali lezioni future dalla coda
-    pulisci_lezioni_passate(calendario, "caso_test_3_oracle.txt");
+    // 5. Filtra la coda per mantenere solo lezioni passate
+    coda coda_filtrata = nuova_coda();
+    while (!coda_vuota(calendario)) {
+        lezione l = rimuovi_lezione(calendario);
+        if (data_passata(l.data, l.orario)) {
+            inserisci_lezione(l, coda_filtrata);
+        }
+    }
 
-    // 7. Salva output e oracle
-    salva_lezioni(calendario, "caso_test_3_output.txt");
-    salva_lezioni(calendario, "caso_test_3_oracle.txt");
+    // 6. Salva output e oracle
+    salva_lezioni(coda_filtrata, "caso_test_3_output.txt");
+    salva_lezioni(coda_filtrata, "caso_test_3_oracle.txt");
 
-    // 8. Confronta i file
+    // 7. Confronta i file
     int esito = confronta_file("caso_test_3_output.txt", "caso_test_3_oracle.txt");
     printf("RISULTATO TEST 3: %s\n", esito ? "PASSATO" : "FALLIMENTO");
 
@@ -440,7 +442,7 @@ void caso_test_3(coda calendario)
         fclose(elenco);
     }
 
-    // 9. Esegui il report
+    // 8. Esegui il report
     printf("\nEsecuzione del report mensile...\n");
     report_mensile("caso_test_3_oracle.txt");
 
