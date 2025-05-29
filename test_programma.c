@@ -208,13 +208,19 @@ void caso_test_2(coda calendario)
     char nomeutente[MAX_CARATTERI];
     snprintf(nomeutente, MAX_CARATTERI, "Abbonato_Test%d", contatore_abbonati++);
 
-    // 2. Crea file input con intestazione + nome abbonato
-    FILE *input = fopen("caso_test_2_input.txt", "w");
+    // 2. Crea o aggiorna file input
+    FILE *check = fopen("caso_test_2_input.txt", "r");
+    int esiste = (check != NULL);
+    if (check) fclose(check);
+
+    FILE *input = fopen("caso_test_2_input.txt", "a");
     if (!input) {
-        printf("Errore nella creazione del file di input.\n");
+        printf("Errore nella scrittura del file di input.\n");
         return;
     }
-    fprintf(input, "Data;Giorno;Orario;NumeroIscritti\n");
+    if (!esiste) {
+        fprintf(input, "Data;Giorno;Orario;NumeroIscritti\n");
+    }
     fprintf(input, "%s\n", nomeutente);
     fclose(input);
 
