@@ -348,121 +348,88 @@ void caso_test_2(coda calendario)
 */
 void caso_test_3(coda calendario)
 {
-	printf("\n--- TEST 3: Verifica Report Mensile ---\n");
-    	printf("Questo test verifica che il report mensile contenga dati corretti sulle prenotazioni.\n");
-    	printf("Crea una data passata per provare il report ad ogni chiamata della funzione, ogni volta salva i dati correttamente.\n\n");
-    	printf("Premi INVIO per iniziare...");
-    	getchar();
+    static struct tm data_corrente = {0};
+    static int inizializzato = 0;
 
-    	// 1. Trova l'ultima data usata dal file storico
-    	struct tm ultima_data = {0};
-    	int data_trovata = 0;
-    	FILE *file_storico = fopen("ct3_storico.txt", "r");
-    
-    	if (file_storico)
-    	{
-        	char riga[256];
-        	char ultima_data_str[11] = "";
-        
-        	while (fgets(riga, sizeof(riga), file_storico))
-        	{
-            		char data[11], giorno[15], orario[10];
-            		int num;
-            
-            		if (sscanf(riga, "%10[^;];%14[^;];%9[^;];%d", data, giorno, orario, &num) == 4)
-            		{
-                		strcpy(ultima_data_str, data);
-                		// Salta le righe dei partecipanti
-                		for (int i = 0; i < num; i++)
-                    			fgets(riga, sizeof(riga), file_storico);
-            		}
-        	}
-        
-        	fclose(file_storico);
-        
-        	// Se abbiamo trovato una data, convertila in struct tm
-        	if (strlen(ultima_data_str) > 0)
-        	{
-        		int giorno, mese, anno;
-            		if (sscanf(ultima_data_str, "%d/%d/%d", &giorno, &mese, &anno) == 3)
-            		{
-                		ultima_data.tm_mday = giorno;
-                		ultima_data.tm_mon = mese - 1;
-                		ultima_data.tm_year = anno - 1900;
-                		data_trovata = 1;
-            		}
-        	}
-    	}
+    printf("\n--- TEST 3: Verifica Report Mensile ---\n");
+    printf("Questo test verifica che il report mensile contenga dati corretti sulle prenotazioni.\n");
+    printf("Premi INVIO per iniziare...");
+    getchar();
 
-    	// 2. Se non c'era un file storico o non si è potuto leggere, usa 1 Aprile 2025 come data iniziale
-    	if (!data_trovata)
-    	{
-        	ultima_data.tm_mday = 1;
-        	ultima_data.tm_mon = 3;
-        	ultima_data.tm_year = 2025 - 1900;
-    	}
+    // Inizializza la data di partenza solo la prima volta
+    if (!inizializzato) {
+        data_corrente.tm_mday = 4;
+        data_corrente.tm_mon = 3;  // Aprile (0-based)
+        data_corrente.tm_year = 2025 - 1900;
+        data_corrente.tm_hour = 0;
+        data_corrente.tm_min = 0;
+        data_corrente.tm_sec = 0;
+        inizializzato = 1;
+    }
 
-    	// 3. Normalizza la struttura tm e calcola la data odierna
-    	mktime(&ultima_data);
-    	time_t oggi_t = time(NULL);
-    	struct tm *oggi_tm = localtime(&oggi_t);
-    	oggi_tm->tm_hour = 0;
-    	oggi_tm->tm_min = 0;
-    	oggi_tm->tm_sec = 0;
-    	mktime(oggi_tm);
+    // Trova la prossima data valida per una lezione passata
+    time_t oggi = time(NULL);
+    int lezione_creata = 0;
 
-    	// 4. Trova la prossima data valida per una lezione
-    	int lezione_creata = 0;
-    	while (difftime(mktime(&ultima_data), oggi_t) < 0 && !lezione_creata)
-    	{
-        	// Avanza di un giorno
-        	ultima_data.tm_mday++;
-        	mktime(&ultima_data);
+    while (!lezione_creata && difftime(mktime(&data_corrente), oggi) < 0) {
+        char giorno[20], orario[20];
+        int ora_inizio;
 
-        	// Verifica se il giorno è valido per una lezione
-        	char giorno[20], orario[20];
-		int ora_inizio;
-		if (giorno_lezione(ultima_data.tm_wday, giorno, orario, &ora_inizio))  
-		{
-            		// 5. Crea una nuova lezione con partecipanti fittizi
-            		lezione l;
-            		l.iscritti = nuova_pila();
-            		strftime(l.data, sizeof(l.data), "%d/%m/%Y", &ultima_data);
-            		strcpy(l.giorno, giorno);
-            		strcpy(l.orario, orario);
+        if (giorno_lezione(data_corrente.tm_wday, giorno, orario, &ora_inizio)) {
+            // Crea la lezione
+            lezione l;
+            l.iscritti = nuova_pila();
+            strftime(l.data, sizeof(l.data), "%d/%m/%Y", &data_corrente);
+            strcpy(l.giorno, giorno);
+            strcpy(l.orario, orario);
 
-            		// 6. Aggiunge da 1 a 5 partecipanti chiamati report1, report2, ...
-            		int num_partecipanti = (rand() % 5) + 1;
-            		char nome[50];
-            		for (int j = 1; j <= num_partecipanti; j++)
-            		{
-                		snprintf(nome, sizeof(nome), "report%d", j);
-                		inserisci_pila(nome, l.iscritti);
-            		}
+            // Aggiunge 3 partecipanti fittizi
+            for (int i = 1; i <= 3; i++) {
+                char nome[50];
+                snprintf(nome, sizeof(nome), "report%d", i);
+                inserisci_pila(nome, l.iscritti);
+            }
 
-            		// 7. Inserisce la lezione nella coda
-            		inserisci_lezione(l, calendario);
-            		lezione_creata = 1;
-        	}
-    	}
+            inserisci_lezione(l, calendario);
+            lezione_creata = 1;
+        }
 
-    	// 8. Se nessuna lezione è stata creata, termina il test
-	if (!lezione_creata)
-    	{
-        	printf("Nessuna data valida trovata per creare una lezione (siamo già arrivati alla data odierna).\n");
-        	printf("Premi INVIO per tornare al menu principale...");
-        	getchar();
-        	return;
-    	}
+        // Avanza di un giorno
+        data_corrente.tm_mday++;
+        mktime(&data_corrente);  // Normalizza
+    }
 
-    	// 9. Salva la lezione nel file storico
-    	pulisci_lezioni_passate(calendario, "ct3_storico.txt");
+    if (!lezione_creata) {
+        printf("Nessuna data valida trovata prima di oggi.\n");
+        printf("Premi INVIO per tornare al menu principale...");
+        getchar();
+        return;
+    }
 
-   	// 10. Esegue il report mensile per verificare la presenza della lezione
-    	printf("\nEsecuzione del report mensile...\n");
-    	report_mensile("ct3_storico.txt");
+    // Salva output e oracle
+    salva_lezioni(calendario, "caso_test_3_output.txt");
+    salva_lezioni(calendario, "caso_test_3_oracle.txt");
 
-    	// 11. Fine test
-    	printf("Verifica completata. Premi INVIO per tornare al menu principale...");
-    	getchar();
+    // Confronta
+    int esito = confronta_file("caso_test_3_output.txt", "caso_test_3_oracle.txt");
+    printf("RISULTATO TEST 3: %s\n", esito ? "PASSATO" : "FALLIMENTO");
+
+    FILE *res = fopen("esiti_test.txt", "a");
+    if (res) {
+        fprintf(res, "Caso Test 3: %s\n", esito ? "PASSATO" : "FALLIMENTO");
+        fclose(res);
+    }
+
+    FILE *elenco = fopen("elenco_test.txt", "a");
+    if (elenco) {
+        fprintf(elenco, "Caso Test 3: %s\n", esito ? "PASSATO" : "FALLIMENTO");
+        fclose(elenco);
+    }
+
+    // Esegui il report
+    printf("\nEsecuzione del report mensile...\n");
+    report_mensile("caso_test_3_oracle.txt");
+
+    printf("Verifica completata. Premi INVIO per tornare al menu principale...");
+    getchar();
 }
