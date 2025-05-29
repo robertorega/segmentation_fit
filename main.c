@@ -71,8 +71,7 @@ int main()
     		printf("3 - Disdici\n");
     		printf("4 - Report mensili\n");
     		printf("5 - Contattaci\n");
-    		printf("6 - Casi di Test\n");
-    		printf("7 - Esci\n\n");
+    		printf("6 - Esci\n\n");
 		printf("La tua scelta: ");
 		fgets(scelta, sizeof(scelta), stdin);
 		scelta[strcspn(scelta, "\n")] = 0;
@@ -101,44 +100,6 @@ int main()
            			contattaci();
           			break;
         		case 6:
-			{
-				int test_scelta = 0;
-				do
-				{
-					pulisci_schermo();
-					printf("--- Casi di Test ---\n");
-					printf("1 - Caso Test 1\n");
-					printf("2 - Caso Test 2\n");
-					printf("3 - Caso Test 3\n");
-					printf("4 - Torna al menu principale\n\n");
-					printf("La tua scelta: ");
-					fgets(scelta, sizeof(scelta), stdin);
-					scelta[strcspn(scelta, "\n")] = 0;
-					test_scelta = atoi(scelta);
-
-					switch (test_scelta)
-					{
-						case 1:
-							caso_test_1(calendario);
-							break;
-						case 2:
-							caso_test_2(calendario);
-							break;
-						case 3:
-							caso_test_3(calendario);
-							break;
-						case 4:
-							break;
-						default:
-							printf("Scelta non valida.\n");
-							printf("Premi INVIO per riprovare...");
-							getchar();
-							break;
-					}
-				} while (test_scelta != 4);
-			}
-				break;
-        		case 7:
             			printf("Arrivederci!\n");
             			return 0;
         		default:
