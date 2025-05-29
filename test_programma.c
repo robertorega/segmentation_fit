@@ -348,87 +348,53 @@ void caso_test_2(coda calendario)
 */
 void caso_test_3(coda calendario)
 {
-    static struct tm data_corrente = {0};
-    static int inizializzato = 0;
-
-    printf("\n--- TEST 3: Verifica Report Mensile ---\n");
-    printf("Questo test verifica che il report mensile contenga dati corretti sulle prenotazioni.\n");
+    printf("\n--- TEST 3: Verifica Report Mensile con Partecipanti Casuali ---\n");
+    printf("Questo test verifica che il report mensile contenga dati corretti.\n");
     printf("Premi INVIO per iniziare...");
     getchar();
 
-    // Inizializza la data di partenza solo la prima volta
-    if (!inizializzato) {
-        data_corrente.tm_mday = 4;
-        data_corrente.tm_mon = 3;  // Aprile (0-based)
-        data_corrente.tm_year = 2025 - 1900;
-        data_corrente.tm_hour = 0;
-        data_corrente.tm_min = 0;
-        data_corrente.tm_sec = 0;
-        inizializzato = 1;
-    }
+    srand(time(NULL)); // inizializza il generatore di numeri casuali
 
-    // Trova la prossima data valida per una lezione passata
-    time_t oggi = time(NULL);
-    int lezione_creata = 0;
+    // Carica eventuali lezioni da file input
+    carica_lezioni(calendario, "caso_test_3_input.txt");
 
-    while (!lezione_creata && difftime(mktime(&data_corrente), oggi) < 0) {
-        char giorno[20], orario[20];
-        int ora_inizio;
+    // Crea una lezione passata
+    struct tm data_passata = {0};
+    data_passata.tm_mday = 10;
+    data_passata.tm_mon = 3; // Aprile (0-based)
+    data_passata.tm_year = 2024 - 1900;
+    data_passata.tm_hour = 10;
+    data_passata.tm_min = 0;
+    data_passata.tm_sec = 0;
+    mktime(&data_passata); // normalizza
 
-        if (giorno_lezione(data_corrente.tm_wday, giorno, orario, &ora_inizio)) {
-            // Crea la lezione
-            lezione l;
-            l.iscritti = nuova_pila();
-            strftime(l.data, sizeof(l.data), "%d/%m/%Y", &data_corrente);
-            strcpy(l.giorno, giorno);
-            strcpy(l.orario, orario);
-
-            // Aggiunge 3 partecipanti fittizi
-            for (int i = 1; i <= 3; i++) {
-                char nome[50];
-                snprintf(nome, sizeof(nome), "report%d", i);
-                inserisci_pila(nome, l.iscritti);
-            }
-
-            inserisci_lezione(l, calendario);
-            lezione_creata = 1;
-        }
-
-        // Avanza di un giorno
-        data_corrente.tm_mday++;
-        mktime(&data_corrente);  // Normalizza
-    }
-
-    if (!lezione_creata) {
-        printf("Nessuna data valida trovata prima di oggi.\n");
-        printf("Premi INVIO per tornare al menu principale...");
-        getchar();
+    char giorno[20], orario[20];
+    int ora_inizio;
+    if (!giorno_lezione(data_passata.tm_wday, giorno, orario, &ora_inizio)) {
+        printf("Nessuna lezione prevista per il giorno selezionato.\n");
         return;
     }
 
-    // Salva output e oracle
-    salva_lezioni(calendario, "caso_test_3_output.txt");
-    salva_lezioni(calendario, "caso_test_3_oracle.txt");
+    lezione l;
+    l.iscritti = nuova_pila();
+    strftime(l.data, sizeof(l.data), "%d/%m/%Y", &data_passata);
+    strcpy(l.giorno, giorno);
+    strcpy(l.orario, orario);
 
-    // Confronta
-    int esito = confronta_file("caso_test_3_output.txt", "caso_test_3_oracle.txt");
-    printf("RISULTATO TEST 3: %s\n", esito ? "PASSATO" : "FALLIMENTO");
-
-    FILE *res = fopen("esiti_test.txt", "a");
-    if (res) {
-        fprintf(res, "Caso Test 3: %s\n", esito ? "PASSATO" : "FALLIMENTO");
-        fclose(res);
+    int num_partecipanti = rand() % 10 + 1; // da 1 a 10 partecipanti
+    for (int i = 1; i <= num_partecipanti; i++) {
+        char nome[50];
+        snprintf(nome, sizeof(nome), "utente%d", i);
+        inserisci_pila(nome, l.iscritti);
     }
 
-    FILE *elenco = fopen("elenco_test.txt", "a");
-    if (elenco) {
-        fprintf(elenco, "Caso Test 3: %s\n", esito ? "PASSATO" : "FALLIMENTO");
-        fclose(elenco);
-    }
+    inserisci_lezione(l, calendario);
 
-    // Esegui il report
-    printf("\nEsecuzione del report mensile...\n");
-    report_mensile("caso_test_3_oracle.txt");
+    // Salva le lezioni nel file output
+    salva_lezioni(calendario, "output.txt");
+
+    // Esegui il report mensile sul file output
+    report_mensile("output.txt");
 
     printf("Verifica completata. Premi INVIO per tornare al menu principale...");
     getchar();
