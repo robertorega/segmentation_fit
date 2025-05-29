@@ -395,20 +395,37 @@ void caso_test_3(coda calendario)
 
             inserisci_lezione(l, calendario);
             lezione_generata = 1;
+
+            // Aggiorna la data per la prossima esecuzione
+            data_corrente.tm_mday++;
+            mktime(&data_corrente);
+            FILE *next = fopen("ct3_data_corrente.txt", "w");
+            if (next) {
+                fprintf(next, "%d %d %d", data_corrente.tm_mday, data_corrente.tm_mon, data_corrente.tm_year);
+                fclose(next);
+            }
+        } else {
+            // Se la data non è valida o non è passata, passa al giorno successivo
+            data_corrente.tm_mday++;
+            mktime(&data_corrente);
         }
 
-        // Aggiorna la data per la prossima esecuzione
-        data_corrente.tm_mday++;
-        mktime(&data_corrente);
-        FILE *next = fopen("ct3_data_corrente.txt", "w");
-        if (next) {
-            fprintf(next, "%d %d %d", data_corrente.tm_mday, data_corrente.tm_mon, data_corrente.tm_year);
-            fclose(next);
-        }
+        // Se la data è oggi o futura, interrompi il ciclo
+        time_t oggi = time(NULL);
+        struct tm oggi_tm = *localtime(&oggi);
+        oggi_tm.tm_hour = 0;
+        oggi_tm.tm_min = 0;
+        oggi_tm.tm_sec = 0;
+        time_t tempo_oggi = mktime(&oggi_tm);
 
-        // Se la data non è passata, esci silenziosamente
-        if (!data_passata(data_str, orario)) {
-            printf("Nessuna lezione generata: la prossima data utile non è ancora passata.\n");
+        struct tm temp = data_corrente;
+        temp.tm_hour = 0;
+        temp.tm_min = 0;
+        temp.tm_sec = 0;
+        time_t tempo_data = mktime(&temp);
+
+        if (difftime(tempo_data, tempo_oggi) >= 0 && !lezione_generata) {
+            printf("Tutte le lezioni passate sono già state generate.\n");
             printf("Premi INVIO per tornare al menu principale...");
             getchar();
             return;
