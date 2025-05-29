@@ -202,22 +202,4 @@ void pulisci_lezioni_passate(coda calendario, const char *nome_file);
 */
 void report_mensile(const char* nome_file);
 
-/* Funzione: caso_test_3
-*
-* Verifica la generazione del report mensile con lezioni passate
-*
-* Parametri:
-* - calendario: la coda contenente le lezioni su cui effettuare il test, deve essere inizializzata
-*
-* Pre-condizione:
-* - 'calendario' deve essere inizializzato
-* - il file "ct3_storico.txt" viene letto e aggiornato durante il test
-*
-* Side-effect:
-* - Scrive e aggiorna il file "ct3_storico.txt" con le lezioni passate
-* - Modifica la coda 'calendario' aggiungendo la lezione creata
-* - Interagisce con l’utente tramite I/O per mostrare il report
-*/
-void caso_test_3(coda calendario);
-
 #endif
