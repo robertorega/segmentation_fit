@@ -26,7 +26,7 @@ pila nuova_pila(void);
 * iscritti: pila da controllare
 *
 * Pre-condizione:
-* iscritti è una pila inizializzata
+* 'iscritti' è una pila inizializzata
 *
 * Post-condizione:
 * Il valore restituito è 1 se e solo se la pila è vuota (iscritti->testa == 0), altrimenti 0.
@@ -42,7 +42,7 @@ int pila_vuota(pila iscritti);
 * iscritti: la pila in cui inserire i partecipanti 
 *
 * Pre-condizione:
-* iscritti è una pila inizializzata 
+* 'iscritti' è una pila inizializzata 
 *
 * Post-condizione:
 * Restituisce 1 se il partecipante viene copiato in cima altrimenti restituisce 0
@@ -61,7 +61,7 @@ int inserisci_pila(partecipante val, pila iscritti);
 * estratto: array di caratteri dove verrà copiato il partecipante rimosso dalla cima
 *
 * Pre-condizione:
-* iscritti è una pila inizializzata e `estratto` è una variabile di tipo partecipante
+* 'iscritti' è una pila inizializzata e `estratto` è una variabile di tipo partecipante
 *
 * Post-condizione:
 * Se la pila contiene almeno un elemento, `estratto` conterrà una copia del partecipante in cima
@@ -80,10 +80,10 @@ int estrai_pila(pila iscritti, partecipante estratto);
 * iscritti: pila da cui leggere l’elemento in cima
 *
 * Pre-condizione:
-* iscritti deve essere una pila inizializzata e non nulla
+* 'iscritti' deve essere una pila inizializzata e non nulla
 *
 * Post-condizione:
-* se iscritti->testa>0  ritorna un puntatore al partecipante in cima alla pila altrimenti NESSUN_PARTECIPANTE
+* Se iscritti->testa>0 ritorna un puntatore al partecipante in cima alla pila altrimenti NESSUN_PARTECIPANTE
 */
 char* testa(pila iscritti);
 
@@ -95,7 +95,7 @@ char* testa(pila iscritti);
 * iscritti:  pila da analizzare
 *
 * Pre-condizione:
-* iscritti è una pila inizializzata (può essere vuota)
+* 'iscritti' è una pila inizializzata (può essere vuota)
 *
 * Post-condizione:
 * Se iscritti == NULL ritorna -1, altrimenti ritorna iscritti->testa (che può essere 0 se vuota)
