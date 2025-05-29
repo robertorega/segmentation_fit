@@ -1,3 +1,5 @@
+all: segmentation_fit segmentation_fit_test
+
 segmentation_fit: main.c coda.o hash.o pila.o utile_coda.o utile_hash.o test_programma.o
 	gcc -Wall -g main.c coda.o hash.o pila.o utile_coda.o utile_hash.o test_programma.o -o segmentation_fit
 
