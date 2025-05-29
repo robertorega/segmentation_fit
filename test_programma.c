@@ -119,11 +119,16 @@ void caso_test_1()
     printf("Premi INVIO per iniziare...");
     getchar();
 
-    coda calendario = nuova_coda(); // Coda locale
+    coda calendario = nuova_coda();
 
-    // 1. Carica/genera lezioni
-    genera_lezioni(calendario);
-    carica_lezioni(calendario, "caso_test_1_input.txt");
+    // 1. Carica lezioni già presenti
+    carica_lezioni(calendario, "caso_test_1_output.txt");
+
+    // 2. Se vuota, genera nuove lezioni
+    if (coda_vuota(calendario)) {
+        genera_lezioni(calendario);
+        carica_lezioni(calendario, "caso_test_1_input.txt");
+    }
 
     if (coda_vuota(calendario)) {
         printf("ERRORE: Nessuna lezione disponibile.\nPremi INVIO per tornare al menu...");
@@ -131,7 +136,7 @@ void caso_test_1()
         return;
     }
 
-    // 2. Aggiungi utente fittizio
+    // 3. Aggiungi utente fittizio
     char utenti[MASSIMO_UTENTI][MASSIMO_LINEA];
     int num_iscritti = aggiorna_input_e_oracle("caso_test_1_input.txt", utenti);
     if (num_iscritti == -1) {
@@ -146,11 +151,11 @@ void caso_test_1()
     }
     inserisci_pila(utenti[num_iscritti - 1], lez->iscritti);
 
-    // 3. Salva sia output che oracle
+    // 4. Salva output e oracle aggiornati
     salva_lezioni(calendario, "caso_test_1_output.txt");
     salva_lezioni(calendario, "caso_test_1_oracle.txt");
 
-    // 4. Confronta output con oracle
+    // 5. Confronta
     int esito = confronta_file("caso_test_1_output.txt", "caso_test_1_oracle.txt");
     printf("RISULTATO TEST 1: %s\n", esito ? "PASSATO" : "FALLIMENTO");
 
@@ -160,7 +165,7 @@ void caso_test_1()
         fclose(res);
     }
 
-    FILE *elenco = fopen("elenco_test.txt", "w");
+    FILE *elenco = fopen("elenco_test.txt", "a");
     if (elenco) {
         fprintf(elenco, "Caso Test 1 %d\n", num_iscritti);
         fclose(elenco);
@@ -201,31 +206,16 @@ void caso_test_2()
     printf("Premi INVIO per iniziare...");
     getchar();
 
-    coda calendario = nuova_coda(); // Coda locale
+    coda calendario = nuova_coda();
 
-    // 1. Genera nome abbonato deterministico
-    char nomeutente[MAX_CARATTERI];
-    snprintf(nomeutente, MAX_CARATTERI, "Abbonato_Test%d", contatore_abbonati++);
+    // 1. Carica lezioni già presenti
+    carica_lezioni(calendario, "caso_test_2_output.txt");
 
-    // 2. Crea o aggiorna file input
-    FILE *check = fopen("caso_test_2_input.txt", "r");
-    int esiste = (check != NULL);
-    if (check) fclose(check);
-
-    FILE *input = fopen("caso_test_2_input.txt", "a");
-    if (!input) {
-        printf("Errore nella scrittura del file di input.\n");
-        return;
+    // 2. Se vuota, genera nuove lezioni
+    if (coda_vuota(calendario)) {
+        genera_lezioni(calendario);
+        carica_lezioni(calendario, "caso_test_2_input.txt");
     }
-    if (!esiste) {
-        fprintf(input, "Data;Giorno;Orario;NumeroIscritti\n");
-    }
-    fprintf(input, "%s\n", nomeutente);
-    fclose(input);
-
-    // 3. Carica lezioni da input
-    genera_lezioni(calendario);
-    carica_lezioni(calendario, "caso_test_2_input.txt");
 
     if (coda_vuota(calendario)) {
         printf("ERRORE: Nessuna lezione disponibile.\nPremi INVIO per tornare al menu...");
@@ -233,7 +223,10 @@ void caso_test_2()
         return;
     }
 
-    // 4. Crea abbonato fittizio
+    // 3. Crea abbonato fittizio
+    char nomeutente[MAX_CARATTERI];
+    snprintf(nomeutente, MAX_CARATTERI, "Abbonato_Test%d", contatore_abbonati++);
+
     abbonato nuovo;
     strcpy(nuovo.nomeutente, nomeutente);
     strcpy(nuovo.password, "1234");
@@ -246,7 +239,7 @@ void caso_test_2()
 
     printf("Abbonato creato: %s\n", nuovo.nomeutente);
 
-    // 5. Ricarica e verifica
+    // 4. Ricarica e verifica
     tabella = carica_abbonati("caso_test_2_abbonati.txt");
     abbonato *trovato = cerca_hash(nomeutente, tabella);
     if (!trovato) {
@@ -255,7 +248,7 @@ void caso_test_2()
         return;
     }
 
-    // 6. Tentativo di prenotazione SENZA lezioni disponibili
+    // 5. Tentativo di prenotazione SENZA lezioni disponibili
     printf("\nTentativo di prenotazione senza lezioni disponibili...\n");
     if (trovato->lezioni_rimanenti <= 0) {
         printf("Comportamento corretto: prenotazione rifiutata per mancanza di lezioni.\n\n");
@@ -263,12 +256,12 @@ void caso_test_2()
         printf("ERRORE: L'utente ha ancora lezioni disponibili, ma non dovrebbe.\n\n");
     }
 
-    // 7. Ricarica abbonamento
+    // 6. Ricarica abbonamento
     trovato->lezioni_rimanenti = 12;
     salva_abbonati(tabella, "caso_test_2_abbonati.txt");
     printf("Lezioni rimanenti dopo ricarica: %d\n\n", trovato->lezioni_rimanenti);
 
-    // 8. Prenotazione automatica
+    // 7. Prenotazione automatica
     printf("Prenotazione automatica della prima lezione...\n");
     struct nodo *lezione_test = calendario->testa;
     if (!lezione_test) {
@@ -284,7 +277,7 @@ void caso_test_2()
         trovato->lezioni_rimanenti--;
         salva_abbonati(tabella, "caso_test_2_abbonati.txt");
 
-        // Salva output e oracle
+        // Salva output e oracle aggiornati
         salva_lezioni(calendario, "caso_test_2_output.txt");
         salva_lezioni(calendario, "caso_test_2_oracle.txt");
 
@@ -298,7 +291,6 @@ void caso_test_2()
             printf("ERRORE: Lezione non scalata correttamente.\n");
         }
 
-        // Confronta output con oracle
         int esito = confronta_file("caso_test_2_output.txt", "caso_test_2_oracle.txt");
         printf("RISULTATO TEST 2: %s\n", esito ? "PASSATO" : "FALLIMENTO");
 
