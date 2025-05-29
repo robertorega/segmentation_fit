@@ -353,7 +353,7 @@ void caso_test_3(coda calendario)
     printf("Premi INVIO per iniziare...");
     getchar();
 
-    srand(time(NULL));
+    srand(time(NULL)); // inizializza il generatore di numeri casuali
 
     // 1. Leggi la data corrente da file o inizializza a 3 marzo 2025
     struct tm data_corrente = {0};
@@ -363,7 +363,7 @@ void caso_test_3(coda calendario)
         fclose(data_file);
     } else {
         data_corrente.tm_mday = 3;
-        data_corrente.tm_mon = 2; // Marzo
+        data_corrente.tm_mon = 2; // Marzo (0-based)
         data_corrente.tm_year = 2025 - 1900;
     }
     mktime(&data_corrente);
@@ -403,4 +403,47 @@ void caso_test_3(coda calendario)
     strcpy(l.orario, orario);
 
     int num_partecipanti = rand() % 10 + 1;
+    for (int i = 1; i <= num_partecipanti; i++) {
+        char nome[50];
+        snprintf(nome, sizeof(nome), "utente%d", i);
+        inserisci_pila(nome, l.iscritti);
+    }
+
+    inserisci_lezione(l, calendario);
+
+    // 5. Salva output e oracle
+    salva_lezioni(calendario, "caso_test_3_output.txt");
+    salva_lezioni(calendario, "caso_test_3_oracle.txt");
+
+    // 6. Confronta i file
+    int esito = confronta_file("caso_test_3_output.txt", "caso_test_3_oracle.txt");
+    printf("RISULTATO TEST 3: %s\n", esito ? "PASSATO" : "FALLIMENTO");
+
+    FILE *res = fopen("esiti_test.txt", "a");
+    if (res) {
+        fprintf(res, "Caso Test 3: %s\n", esito ? "PASSATO" : "FALLIMENTO");
+        fclose(res);
+    }
+
+    FILE *elenco = fopen("elenco_test.txt", "a");
+    if (elenco) {
+        fprintf(elenco, "Caso Test 3: %s\n", esito ? "PASSATO" : "FALLIMENTO");
+        fclose(elenco);
+    }
+
+    // 7. Aggiorna la data per la prossima esecuzione
+    data_corrente.tm_mday++;
+    mktime(&data_corrente);
+    FILE *next = fopen("ct3_data_corrente.txt", "w");
+    if (next) {
+        fprintf(next, "%d %d %d", data_corrente.tm_mday, data_corrente.tm_mon, data_corrente.tm_year);
+        fclose(next);
+    }
+
+    // 8. Esegui il report
+    printf("\nEsecuzione del report mensile...\n");
+    report_mensile("caso_test_3_oracle.txt");
+
+    printf("Verifica completata. Premi INVIO per tornare al menu principale...");
+    getchar();
 }
