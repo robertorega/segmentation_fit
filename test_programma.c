@@ -358,16 +358,20 @@ void caso_test_3(coda calendario)
     // Carica lezioni esistenti da file input
     carica_lezioni(calendario, "caso_test_3_input.txt");
 
-    // Trova una data passata valida per una lezione
-    time_t oggi = time(NULL);
-    struct tm data_corrente = *localtime(&oggi);
-    data_corrente.tm_mday -= 1; // inizia da ieri
+    // Inizio da 3 marzo 2025
+    struct tm data_corrente = {0};
+    data_corrente.tm_mday = 3;
+    data_corrente.tm_mon = 2; // Marzo (0-based)
+    data_corrente.tm_year = 2025 - 1900;
     mktime(&data_corrente);
 
-    int lezione_creata = 0;
-    while (!lezione_creata && difftime(mktime(&data_corrente), oggi) < 0) {
+    time_t oggi = time(NULL);
+    int lezioni_create = 0;
+
+    while (difftime(mktime(&data_corrente), oggi) < 0) {
         char giorno[20], orario[20];
         int ora_inizio;
+
         if (giorno_lezione(data_corrente.tm_wday, giorno, orario, &ora_inizio)) {
             lezione l;
             l.iscritti = nuova_pila();
@@ -383,14 +387,15 @@ void caso_test_3(coda calendario)
             }
 
             inserisci_lezione(l, calendario);
-            lezione_creata = 1;
+            lezioni_create++;
         }
-        data_corrente.tm_mday--;
+
+        data_corrente.tm_mday++;
         mktime(&data_corrente);
     }
 
-    if (!lezione_creata) {
-        printf("Nessuna data valida trovata prima di oggi.\n");
+    if (lezioni_create == 0) {
+        printf("Nessuna lezione passata generata.\n");
         printf("Premi INVIO per tornare al menu principale...");
         getchar();
         return;
@@ -411,10 +416,10 @@ void caso_test_3(coda calendario)
         fclose(res);
     }
 
-    // Scrive il numero di partecipanti nel file elenco
+    // Scrive il numero di lezioni nel file elenco
     FILE *elenco = fopen("elenco_test.txt", "a");
     if (elenco) {
-        fprintf(elenco, "Caso Test 3 %s\n", esito ? "PASSATO" : "FALLIMENTO");
+        fprintf(elenco, "Caso Test 3 %d lezioni\n", lezioni_create);
         fclose(elenco);
     }
 
