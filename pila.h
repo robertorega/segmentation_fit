@@ -9,6 +9,7 @@ typedef struct c_pila *pila;
 /* Funzione: nuova_pila
 *
 * Crea e inizializza una nuova pila vuota
+*
 * Post-condizione:
 * Restituisce un puntatore a una pila vuota chiamata iscritti
 *
@@ -19,7 +20,8 @@ pila nuova_pila(void);
 
 /* Funzione: pila_vuota
 *
-* controlla se la pila iscritti è vuota
+* Controlla se la pila iscritti è vuota
+*
 * Parametri:
 * iscritti: pila da controllare
 *
@@ -34,6 +36,7 @@ int pila_vuota(pila iscritti);
 /* Funzione: inserisci_pila
 *
 * Inserisce un partecipante in cima alla pila iscritti, se la pila non è piena
+*
 * Parametri:
 * persona: il partecipante da inserire
 * iscritti: la pila in cui inserire i partecipanti 
@@ -72,6 +75,7 @@ int estrai_pila(pila iscritti, partecipante estratto);
 /* Funzione: testa
 *
 * Restituisce l’elemento in cima alla pila iscritti senza rimuoverlo
+*
 * Parametri:
 * iscritti: pila da cui leggere l’elemento in cima
 *
@@ -86,6 +90,7 @@ char* testa(pila iscritti);
 /* Funzione: dimensione_pila
 *
 * Restituisce il numero di elementi attualmente presenti nella pila iscritti
+*
 * Parametri:
 * iscritti:  pila da analizzare
 *
