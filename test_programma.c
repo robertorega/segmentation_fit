@@ -371,6 +371,7 @@ void caso_test_3(coda calendario)
     int lezione_generata = 0;
     char data_str[11], giorno[20], orario[20];
     int ora_inizio;
+    lezione l;
 
     while (!lezione_generata) {
         mktime(&data_corrente);
@@ -380,7 +381,6 @@ void caso_test_3(coda calendario)
             data_passata(data_str, orario)) {
 
             // Crea la lezione
-            lezione l;
             l.iscritti = nuova_pila();
             strcpy(l.data, data_str);
             strcpy(l.giorno, giorno);
@@ -395,6 +395,26 @@ void caso_test_3(coda calendario)
 
             inserisci_lezione(l, calendario);
             lezione_generata = 1;
+
+            // Scrive la lezione anche nel file di input
+            FILE *input = fopen("caso_test_3_input.txt", "w");
+            if (input) {
+                fprintf(input, "%s;%s;%s;%d\n", l.data, l.giorno, l.orario, num_partecipanti);
+                pila temp = nuova_pila();
+                partecipante p;
+                while (!pila_vuota(l.iscritti)) {
+                    if (estrai_pila(l.iscritti, p)) {
+                        fprintf(input, "%s\n", p);
+                        inserisci_pila(p, temp);
+                    }
+                }
+                while (!pila_vuota(temp)) {
+                    if (estrai_pila(temp, p)) {
+                        inserisci_pila(p, l.iscritti);
+                    }
+                }
+                fclose(input);
+            }
 
             // Aggiorna la data per la prossima esecuzione
             data_corrente.tm_mday++;
@@ -438,16 +458,16 @@ void caso_test_3(coda calendario)
 
     // 4. Unisci le lezioni precedenti con quella nuova
     while (!coda_vuota(calendario)) {
-        lezione l = rimuovi_lezione(calendario);
-        inserisci_lezione(l, lezioni_precedenti);
+        lezione lezione_corrente = rimuovi_lezione(calendario);
+        inserisci_lezione(lezione_corrente, lezioni_precedenti);
     }
 
     // 5. Filtra solo le lezioni passate
     coda finali = nuova_coda();
     while (!coda_vuota(lezioni_precedenti)) {
-        lezione l = rimuovi_lezione(lezioni_precedenti);
-        if (data_passata(l.data, l.orario)) {
-            inserisci_lezione(l, finali);
+        lezione lezione_corrente = rimuovi_lezione(lezioni_precedenti);
+        if (data_passata(lezione_corrente.data, lezione_corrente.orario)) {
+            inserisci_lezione(lezione_corrente, finali);
         }
     }
 
