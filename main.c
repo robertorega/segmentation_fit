@@ -14,10 +14,10 @@
 * Gestisce l'area abbonamenti dell'applicazione
 *
 * Parametri:
-* calendario - struttura contenente il calendario delle lezioni disponibili
+* calendario: struttura contenente il calendario delle lezioni disponibili
 *
 * Pre-condizione:
-* calendario è una struttura coda valida e inizializzata correttamente
+* - 'calendario' è una struttura coda valida e inizializzata correttamente
 *
 * Side-effect:
 * - Output a schermo
@@ -128,14 +128,14 @@ int main()
 * Se l'utente non è registrato, può creare un nuovo account scegliendo nome utente e password.
 *
 * Parametri:
-* calendario - struttura dati contenente le lezioni, utilizzata per prenotazioni e gestione
+* calendario: struttura contenente il calendario delle lezioni disponibili
 *
 * Pre-condizione:
-* calendario è inizializzato correttamente e i file di supporto ("abbonati.txt", "lezioni.txt") sono presenti o creati
+* - 'calendario' è una struttura coda valida e inizializzata correttamente
 *
 * Side-effect:
-* - Lettura e scrittura su file ("abbonati.txt", "lezioni.txt")
-* - Allocazione dinamica di memoria per nuovi utenti
+* - Output a schermo
+* - Possibili modifiche al file "abbonati.txt" e "lezioni.txt"
 */
 void abbonamenti(coda calendario)
 {
