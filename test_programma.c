@@ -403,3 +403,4 @@ void caso_test_3(coda calendario)
     strcpy(l.orario, orario);
 
     int num_partecipanti = rand() % 10 + 1;
+}
