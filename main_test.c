@@ -9,6 +9,23 @@
 #include "utile_hash.h"
 #include "test_programma.h"
 
+/* Funzione: pulisci_schermo
+*
+* Pulisce il contenuto visualizzato nel terminale, rendendo lo schermo vuoto
+*
+* Pre-condizione:
+* Nessuna
+*
+* Post-condizione:
+* Il terminale viene pulito (effetto visivo simile a "schermo vuoto")
+*
+* Side-effect:
+* Chiama un comando di sistema (dipendente dal sistema operativo):
+* - Su Windows: esegue "cls"
+* - Su Unix/Linux/macOS: esegue "clear"
+*/
+void pulisci_schermo(void);
+
 int main()
 {
     char scelta[10];
@@ -55,4 +72,28 @@ int main()
     } while (test_scelta != 4);
 
     return 0;
+}
+
+/* Funzione: pulisci_schermo
+*
+* Pulisce il contenuto visualizzato nel terminale, rendendo lo schermo vuoto
+*
+* Descrizione:
+* La funzione pulisce lo schermo del terminale eseguendo il comando appropriato
+* in base al sistema operativo in uso. Su Windows esegue il comando "cls",
+* mentre su sistemi Unix/Linux/macOS esegue "clear". Questo permette di ottenere
+* un terminale visivamente vuoto, migliorando la leggibilità dell'interfaccia utente.
+*
+* Side-effect:
+* Chiama un comando di sistema (dipendente dal sistema operativo):
+* - Su Windows: esegue "cls"
+* - Su Unix/Linux/macOS: esegue "clear"
+*/
+void pulisci_schermo(void)
+{
+	#ifdef _WIN32
+    		system("cls");
+	#else
+    		system("clear");
+	#endif
 }
