@@ -29,7 +29,7 @@ int aggiorna_input_e_oracle(const char *input_file, char utenti[][MASSIMO_LINEA]
 * - Inserisce un partecipante fittizio nella prima lezione della coda in memoria
 * - Aggiorna il file "ct1_lezioni.txt" con i dati modificati (iscritti e lista utenti)
 */
-void caso_test_1(coda calendario);
+void caso_test_1();
 
 /* Funzione: caso_test_2
 *
@@ -47,7 +47,7 @@ void caso_test_1(coda calendario);
 * - Modifica e salva il file "ct2_abbonati.txt" con il nuovo abbonato e i dati aggiornati
 * - Modifica e salva il file "ct2_lezioni.txt" con la prenotazione aggiornata
 */
-void caso_test_2(coda calendario);
+void caso_test_2();
 
 /* Funzione: caso_test_3
 *
