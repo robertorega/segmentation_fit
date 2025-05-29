@@ -204,24 +204,33 @@ void caso_test_2(coda calendario)
     printf("Premi INVIO per iniziare...");
     getchar();
 
-    // 1. Carica lezioni da input
-    if (coda_vuota(calendario)) 
-    {
+    // 1. Genera nome abbonato deterministico
+    char nomeutente[MAX_CARATTERI];
+    snprintf(nomeutente, MAX_CARATTERI, "Abbonato_Test%d", contatore_abbonati++);
+
+    // 2. Crea file input con intestazione + nome abbonato
+    FILE *input = fopen("caso_test_2_input.txt", "w");
+    if (!input) {
+        printf("Errore nella creazione del file di input.\n");
+        return;
+    }
+    fprintf(input, "Data;Giorno;Orario;NumeroIscritti\n");
+    fprintf(input, "%s\n", nomeutente);
+    fclose(input);
+
+    // 3. Carica lezioni da input
+    if (coda_vuota(calendario)) {
         genera_lezioni(calendario);
         carica_lezioni(calendario, "caso_test_2_input.txt");
     }
 
-    if (coda_vuota(calendario)) 
-    {
+    if (coda_vuota(calendario)) {
         printf("ERRORE: Nessuna lezione disponibile.\nPremi INVIO per tornare al menu...");
         getchar();
         return;
     }
 
-    // 2. Crea abbonato fittizio con nome deterministico
-    char nomeutente[MAX_CARATTERI];
-    snprintf(nomeutente, MAX_CARATTERI, "Abbonato_Test%d", contatore_abbonati++);
-
+    // 4. Crea abbonato fittizio
     abbonato nuovo;
     strcpy(nuovo.nomeutente, nomeutente);
     strcpy(nuovo.password, "1234");
@@ -234,35 +243,32 @@ void caso_test_2(coda calendario)
 
     printf("Abbonato creato: %s\n", nuovo.nomeutente);
 
-    // 3. Ricarica e verifica
+    // 5. Ricarica e verifica
     tabella = carica_abbonati("ct2_abbonati.txt");
     abbonato *trovato = cerca_hash(nomeutente, tabella);
-    if (!trovato) 
-    {
+    if (!trovato) {
         printf("ERRORE: Utente non trovato dopo la creazione.\n");
         getchar();
         return;
     }
 
-    // 4. Tentativo di prenotazione SENZA lezioni disponibili
+    // 6. Tentativo di prenotazione SENZA lezioni disponibili
     printf("\nTentativo di prenotazione senza lezioni disponibili...\n");
     if (trovato->lezioni_rimanenti <= 0) {
         printf("Comportamento corretto: prenotazione rifiutata per mancanza di lezioni.\n\n");
-    } else 
-    {
+    } else {
         printf("ERRORE: L'utente ha ancora lezioni disponibili, ma non dovrebbe.\n\n");
     }
 
-    // 5. Ricarica abbonamento
+    // 7. Ricarica abbonamento
     trovato->lezioni_rimanenti = 12;
     salva_abbonati(tabella, "ct2_abbonati.txt");
     printf("Lezioni rimanenti dopo ricarica: %d\n\n", trovato->lezioni_rimanenti);
 
-    // 6. Prenotazione automatica
+    // 8. Prenotazione automatica
     printf("Prenotazione automatica della prima lezione...\n");
     struct nodo *lezione_test = calendario->testa;
-    if (!lezione_test) 
-    {
+    if (!lezione_test) {
         printf("ERRORE: Nessuna lezione disponibile.\n");
         getchar();
         return;
@@ -271,8 +277,7 @@ void caso_test_2(coda calendario)
     int iscritti_pre = dimensione_pila(lezione_test->valore.iscritti);
     int lezioni_pre = trovato->lezioni_rimanenti;
 
-    if (inserisci_pila(trovato->nomeutente, lezione_test->valore.iscritti)) 
-    {
+    if (inserisci_pila(trovato->nomeutente, lezione_test->valore.iscritti)) {
         trovato->lezioni_rimanenti--;
         salva_abbonati(tabella, "ct2_abbonati.txt");
 
@@ -284,12 +289,9 @@ void caso_test_2(coda calendario)
         printf("Prenotazione riuscita. Iscritti prima: %d, dopo: %d\n", iscritti_pre, iscritti_post);
         printf("Lezioni rimanenti: %d\n", trovato->lezioni_rimanenti);
 
-        if (lezioni_pre - 1 == trovato->lezioni_rimanenti) 
-        {
+        if (lezioni_pre - 1 == trovato->lezioni_rimanenti) {
             printf("Lezione scalata correttamente.\n");
-        } 
-        else 
-        {
+        } else {
             printf("ERRORE: Lezione non scalata correttamente.\n");
         }
 
@@ -298,22 +300,18 @@ void caso_test_2(coda calendario)
         printf("RISULTATO TEST 2: %s\n", esito ? "PASSATO" : "FALLIMENTO");
 
         FILE *res = fopen("esiti_test.txt", "a");
-        if (res) 
-        {
+        if (res) {
             fprintf(res, "Caso Test 2: %s\n", esito ? "PASSATO" : "FALLIMENTO");
             fclose(res);
         }
 
         FILE *elenco = fopen("elenco_test.txt", "a");
-        if (elenco) 
-        {
+        if (elenco) {
             fprintf(elenco, "CT2 %d\n", iscritti_post);
             fclose(elenco);
         }
 
-    } 
-    else
-    {
+    } else {
         printf("ERRORE: Prenotazione fallita dopo ricarica.\n");
     }
 
