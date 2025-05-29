@@ -164,7 +164,7 @@ void caso_test_1(coda calendario)
     FILE *elenco = fopen("elenco_test.txt", "w");
     if (elenco) 
     {
-        fprintf(elenco, "CT1 %d\n", num_iscritti);
+        fprintf(elenco, "Caso Test 1 %d\n", num_iscritti);
         fclose(elenco);
     }
 
@@ -243,14 +243,14 @@ void caso_test_2(coda calendario)
     nuovo.chiave = strdup(nuovo.nomeutente);
     nuovo.lezioni_rimanenti = 0;
 
-    tabella_hash tabella = carica_abbonati("ct2_abbonati.txt");
+    tabella_hash tabella = carica_abbonati("caso_test_2_abbonati.txt");
     tabella = inserisci_hash(nuovo, tabella);
-    salva_abbonati(tabella, "ct2_abbonati.txt");
+    salva_abbonati(tabella, "caso_test_2_abbonati.txt");
 
     printf("Abbonato creato: %s\n", nuovo.nomeutente);
 
     // 5. Ricarica e verifica
-    tabella = carica_abbonati("ct2_abbonati.txt");
+    tabella = carica_abbonati("caso_test_2_abbonati.txt");
     abbonato *trovato = cerca_hash(nomeutente, tabella);
     if (!trovato) {
         printf("ERRORE: Utente non trovato dopo la creazione.\n");
@@ -268,7 +268,7 @@ void caso_test_2(coda calendario)
 
     // 7. Ricarica abbonamento
     trovato->lezioni_rimanenti = 12;
-    salva_abbonati(tabella, "ct2_abbonati.txt");
+    salva_abbonati(tabella, "caso_test_2_abbonati.txt");
     printf("Lezioni rimanenti dopo ricarica: %d\n\n", trovato->lezioni_rimanenti);
 
     // 8. Prenotazione automatica
@@ -285,7 +285,7 @@ void caso_test_2(coda calendario)
 
     if (inserisci_pila(trovato->nomeutente, lezione_test->valore.iscritti)) {
         trovato->lezioni_rimanenti--;
-        salva_abbonati(tabella, "ct2_abbonati.txt");
+        salva_abbonati(tabella, "caso_test_2_abbonati.txt");
 
         // Salva output e oracle
         salva_lezioni(calendario, "caso_test_2_output.txt");
@@ -313,7 +313,7 @@ void caso_test_2(coda calendario)
 
         FILE *elenco = fopen("elenco_test.txt", "a");
         if (elenco) {
-            fprintf(elenco, "CT2 %d\n", iscritti_post);
+            fprintf(elenco, "Caso Test 2 %d\n", iscritti_post);
             fclose(elenco);
         }
 
