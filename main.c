@@ -115,7 +115,6 @@ int main()
 
 /* Funzione: abbonamenti
 *
-*
 * Gestisce l'interazione dell'utente con l'area dedicata agli abbonamenti.
 *
 * Descrizione:
