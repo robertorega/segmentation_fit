@@ -346,7 +346,7 @@ void caso_test_2(coda calendario)
 * - Modifica la coda 'calendario' aggiungendo la lezione creata
 * - Interagisce con l’utente tramite I/O per mostrare il report
 */
-void caso_test_3(coda calendario)
+ùvoid caso_test_3(coda calendario)
 {
     printf("\n--- TEST 3: Verifica Report Mensile con Partecipanti Casuali ---\n");
     printf("Questo test verifica che il report mensile contenga dati corretti sulle prenotazioni.\n");
