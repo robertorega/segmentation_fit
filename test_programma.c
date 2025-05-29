@@ -113,17 +113,17 @@ int aggiorna_input_e_oracle(const char *input_file, char utenti[][MASSIMO_LINEA]
 * - Inserisce un partecipante fittizio nella prima lezione della coda in memoria
 * - Aggiorna il file "ct1_lezioni.txt" con i dati modificati (iscritti e lista utenti)
 */
-void caso_test_1(coda calendario) 
+void caso_test_1()
 {
     printf("TEST 1: Verifica registrazione prenotazione e aggiornamento disponibilità\n");
     printf("Premi INVIO per iniziare...");
     getchar();
 
+    coda calendario = nuova_coda(); // Coda locale
+
     // 1. Carica/genera lezioni
-    if (coda_vuota(calendario)) {
-        genera_lezioni(calendario);
-        carica_lezioni(calendario, "caso_test_1_input.txt");
-    }
+    genera_lezioni(calendario);
+    carica_lezioni(calendario, "caso_test_1_input.txt");
 
     if (coda_vuota(calendario)) {
         printf("ERRORE: Nessuna lezione disponibile.\nPremi INVIO per tornare al menu...");
@@ -155,15 +155,13 @@ void caso_test_1(coda calendario)
     printf("RISULTATO TEST 1: %s\n", esito ? "PASSATO" : "FALLIMENTO");
 
     FILE *res = fopen("esiti_test.txt", "a");
-    if (res) 
-    {
+    if (res) {
         fprintf(res, "Caso Test 1: %s\n", esito ? "PASSATO" : "FALLIMENTO");
         fclose(res);
     }
 
     FILE *elenco = fopen("elenco_test.txt", "w");
-    if (elenco) 
-    {
+    if (elenco) {
         fprintf(elenco, "Caso Test 1 %d\n", num_iscritti);
         fclose(elenco);
     }
@@ -194,15 +192,16 @@ void caso_test_1(coda calendario)
 * - Modifica e salva il file "ct2_abbonati.txt" con il nuovo abbonato e i dati aggiornati
 * - Modifica e salva il file "ct2_lezioni.txt" con la prenotazione aggiornata
 */
-void caso_test_2(coda calendario) 
+void caso_test_2()
 {
     static int contatore_abbonati = 1;
-
     printf("\n--- TEST 2: Gestione Abbonamenti ---\n");
     printf("Test della gestione degli abbonamenti e della verifica della validità.\n");
     printf("Crea 'Abbonato_TestN', verifica prenotazione senza lezioni, ricarica e prenota.\n\n");
     printf("Premi INVIO per iniziare...");
     getchar();
+
+    coda calendario = nuova_coda(); // Coda locale
 
     // 1. Genera nome abbonato deterministico
     char nomeutente[MAX_CARATTERI];
@@ -225,10 +224,8 @@ void caso_test_2(coda calendario)
     fclose(input);
 
     // 3. Carica lezioni da input
-    if (coda_vuota(calendario)) {
-        genera_lezioni(calendario);
-        carica_lezioni(calendario, "caso_test_2_input.txt");
-    }
+    genera_lezioni(calendario);
+    carica_lezioni(calendario, "caso_test_2_input.txt");
 
     if (coda_vuota(calendario)) {
         printf("ERRORE: Nessuna lezione disponibile.\nPremi INVIO per tornare al menu...");
@@ -316,7 +313,6 @@ void caso_test_2(coda calendario)
             fprintf(elenco, "Caso Test 2 %d\n", iscritti_post);
             fclose(elenco);
         }
-
     } else {
         printf("ERRORE: Prenotazione fallita dopo ricarica.\n");
     }
