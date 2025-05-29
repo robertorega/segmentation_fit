@@ -353,7 +353,7 @@ void caso_test_3(coda calendario)
     printf("Premi INVIO per iniziare...");
     getchar();
 
-    srand(time(NULL)); // inizializza il generatore di numeri casuali
+    srand(time(NULL));
 
     // 1. Leggi la data corrente da file o inizializza a 3 marzo 2025
     struct tm data_corrente = {0};
@@ -368,7 +368,7 @@ void caso_test_3(coda calendario)
     }
     mktime(&data_corrente);
 
-    // 2. Verifica se la data è futura
+    // 2. Verifica se la data è passata
     time_t oggi = time(NULL);
     if (difftime(mktime(&data_corrente), oggi) >= 0) {
         printf("Tutte le lezioni passate sono già state generate.\n");
@@ -380,42 +380,51 @@ void caso_test_3(coda calendario)
     // 3. Verifica se è un giorno valido per le lezioni
     char giorno[20], orario[20];
     int ora_inizio;
-    if (!giorno_lezione(data_corrente.tm_wday, giorno, orario, &ora_inizio)) {
-        // Salta al giorno successivo
-        data_corrente.tm_mday++;
-        mktime(&data_corrente);
-        FILE *next = fopen("ct3_data_corrente.txt", "w");
-        if (next) {
-            fprintf(next, "%d %d %d", data_corrente.tm_mday, data_corrente.tm_mon, data_corrente.tm_year);
-            fclose(next);
+    int lezione_generata = 0;
+
+    if (giorno_lezione(data_corrente.tm_wday, giorno, orario, &ora_inizio)) {
+        // 4. Crea la lezione
+        lezione l;
+        l.iscritti = nuova_pila();
+        strftime(l.data, sizeof(l.data), "%d/%m/%Y", &data_corrente);
+        strcpy(l.giorno, giorno);
+        strcpy(l.orario, orario);
+
+        int num_partecipanti = rand() % 10 + 1;
+        for (int i = 1; i <= num_partecipanti; i++) {
+            char nome[50];
+            snprintf(nome, sizeof(nome), "utente%d", i);
+            inserisci_pila(nome, l.iscritti);
         }
+
+        inserisci_lezione(l, calendario);
+        lezione_generata = 1;
+    }
+
+    // 5. Aggiorna la data per la prossima esecuzione
+    data_corrente.tm_mday++;
+    mktime(&data_corrente);
+    FILE *next = fopen("ct3_data_corrente.txt", "w");
+    if (next) {
+        fprintf(next, "%d %d %d", data_corrente.tm_mday, data_corrente.tm_mon, data_corrente.tm_year);
+        fclose(next);
+    }
+
+    if (!lezione_generata) {
         printf("Giorno non valido per le lezioni. Nessuna lezione generata oggi.\n");
         printf("Premi INVIO per tornare al menu principale...");
         getchar();
         return;
     }
 
-    // 4. Crea la lezione
-    lezione l;
-    l.iscritti = nuova_pila();
-    strftime(l.data, sizeof(l.data), "%d/%m/%Y", &data_corrente);
-    strcpy(l.giorno, giorno);
-    strcpy(l.orario, orario);
+    // 6. Rimuove eventuali lezioni future dalla coda
+    pulisci_lezioni_passate(calendario, "caso_test_3_oracle.txt");
 
-    int num_partecipanti = rand() % 10 + 1;
-    for (int i = 1; i <= num_partecipanti; i++) {
-        char nome[50];
-        snprintf(nome, sizeof(nome), "utente%d", i);
-        inserisci_pila(nome, l.iscritti);
-    }
-
-    inserisci_lezione(l, calendario);
-
-    // 5. Salva output e oracle
+    // 7. Salva output e oracle
     salva_lezioni(calendario, "caso_test_3_output.txt");
     salva_lezioni(calendario, "caso_test_3_oracle.txt");
 
-    // 6. Confronta i file
+    // 8. Confronta i file
     int esito = confronta_file("caso_test_3_output.txt", "caso_test_3_oracle.txt");
     printf("RISULTATO TEST 3: %s\n", esito ? "PASSATO" : "FALLIMENTO");
 
@@ -431,16 +440,7 @@ void caso_test_3(coda calendario)
         fclose(elenco);
     }
 
-    // 7. Aggiorna la data per la prossima esecuzione
-    data_corrente.tm_mday++;
-    mktime(&data_corrente);
-    FILE *next = fopen("ct3_data_corrente.txt", "w");
-    if (next) {
-        fprintf(next, "%d %d %d", data_corrente.tm_mday, data_corrente.tm_mon, data_corrente.tm_year);
-        fclose(next);
-    }
-
-    // 8. Esegui il report
+    // 9. Esegui il report
     printf("\nEsecuzione del report mensile...\n");
     report_mensile("caso_test_3_oracle.txt");
 
