@@ -8,6 +8,7 @@
 #include "utile_coda.h"
 #include "test_programma.h"
 #include "pila.h"
+#include "utile_hash.h"
 
 // Nodo della coda
 struct nodo
