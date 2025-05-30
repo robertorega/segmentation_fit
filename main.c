@@ -53,14 +53,14 @@ void pulisci_schermo(void);
 int main()
 {
 	char scelta[10];
-    	coda calendario = nuova_coda();
-	carica_lezioni(calendario, "lezioni.txt");
-	pulisci_lezioni_passate(calendario, "storico.txt");
-	genera_lezioni(calendario);
+    	coda calendario = nuova_coda(); // Inizializza la coda delle lezioni 
+	carica_lezioni(calendario, "lezioni.txt"); // Carica le lezioni salvate da file
+	pulisci_lezioni_passate(calendario, "storico.txt"); // Rimuove le lezioni passate e le archivia nello storico
+	genera_lezioni(calendario); // Genera nuove lezioni per i prossimi 30 giorni
 
 	while (1) 
 	{
-		pulisci_schermo();
+		pulisci_schermo(); // Pulisce lo schermo
 
 		printf("--- Segmentation Fit ---\n");
 		printf("Benvenuto nella palestra numero uno per gli informatici\n");
@@ -79,9 +79,11 @@ int main()
     		switch(atoi(scelta)) 
 		{
         		case 1:
+				// Accesso all'area abbonati
             			abbonamenti(calendario);
             			break;
         		case 2:
+				// Prenotazione per ingresso singolo
 				pulisci_schermo();
 				pulisci_lezioni_passate(calendario, "storico.txt");
 				genera_lezioni(calendario); 
@@ -89,20 +91,25 @@ int main()
 				salva_lezioni(calendario, "lezioni.txt");
             			break;
         		case 3:
+				// Disdetta di una prenotazione
 				pulisci_schermo();
             			disdici_iscrizione(calendario, "lezioni.txt");
             			break;
  			case 4:
+				// Visualizzazione report mensile
 				pulisci_schermo();
             			report_mensile("storico.txt");
 				break;
     			case 5:
+				// Informazioni di contatto
            			contattaci();
           			break;
         		case 6:
+				// Uscita dal programma
             			printf("Arrivederci!\n");
             			return 0;
         		default:
+				// Gestione input non valido
             			printf("Scelta non valida.\n");
 				printf("Premi INVIO per riprovare...");
             			getchar(); 
@@ -139,10 +146,11 @@ int main()
 void abbonamenti(coda calendario)
 {
     char scelta[10];
-    tabella_hash tabella_abbonati = carica_abbonati("abbonati.txt");
+    tabella_hash tabella_abbonati = carica_abbonati("abbonati.txt"); // Carica la tabella hash degli abbonati dal file
 
-    while (1) {
-        pulisci_schermo();
+    while (1)
+    {
+	pulisci_schermo();
 	printf("--- Area Abbonati ---");
         printf("\nScegli il piano di allenamento adatto a te!\n\n");
         printf("Seleziona un'opzione:\n");
@@ -153,151 +161,180 @@ void abbonamenti(coda calendario)
         fgets(scelta, sizeof(scelta), stdin);
         scelta[strcspn(scelta, "\n")] = 0;
 
-        switch (atoi(scelta)) {
-        case 1: {
-            char nomeutente[MAX_CARATTERI];
-            char password[MAX_CARATTERI];
-            printf("Inserisci il nome utente: ");
-            scanf("%s", nomeutente);
-            getchar();
-            abbonato *utente = cerca_hash(nomeutente, tabella_abbonati);
-            if (!utente) {
-                printf("Utente non trovato.\nPremi INVIO per continuare...");
-                getchar();
-                break;
-            }
-            printf("Inserisci la password: ");
-            scanf("%s", password);
-            getchar();
-            if (strcmp(utente->password, password) != 0) {
-                printf("Password errata.\nPremi INVIO per continuare...");
-                getchar();
-                break;
-            }
-            printf("\nBenvenuto %s, hai %d lezioni rimanenti.\n", utente->nomeutente, utente->lezioni_rimanenti);
-            int dentro_area = 1;
-            while (dentro_area) {
-                char scelta_operazione[10];
-                printf("\n1 - Prenota una lezione\n");
-                printf("2 - Ricarica abbonamento\n");
-                printf("3 - Torna al menu abbonamenti\n\n");
-                printf("La tua scelta: ");
-                fgets(scelta_operazione, sizeof(scelta_operazione), stdin);
-                scelta[strcspn(scelta, "\n")] = 0;
-                switch (atoi(scelta_operazione))
-                 {
-                case 1:
-                    pulisci_lezioni_passate(calendario, "storico.txt");
-                    prenota_lezione_abbonato(calendario, utente);
-                    salva_abbonati(tabella_abbonati, "abbonati.txt");
-                    salva_lezioni(calendario, "lezioni.txt");
-                    break;
-                case 2: {
-                    char scelta_abbonamento[10];
-                    while (1) {
-                        printf("\nScegli il piano di allenamento:\n");
-                        printf("1 - 12 lezioni: 60€\n");
-                        printf("2 - 24 lezioni: 100€\n");
-                        printf("3 - 36 lezioni: 150€\n");
-                        printf("4 - Annulla\n\n");
-                        printf("La tua scelta: ");
-                        fgets(scelta_abbonamento, sizeof(scelta_abbonamento), stdin);
-                        scelta[strcspn(scelta, "\n")] = 0;
+        switch (atoi(scelta))
+	{
+        	case 1:
+		{
+			// Accesso area riservata per abbonati esistenti
+			char nomeutente[MAX_CARATTERI];
+            		char password[MAX_CARATTERI];
 
-                        if (atoi(scelta_abbonamento) >= 1 && atoi(scelta_abbonamento) <= 3) 
-                        {
-                            int lezioni = atoi(scelta_abbonamento) * 12;
-                            utente->lezioni_rimanenti += lezioni;
-                            printf("Abbonamento aggiornato! Ora hai %d lezioni rimanenti.\n", utente->lezioni_rimanenti);
-                            salva_abbonati(tabella_abbonati, "abbonati.txt");
-                            break;
-                        } 
-                        else if (atoi(scelta_abbonamento) == 4) 
-                        {
-                            break;
-                        } 
-                        else 
-                        {
-                            printf("Scelta non valida.\n");
-                            printf("Premi INVIO per riprovare...");
-                            getchar(); 
-                        }
-                    }
-                    break;
-                }
-                case 3:
-                    dentro_area = 0;
-                    break;
-                default:
-                    printf("Scelta non valida.\n");
-                    printf("Premi INVIO per riprovare...");
-                    getchar(); 
-                }
-            }
-            break;
+			// Autenticazione utente
+            		printf("Inserisci il nome utente: ");
+            		scanf("%s", nomeutente);
+           		getchar();
+            		abbonato *utente = cerca_hash(nomeutente, tabella_abbonati);
+            		if (!utente)
+			{
+                		printf("Utente non trovato.\nPremi INVIO per continuare...");
+                		getchar();
+                		break;
+            		}
+            		printf("Inserisci la password: ");
+            		scanf("%s", password);
+            		getchar();
+            		if (strcmp(utente->password, password) != 0)
+			{
+                		printf("Password errata.\nPremi INVIO per continuare...");
+                		getchar();
+                		break;
+            		}
+
+			// Accesso riuscito
+            		printf("\nBenvenuto %s, hai %d lezioni rimanenti.\n", utente->nomeutente, utente->lezioni_rimanenti);
+            		int dentro_area = 1;
+            		while (dentro_area)
+			{
+                		char scelta_operazione[10];
+                		printf("\n1 - Prenota una lezione\n");
+                		printf("2 - Ricarica abbonamento\n");
+                		printf("3 - Torna al menu abbonamenti\n\n");
+                		printf("La tua scelta: ");
+                		fgets(scelta_operazione, sizeof(scelta_operazione), stdin);
+                		scelta[strcspn(scelta, "\n")] = 0;
+                		switch (atoi(scelta_operazione))
+                 		{
+                			case 1:
+						// Prenotazione lezione per abbonato
+                    				pulisci_lezioni_passate(calendario, "storico.txt");
+                    				prenota_lezione_abbonato(calendario, utente);
+                    				salva_abbonati(tabella_abbonati, "abbonati.txt");
+                    				salva_lezioni(calendario, "lezioni.txt");
+                    				break;
+                			case 2:
+					{
+						// Ricarica abbonamento
+                    				char scelta_abbonamento[10];
+                    				while (1)
+						{
+                        				printf("\nScegli il piano di allenamento:\n");
+                        				printf("1 - 12 lezioni: 60€\n");
+                        				printf("2 - 24 lezioni: 100€\n");
+                        				printf("3 - 36 lezioni: 150€\n");
+                        				printf("4 - Annulla\n\n");
+                        				printf("La tua scelta: ");
+                        				fgets(scelta_abbonamento, sizeof(scelta_abbonamento), stdin);
+                        				scelta[strcspn(scelta, "\n")] = 0;
+
+                        				if (atoi(scelta_abbonamento) >= 1 && atoi(scelta_abbonamento) <= 3) 
+                        				{
+                            					int lezioni = atoi(scelta_abbonamento) * 12;
+                            					utente->lezioni_rimanenti += lezioni;
+                            					printf("Abbonamento aggiornato! Ora hai %d lezioni rimanenti.\n", utente->lezioni_rimanenti);
+                            					salva_abbonati(tabella_abbonati, "abbonati.txt");
+                            					break;
+                        				} 
+                        				else if (atoi(scelta_abbonamento) == 4) 
+                        				{
+                            					break;
+                        				} else 
+                        				{
+                            					printf("Scelta non valida.\n");
+                            					printf("Premi INVIO per riprovare...");
+                            					getchar(); 
+                        				}
+                    				}
+                    				break;
+                			}
+                			case 3:
+						// Uscita dall'area riservata
+                    				dentro_area = 0;
+                    				break;
+                			default:
+                    				printf("Scelta non valida.\n");
+                    				printf("Premi INVIO per riprovare...");
+                    				getchar(); 
+                		}
+            		}
+            		break;
+        	}
+        	case 2:
+		{
+			// Creazione nuovo abbonamento
+            		char nomeutente[MAX_CARATTERI];
+            		char password[MAX_CARATTERI];
+
+			// Inserimento nome utente con validazione
+            		do
+			{
+            			printf("Inserisci nome utente: ");
+            			fgets(nomeutente, sizeof(nomeutente), stdin);
+            			nomeutente[strcspn(nomeutente, "\n")] = 0; // Rimuove newline
+
+            			if (strchr(nomeutente, ' ') != NULL)
+				{
+            				printf("Il nome utente non può contenere spazi. Riprova.\n");
+            			} else if (strlen(nomeutente) == 0)
+				{
+            				printf("Il nome utente non può essere vuoto. Riprova.\n");
+            			} else
+            			{
+            				break;
+            			}
+            		}while (1);
+
+			// Verifica se l'utente esiste già
+            		abbonato *utente = cerca_hash(nomeutente, tabella_abbonati);
+            		if (utente)
+			{
+                		printf("Utente gia' esistente. Accedi dall'area riservata per ricaricare l'abbonamento.\nPremi INVIO per continuare...");
+                		getchar();
+                		break;
+            		}
+
+			// Inserimento password con validazione
+            		do
+			{
+            			printf("Inserisci password: ");
+            			fgets(password, sizeof(password), stdin);
+            			password[strcspn(password, "\n")] = 0;
+
+            			if (strchr(password, ' ') != NULL)
+				{
+            				printf("La password non può contenere spazi. Riprova.\n");
+            			} else if (strlen(password) == 0)
+				{
+            				printf("La password non può essere vuota. Riprova.\n");
+            			} else
+				{
+             				break;
+            			}
+            		} while (1);
+
+			// Creazione nuovo abbonato
+            		abbonato nuovo;
+            		strncpy(nuovo.nomeutente, nomeutente, MAX_CARATTERI);
+            		strncpy(nuovo.password, password, MAX_CARATTERI);
+            		nuovo.chiave = strdup(nomeutente);
+            		nuovo.lezioni_rimanenti = 0;
+
+			// Inserimento nella tabella hash e salvataggio
+            		tabella_abbonati = inserisci_hash(nuovo, tabella_abbonati);
+            		salva_abbonati(tabella_abbonati, "abbonati.txt");
+            		printf("Account creato con successo! Ora accedi dall'area riservata per attivare un abbonamento.\nPremi INVIO per continuare...");
+            		getchar();
+            		break;
+        	}
+        	case 3:
+            		// Ritorna al menu principale
+            		return;
+        	default:
+            		printf("Scelta non valida.\n");
+            		printf("Premi INVIO per riprovare...");
+            		getchar();
+            		break;
         }
-        case 2: {
-            char nomeutente[MAX_CARATTERI];
-            char password[MAX_CARATTERI];
-            
-            do {
-            printf("Inserisci nome utente: ");
-            fgets(nomeutente, sizeof(nomeutente), stdin);
-            nomeutente[strcspn(nomeutente, "\n")] = 0; // Rimuove newline
-
-            if (strchr(nomeutente, ' ') != NULL) {
-            printf("Il nome utente non può contenere spazi. Riprova.\n");
-            } else if (strlen(nomeutente) == 0) {
-            printf("Il nome utente non può essere vuoto. Riprova.\n");
-            } 
-            else
-            {
-            break;
-            }
-            }while (1);
-
-            abbonato *utente = cerca_hash(nomeutente, tabella_abbonati);
-            if (utente) {
-                printf("Utente gia' esistente. Accedi dall'area riservata per ricaricare l'abbonamento.\nPremi INVIO per continuare...");
-                getchar();
-                break;
-            }
-            
-            do {
-            printf("Inserisci password: ");
-            fgets(password, sizeof(password), stdin);
-            password[strcspn(password, "\n")] = 0;
-
-            if (strchr(password, ' ') != NULL) {
-            printf("La password non può contenere spazi. Riprova.\n");
-            } else if (strlen(password) == 0) {
-            printf("La password non può essere vuota. Riprova.\n");
-            } else {
-             break;
-            }
-            } while (1);
-
-            abbonato nuovo;
-            strncpy(nuovo.nomeutente, nomeutente, MAX_CARATTERI);
-            strncpy(nuovo.password, password, MAX_CARATTERI);
-            nuovo.chiave = strdup(nomeutente);
-            nuovo.lezioni_rimanenti = 0;
-            tabella_abbonati = inserisci_hash(nuovo, tabella_abbonati);
-            salva_abbonati(tabella_abbonati, "abbonati.txt");
-            printf("Account creato con successo! Ora accedi dall'area riservata per attivare un abbonamento.\nPremi INVIO per continuare...");
-            getchar();
-            break;
-        }
-        case 3:
-            //ritorna al menu principale
-            return;
-        default:
-            printf("Scelta non valida.\n");
-            printf("Premi INVIO per riprovare...");
-            getchar();
-            break;
-        }
-    }
+	}
 }
 
 /* Funzione: contattaci
